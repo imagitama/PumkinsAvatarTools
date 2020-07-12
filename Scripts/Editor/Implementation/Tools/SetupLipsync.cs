@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Attributes;
 
 namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
 {
+    [AllowAutoLoad]
     class SetupLipsync : SubToolBase
     {
         public SetupLipsync() : base()
@@ -16,18 +18,15 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             Name = "Setup Lipsync";
             Description = "Sets up lipsync on your avatar";
             CategoryName = "Avatar";
+            GameConfigurationString = "VRChat";
         }   
 
-        public override bool Execute(GameObject avatar)
+        public override bool Execute(GameObject target)
         {
-            if(!avatar)
-            {
-                //Debug.LogError("No avatar selected");
-                AvatarTools.Log("No avatar selected", avatar);
+            if(!Prepare(target))
                 return false;
-            }            
 
-            var descriptor = avatar.GetOrAddComponent<VRCSDK2.VRC_AvatarDescriptor>();
+            var descriptor = target.GetOrAddComponent<VRCSDK2.VRC_AvatarDescriptor>();
 
             //Get required viseme names from the visemes enum and remove last entry called "Count"
             var requiredVisemes = Enum.GetNames(typeof(VRCSDK2.VRC_AvatarDescriptor.Viseme)).ToList();
@@ -36,7 +35,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             if(descriptor.VisemeBlendShapes == null || descriptor.VisemeBlendShapes.Length != requiredVisemes.Count)            
                 descriptor.VisemeBlendShapes = new string[requiredVisemes.Count];            
 
-            var renders = avatar.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
             bool foundShape = false;            
 
             //Look for a renderer with one matching viseme and asign it as the face mesh renderer 
@@ -79,7 +78,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
                 }
                 else
                 {
-                    var anim = avatar.GetComponent<Animator>();
+                    var anim = target.GetComponent<Animator>();
                     if(anim && anim.isHuman)
                     {
                         var jaw = anim.GetBoneTransform(HumanBodyBones.Jaw);

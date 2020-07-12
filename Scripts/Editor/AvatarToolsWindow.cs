@@ -1,6 +1,7 @@
 ﻿using Pumkin.AvatarTools.Implementation.Tools;
 using Pumkin.AvatarTools.Implementation.Tools.SubTools;
 using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +10,7 @@ namespace Pumkin.AvatarTools
 {
     class AvatarToolsWindow : EditorWindow
     {
-        static List<IMainMenuModule> MainMenuModules = new List<IMainMenuModule>();
+        MainUI UI;
 
         [MenuItem("Pumkin/Avatar Tools", false, 0)]
         public static void ShowWindow()
@@ -24,18 +25,7 @@ namespace Pumkin.AvatarTools
 
         void OnEnable()
         {
-            MainMenuModules = new List<IMainMenuModule>()
-            {
-                new ToolsModule
-                (
-                    new List<ISubTool>()
-                    {
-                        new SetupLipsync(),
-                        new ResetPose(),
-                        new RevertBlendshapes(),
-                    }
-                )
-            };
+            UI = UIBuilder.BuildUI();            
         }
 
         private void OnGUI()
@@ -45,11 +35,20 @@ namespace Pumkin.AvatarTools
             AvatarTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", AvatarTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
             
             EditorGUILayout.Space();
+
+            if(UI != null)
+                UI.Draw();
+
+            EditorGUILayout.Space();
+
+            if(GUILayout.Button("Remove reset pose"))
+                UI.FindModule("tools")?.SubTools.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
             
-            foreach(var mod in MainMenuModules)
-            {
-                mod.Draw();
-            }
+            if(GUILayout.Button("Remove tools module"))
+                UI.RemoveModule("tools");
+            
+            if(GUILayout.Button("Build UI"))
+                UI = UIBuilder.BuildUI();
         }
     }
 }

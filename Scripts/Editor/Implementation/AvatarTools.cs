@@ -9,6 +9,9 @@ namespace Pumkin.AvatarTools
 {
     static class AvatarTools
     {
+        public enum GameConfiguration { Generic, VRChat }
+
+        public static GameConfiguration Configuration = AvatarTools.GameConfiguration.VRChat;
         public static GameObject SelectedAvatar { get; set; }
         public static ILogHandler LogHandler { get; set; } = new Implementation.Logging.LogHandler();
 
