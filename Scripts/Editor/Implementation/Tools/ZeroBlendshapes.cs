@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Implementation.Tools
 {
-    [AllowAutoLoad]
+    [AllowAutoLoad]    
     class ZeroBlendshapes : SubToolBase
     {
         public ZeroBlendshapes()
         {
             Name = "Zero Blendshapes";
             Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0";
-            CategoryName = "avatar";
+            ParentModuleID = "main_tools";            
         }
 
         public override bool Execute(GameObject target)

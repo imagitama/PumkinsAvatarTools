@@ -17,7 +17,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         {
             Name = "Setup Lipsync";
             Description = "Sets up lipsync on your avatar";
-            CategoryName = "Avatar";
+            ParentModuleID = "main_tools";
             GameConfigurationString = "VRChat";
         }   
 

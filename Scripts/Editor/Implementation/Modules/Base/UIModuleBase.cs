@@ -8,18 +8,17 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
     abstract class UIModuleBase : IUIModule
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public string GameConfigurationString { get; set; }
-        public List<ISubTool> SubTools { get; set; }        
         public bool IsExpanded { get; set; }
-
-        GUIContent _content;
-        GUIContent Content
+        public List<IUIModule> ChildModules { get; set; }
+        public List<ISubTool> SubTools { get; set; }
+        public GUIContent LabelContent
         {
             get
             {
@@ -29,14 +28,21 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             {
                 _content = value;
             }
-        }
+        }       
+        public string ParentModuleID { get; set; }
+        public int OrderInUI { get; set; }
+
+        protected GUIContent _content;
 
         public UIModuleBase()
         {
             Name = "Generic Module";
-            Description = "A generic module";
+            Description = "A generic module";            
             GameConfigurationString = "generic";
             IsExpanded = false;
+            
+            SubTools = new List<ISubTool>();
+            ChildModules = new List<IUIModule>();
         }
 
         public virtual void Draw()
@@ -46,13 +52,10 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             if(IsExpanded)
             {
                 foreach(var tool in SubTools)
-                {
-                    if(tool != null)
-                        tool.DrawUI();
-                    else
-                        Debug.Log($"{tool} is null");
+                    tool?.DrawUI();
 
-                }
+                foreach(var child in ChildModules)
+                    child?.Draw();                
             }
         }
     }

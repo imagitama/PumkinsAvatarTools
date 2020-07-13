@@ -4,16 +4,16 @@ using Pumkin.AvatarTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Pumkin.AvatarTools.Implementation.Tools
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
     [AllowAutoLoad]
+    [ModuleID("main_tools")]
     class ToolsModule : UIModuleBase
-    {   
-        public ToolsModule(List<ISubTool> tools)
+    {
+        public ToolsModule()
         {
             Name = "Tools";
             Description = "Various tools";
-            SubTools = tools;
-        }
+        }          
     }
 }

@@ -10,7 +10,7 @@ namespace Pumkin.AvatarTools
 {
     class AvatarToolsWindow : EditorWindow
     {
-        MainUI UI;
+        public static MainUI UI { get; set; }
 
         [MenuItem("Pumkin/Avatar Tools", false, 0)]
         public static void ShowWindow()
@@ -40,15 +40,6 @@ namespace Pumkin.AvatarTools
                 UI.Draw();
 
             EditorGUILayout.Space();
-
-            if(GUILayout.Button("Remove reset pose"))
-                UI.FindModule("tools")?.SubTools.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
-            
-            if(GUILayout.Button("Remove tools module"))
-                UI.RemoveModule("tools");
-            
-            if(GUILayout.Button("Build UI"))
-                UI = UIBuilder.BuildUI();
         }
     }
 }

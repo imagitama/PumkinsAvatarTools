@@ -8,7 +8,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string CategoryName { get; set; }
+        public string ParentModuleID { get; set; }
         public string GameConfigurationString { get; set; }
         public bool AllowUpdate
         {
@@ -45,7 +45,8 @@ namespace Pumkin.AvatarTools.Implementation.Tools
                 _content = value;
             }
         }
-    
+
+        public int OrderInUI { get; set; }
 
         EditorApplication.CallbackFunction updateCallback;
 
@@ -53,8 +54,9 @@ namespace Pumkin.AvatarTools.Implementation.Tools
         {
             Name = "Base Tool";
             Description = "Base tool description";
-            CategoryName = "uncategorized";
+            ParentModuleID = "";
             GameConfigurationString = "generic";
+            OrderInUI = 0;
         }
 
         void SetupUpdateCallback()
@@ -71,7 +73,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
         {
             Name = name;
             Description = description;
-            CategoryName = category;
+            ParentModuleID = category;
         }
 
         public virtual void DrawUI()

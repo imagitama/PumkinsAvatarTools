@@ -16,7 +16,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         {
             Name = "Reset Transforms";
             Description = "Resets the location, rotation and scale of your avatar";
-            CategoryName = "pose stuff";
+            ParentModuleID = "main_tools";
         }
 
         public override bool Prepare(GameObject target)

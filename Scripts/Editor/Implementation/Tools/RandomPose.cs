@@ -1,4 +1,5 @@
 ﻿using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Implementation.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         {
             Name = "Random Pose";
             Description = "Set a random pose for testing";
-            CategoryName = "debug";
+            ParentModuleID = "main_tools";
         }
 
         public override bool Execute(GameObject target)

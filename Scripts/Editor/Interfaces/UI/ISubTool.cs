@@ -20,9 +20,9 @@ namespace Pumkin.AvatarTools.Interfaces
         string Description { get; set; }
 
         /// <summary>
-        /// The category name of the tool. Used to group tools in the UI.
+        /// The ID of the parent module this tool should be put into.
         /// </summary>
-        string CategoryName { get; set; }
+        string ParentModuleID { get; set; }
 
         /// <summary>
         /// Name of the game configuration to look for. Must match a value in AvatarTools.GameConfiguration enum.
@@ -30,7 +30,15 @@ namespace Pumkin.AvatarTools.Interfaces
         /// </summary>
         string GameConfigurationString { get; set; }
 
+        /// <summary>
+        /// Whether or not to allow Update() to run
+        /// </summary>
         bool AllowUpdate { get; set; }
+
+        /// <summary>
+        /// The order of which this will tool will be drawn in the UI
+        /// </summary>
+        int OrderInUI { get; set; }
 
         /// <summary>
         /// Draws the UI
