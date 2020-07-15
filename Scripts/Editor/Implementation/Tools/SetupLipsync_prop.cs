@@ -49,7 +49,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         Type _vrcDescriptorType;
         Type _lipSyncStyleEnumType;
 
-        public SetupLipsync_prop()pro
+        public SetupLipsync_prop()
         {
             Name = "Setup Lipsync Properties";
             Description = "Sets up lipsync on your avatar. Doesn't need the VRChat SDK to be in the project to compile";
