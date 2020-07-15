@@ -23,10 +23,10 @@ namespace Pumkin.AvatarTools.UI
             List<IUIModule> modules = new List<IUIModule>();
 
             //Get all types implementing IUIModule that have the AllowAutoLoad attribute
-            typeCache = TypeHelpers.GetTypesWithAttribute<AllowAutoLoadAttribute>();            
+            typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>();            
             
             var moduleTypes = TypeHelpers.GetChildTypesOf<IUIModule>()
-                ?.Where(t => t.IsDefined(typeof(AllowAutoLoadAttribute))) ?? null;
+                ?.Where(t => t.IsDefined(typeof(AutoLoadAttribute))) ?? null;
 
             //Instantiate modules from typeCache
             foreach(var t in moduleTypes)

@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AllowAutoLoad]
+    [AutoLoad]
     [ModuleID("main_tools")]
     class ToolsModule : UIModuleBase
     {
@@ -14,6 +14,6 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         {
             Name = "Tools";
             Description = "Various tools";
-        }          
+        }
     }
 }

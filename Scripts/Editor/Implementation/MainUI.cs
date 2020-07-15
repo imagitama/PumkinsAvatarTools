@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.UI
@@ -22,9 +23,14 @@ namespace Pumkin.AvatarTools.UI
             foreach(var mod in UIModules)
             {
                 if(mod != null)
+                {
                     mod.Draw();
+                    EditorGUILayout.Space();
+                }
                 else
+                {
                     Debug.Log($"{mod} is null");
+                }
             }
         }
 

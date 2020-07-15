@@ -18,11 +18,8 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             ParentModuleID = "main_tools";
         }
 
-        public override bool Execute(GameObject target)
+        public override bool DoAction(GameObject target)
         {
-            if(!Prepare(target))
-                return false;
-
             var rng = new System.Random();
             int range = 5;
 

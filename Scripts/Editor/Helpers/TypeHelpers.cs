@@ -21,7 +21,7 @@ namespace Pumkin.AvatarTools.Helpers
                 return type;
             foreach(var a in AppDomain.CurrentDomain.GetAssemblies())
             {
-                type = a.GetType(typeName);
+                type = a.GetType(typeName, false, true);
                 if(type != null)
                     return type;
             }

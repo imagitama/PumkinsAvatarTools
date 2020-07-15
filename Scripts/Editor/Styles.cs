@@ -10,14 +10,17 @@ namespace Pumkin.AvatarTools.UI
 {
     static class Styles
     {
-        public static GUIStyle MenuDropdown { get; set; }
-        public static GUIStyle Foldout { get; set; }
+        public static GUIStyle MenuFoldout { get; set; }        
 
         static Styles()
         {
             //EditorStyles
-            MenuDropdown = new GUIStyle("ShurikenDropdown");
-            Foldout = EditorStyles.foldout;            
+            MenuFoldout = new GUIStyle("foldout")
+            {
+                fontSize = 14,
+                alignment = TextAnchor.MiddleLeft,
+                fontStyle = FontStyle.Bold                
+            };                        
         }
     }
 }

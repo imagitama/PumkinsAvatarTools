@@ -23,7 +23,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
             string id = module.GetType().GetCustomAttribute<ModuleIDAttribute>()?.ID ?? null;            
             if(!string.IsNullOrEmpty(id) && IDCache.TryGetValue(id, out _))
             {
-                Debug.Log($"Module with ID {id} was already created");
+                Debug.Log($"Module with ID {id} has already been created");
                 return false;
             }
 

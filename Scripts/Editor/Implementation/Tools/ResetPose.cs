@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
 {
-    [AllowAutoLoad]
+    [AutoLoad]
     class ResetPose : SubToolBase
     {
         public ResetPose()
@@ -32,11 +32,8 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             return true;
         }
 
-        public override bool Execute(GameObject target)
+        public override bool DoAction(GameObject target)
         {
-            if(!Prepare(target))
-                return false;
-
             foreach(var t in target.GetComponentsInChildren<Transform>())
             {
                 if(t == t.root) 

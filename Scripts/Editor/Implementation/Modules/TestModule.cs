@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AllowAutoLoad]
+    [AutoLoad]
     [ModuleID("main_test")]
     class TestModule : UIModuleBase
     {        
@@ -18,7 +18,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         {
             Name = "Test Module";
             Description = "Debug and test stuff";
-            OrderInUI = 100;
+            OrderInUI = 100;            
         }
 
         public override void Draw()

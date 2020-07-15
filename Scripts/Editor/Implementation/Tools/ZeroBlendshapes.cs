@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Implementation.Tools
 {
-    [AllowAutoLoad]    
+    [AutoLoad]    
     class ZeroBlendshapes : SubToolBase
     {
         public ZeroBlendshapes()
@@ -18,19 +19,16 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             ParentModuleID = "main_tools";            
         }
 
-        public override bool Execute(GameObject target)
+        public override bool DoAction(GameObject target)
         {
-            if(!Prepare(target))
-                return false;
-
-            foreach(var render in target.GetComponentsInChildren<SkinnedMeshRenderer>(true))
-            {
-                if(!render || !render.sharedMesh)
-                    continue;
-                
-                for(int i = 0; i < render.sharedMesh.blendShapeCount; i++)                
-                    render.SetBlendShapeWeight(i, 0);                
-            }
+            var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+            var so = new SerializedObject(renders);
+            var weights = so.FindProperty("m_BlendShapeWeights");
+            
+            for(int i = 0; i < weights.arraySize; i++)
+                weights.GetArrayElementAtIndex(i).floatValue = 0;
+            
+            so.ApplyModifiedPropertiesWithoutUndo();
             return true;
         }
     }

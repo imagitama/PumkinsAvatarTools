@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Pumkin.AvatarTools.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    class AllowAutoLoadAttribute : Attribute
+    class AutoLoadAttribute : Attribute
     {        
 
     }

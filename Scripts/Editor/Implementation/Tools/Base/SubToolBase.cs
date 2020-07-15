@@ -1,4 +1,5 @@
 ﻿using Pumkin.AvatarTools.Interfaces;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -79,7 +80,24 @@ namespace Pumkin.AvatarTools.Implementation.Tools
         public virtual void DrawUI()
         {
             if(GUILayout.Button(Content))
-                Execute(AvatarTools.SelectedAvatar);            
+                TryExecute(AvatarTools.SelectedAvatar);            
+        }
+
+        public bool TryExecute(GameObject target)
+        {
+            try
+            {
+                if(Prepare(target) && DoAction(target))
+                {
+                    Finish(target);
+                    return true;
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.LogException(e);
+            }
+            return false;
         }
 
         public virtual bool Prepare(GameObject target)
@@ -96,16 +114,19 @@ namespace Pumkin.AvatarTools.Implementation.Tools
                 PrefabUtility.RecordPrefabInstancePropertyModifications(target);
 
             return true;
+        }        
+
+        public abstract bool DoAction(GameObject target);
+
+        public virtual void Finish(GameObject target)
+        {
+            Debug.Log($"{Name} completed successfully.");
         }
 
         public virtual void Update()
         {
             if(!AllowUpdate)
-                return;            
+                return;
         }
-
-        public abstract bool Execute(GameObject target);
-        
-        //public abstract void Finalize(GameObject target);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Pumkin.AvatarTools.Interfaces;
+﻿using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
@@ -47,16 +48,19 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
         public virtual void Draw()
         {
-            IsExpanded = EditorGUILayout.Toggle(new GUIContent(Name, Description), IsExpanded);
+            //GUILayout.BeginArea(rect, GUI.skin.box);            
+            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);
 
             if(IsExpanded)
             {
                 foreach(var tool in SubTools)
                     tool?.DrawUI();
 
+                EditorGUILayout.Space();
+
                 foreach(var child in ChildModules)
-                    child?.Draw();                
-            }
+                    child?.Draw();
+            }            
         }
     }
 }

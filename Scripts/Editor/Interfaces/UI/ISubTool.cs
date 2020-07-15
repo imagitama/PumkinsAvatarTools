@@ -46,20 +46,31 @@ namespace Pumkin.AvatarTools.Interfaces
         void DrawUI();
 
         /// <summary>
-        /// Executes the tool functionality
+        /// Calls Prepare() => DoAction() => Finish()
+        /// </summary>
+        /// <param name="target">Target GameObject</param>
+        /// <returns>True if everything succeeded</returns>
+        bool TryExecute(GameObject target);
+
+        /// <summary>
+        /// Checks whether we should call DoAction()
+        /// </summary>
+        /// <param name="target">Target GameObject</param>
+        /// <returns>True if succeded</returns>
+        bool Prepare(GameObject target);
+
+        /// <summary>
+        /// Runs the main action of the tool
         /// </summary>
         /// <param name="target">Target GameObject</param>
         /// <returns>True if succeeded</returns>
-        bool Execute(GameObject target);
-
+        bool DoAction(GameObject target);
+        
         /// <summary>
-        /// Runs before Execute
+        /// Runs after DoAction() completes
         /// </summary>
-        /// <param name="target">Target GameObject</param>
-        /// <returns>True if succeded, used to check if we should call Execute()</returns>
-        bool Prepare(GameObject target);
-                
-        //void Finalize(GameObject target);
+        /// <param name="target"></param>
+        void Finish(GameObject target);
         
         /// <summary>
         /// Runs every editor update, used when tool still needs to do stuff when it's UI isn't being drawing
