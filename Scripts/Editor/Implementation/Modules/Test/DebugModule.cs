@@ -1,5 +1,5 @@
-﻿using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.UI;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,29 +8,21 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Modules
-{
-    [AutoLoad]
-    [ModuleID("main_test")]
-    class TestModule : UIModuleBase
+namespace Pumkin.UnityTools.Implementation.Modules
+{    
+    [AutoLoad("test")]
+    class DebugModule : UIModuleBase
     {        
-        public TestModule()
+        public DebugModule()
         {
-            Name = "Test Module";
+            Name = "Debug";
             Description = "Debug and test stuff";
             OrderInUI = 100;            
         }
 
-        public override void Draw()
+        public override void DrawContent()
         {
-            base.Draw();
-
-            if(!IsExpanded)
-                return;
-
-            EditorGUILayout.LabelField("This is the test module!");
-
-            EditorGUILayout.Space();
+            base.DrawContent();
 
             if(GUILayout.Button("Remove reset transforms from tools"))
                 AvatarToolsWindow.UI.FindModule("tools")?.SubTools.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
@@ -39,7 +31,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
                 AvatarToolsWindow.UI.RemoveModule("tools");
 
             if(GUILayout.Button("Build UI"))
-                AvatarToolsWindow.UI = UIBuilder.BuildUI();
+                AvatarToolsWindow.UI = UIBuilder.BuildUI();            
         }
     }
 }

@@ -1,12 +1,12 @@
-﻿using Pumkin.AvatarTools.Implementation.Tools;
-using Pumkin.AvatarTools.Implementation.Tools.SubTools;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.UI;
+﻿using Pumkin.UnityTools.Implementation.Tools;
+using Pumkin.UnityTools.Implementation.Tools.SubTools;
+using Pumkin.UnityTools.Interfaces;
+using Pumkin.UnityTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools
+namespace Pumkin.UnityTools
 {
     class AvatarToolsWindow : EditorWindow
     {
@@ -30,16 +30,8 @@ namespace Pumkin.AvatarTools
 
         private void OnGUI()
         {
-            EditorGUILayout.Space();
-
-            AvatarTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", AvatarTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
-            
-            EditorGUILayout.Space();
-
             if(UI != null)
-                UI.Draw();
-
-            EditorGUILayout.Space();
+                UI.Draw();            
         }
     }
 }

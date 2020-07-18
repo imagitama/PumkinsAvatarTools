@@ -1,4 +1,4 @@
-﻿using Pumkin.AvatarTools.Attributes;
+﻿using Pumkin.UnityTools.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad]
-    class ResetPose : SubToolBase
+    [AutoLoad("tools_resettransforms", "tools")]
+    class ResetTransforms : SubToolBase
     {
-        public ResetPose()
+        public ResetTransforms()
         {
             Name = "Reset Transforms";
-            Description = "Resets the location, rotation and scale of your avatar";
-            ParentModuleID = "main_tools";
+            Description = "Resets the location, rotation and scale of your avatar";            
         }
 
         public override bool Prepare(GameObject target)

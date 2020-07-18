@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.UI
+namespace Pumkin.UnityTools.UI
 {
     static class Styles
     {
-        public static GUIStyle MenuFoldout { get; set; }        
+        public static GUIStyle MenuFoldout { get; private set; }
+        public static GUIStyle TitleLabel { get; private set; }
+        public static GUIStyle EditorLine { get; private set; }
 
         static Styles()
         {
@@ -19,8 +21,22 @@ namespace Pumkin.AvatarTools.UI
             {
                 fontSize = 14,
                 alignment = TextAnchor.MiddleLeft,
-                fontStyle = FontStyle.Bold                
-            };                        
+                fontStyle = FontStyle.Bold
+            };
+
+            TitleLabel = new GUIStyle("label")
+            {
+                fontSize = 16,
+                stretchHeight = true,
+                fixedHeight = 24,
+            };
+
+            EditorLine = new GUIStyle("box")
+            {
+                border = new RectOffset(1, 1, 1, 1),
+                margin = new RectOffset(5, 5, 1, 1),
+                padding = new RectOffset(1, 1, 1, 1),
+            };
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.Helpers;
-using Pumkin.AvatarTools.Interfaces;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Helpers;
+using Pumkin.UnityTools.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,31 +9,35 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Modules
+namespace Pumkin.UnityTools.Implementation.Modules
 {
     static class ModuleIDManager
     {
         static Dictionary<string, IUIModule> IDCache = new Dictionary<string, IUIModule>();
-
+        
         public static bool RegisterModule(IUIModule module)
         {
             if(module == null)
                 return false;
-
-            string id = module.GetType().GetCustomAttribute<ModuleIDAttribute>()?.ID ?? null;            
-            if(!string.IsNullOrEmpty(id) && IDCache.TryGetValue(id, out _))
+            var typ = module.GetType();
+            var attr = typ.GetCustomAttribute<AutoLoadAttribute>();
+            
+            //var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>() ?? null;
+            if(attr != null && IDCache.TryGetValue(attr.ID.ToUpperInvariant(), out _))
             {
-                Debug.Log($"Module with ID {id} has already been created");
+                Debug.LogWarning($"Module with ID '{attr.ID}' has already been created");
                 return false;
             }
 
-            IDCache.Add(id, module);
+            IDCache.Add(attr.ID.ToUpper(), module);
             return true;
         }
 
         public static IUIModule GetModule(string moduleID)
         {
-            IDCache.TryGetValue(moduleID, out IUIModule value);
+            if(moduleID == null)
+                moduleID = "";
+            IDCache.TryGetValue(moduleID.ToUpperInvariant(), out IUIModule value);
             return value;
         }
 

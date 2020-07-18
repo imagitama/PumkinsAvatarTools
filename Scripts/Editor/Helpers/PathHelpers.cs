@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Helpers
+namespace Pumkin.UnityTools.Helpers
 {
     public static class PathHelpers
     {

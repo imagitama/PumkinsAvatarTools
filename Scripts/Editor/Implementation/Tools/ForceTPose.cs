@@ -1,4 +1,4 @@
-﻿using Pumkin.AvatarTools.Attributes;
+﻿using Pumkin.UnityTools.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad]    
+    [AutoLoad("tools_tpose", "tools")]
     class ForceTPose : SubToolBase
     {
         readonly float[] TPOSE_MUSCLES =
@@ -26,8 +26,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         public ForceTPose()
         {
             Name = "Force T-Pose";
-            Description = "Sets your humanoid avatar into a T-Pose";
-            ParentModuleID = "main_tools";
+            Description = "Sets your humanoid avatar into a T-Pose";            
         }
 
         public override bool Prepare(GameObject target)
@@ -37,7 +36,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
                 var anim = target.GetComponent<Animator>(); //Check if target is humanoid
                 if(anim == null || !anim.isHuman)
                 {
-                    Debug.LogError($"{target.name} is not humanoid");
+                    Debug.LogError($"'{target.name}' is not humanoid");
                     return false;
                 }
                 return true;

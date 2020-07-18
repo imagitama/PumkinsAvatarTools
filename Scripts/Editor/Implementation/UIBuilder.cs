@@ -4,75 +4,87 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Pumkin.AvatarTools;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.Attributes;
+using Pumkin.UnityTools;
+using Pumkin.UnityTools.Interfaces;
+using Pumkin.UnityTools.Attributes;
 using UnityEngine;
-using Pumkin.AvatarTools.Helpers;
-using Pumkin.AvatarTools.Implementation.Modules;
+using Pumkin.UnityTools.Helpers;
+using Pumkin.UnityTools.Implementation.Modules;
 
-namespace Pumkin.AvatarTools.UI
+namespace Pumkin.UnityTools.UI
 {
     static class UIBuilder
     {
-        static IEnumerable<Type> typeCache;
-
+        static List<Type> typeCache;
+        static List<Type> subToolTypeCache;
+        static List<Type> moduleTypeCache;
+        
         public static MainUI BuildUI()
         {
+            MainUI UI = new MainUI();
             ModuleIDManager.ClearCache();
-            List<IUIModule> modules = new List<IUIModule>();
 
-            //Get all types implementing IUIModule that have the AllowAutoLoad attribute
-            typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>();            
+            RefreshCachedTypes();
             
-            var moduleTypes = TypeHelpers.GetChildTypesOf<IUIModule>()
-                ?.Where(t => t.IsDefined(typeof(AutoLoadAttribute))) ?? null;
-
-            //Instantiate modules from typeCache
-            foreach(var t in moduleTypes)
+            //Build modules from typeCache
+            foreach(var t in moduleTypeCache)
             {
                 var mod = BuildModule(t);
                 if(mod != null)
-                    modules.Add(mod);
+                    UI.UIModules.Add(mod);
             }
 
             //Assign child modules to their parents
-            for(int i = modules.Count - 1; i >= 0; i--)
+            for(int i = UI.UIModules.Count - 1; i >= 0; i--)
             {
-                if(string.IsNullOrEmpty(modules[i].ParentModuleID))
+                var attr = UI.UIModules[i].GetType().GetCustomAttribute<AutoLoadAttribute>();
+                if(string.IsNullOrEmpty(attr?.ParentModuleID))
                     continue;
 
-                if(AssignToParent(modules[i]))
-                    modules.RemoveAt(i);
-            }            
+                if(AssignToParent(UI.UIModules[i]))
+                    UI.UIModules.RemoveAt(i);
+            }
 
-            return new MainUI(modules.OrderBy(c => c.OrderInUI).ToList());
+            //Create and assign subtools that don't belong to any modules
+            foreach(var type in subToolTypeCache)
+            {
+                var attr = type.GetCustomAttribute<AutoLoadAttribute>();
+                if(string.IsNullOrEmpty(attr.ParentModuleID))
+                {
+                    var tool = Activator.CreateInstance(type) as ISubTool;
+                    if(tool != null)
+                        UI.OrphanHolder.SubTools.Add(tool);
+                }                
+            }
+                        
+            UI.OrderModules();
+            return UI;
         }        
 
         public static IUIModule BuildModule<T>() where T : IUIModule
         {
             return BuildModule(typeof(T));
-        }
-        
-        public static IUIModule BuildModule(Type t)
+        }        
+
+        public static IUIModule BuildModule(Type moduleType)
         {
             var tools = new List<ISubTool>();            
-            
-            var types = TypeHelpers.GetChildTypesOf<ISubTool>(typeCache);
-            var module = Activator.CreateInstance(t) as IUIModule;
+            var module = Activator.CreateInstance(moduleType) as IUIModule;
 
-            var attr = module.GetType().GetCustomAttribute<ModuleIDAttribute>(false);
-            if(attr == null || string.IsNullOrEmpty(attr.ID))
+            var modAttr = module.GetType().GetCustomAttribute<AutoLoadAttribute>(false);
+            if(string.IsNullOrEmpty(modAttr?.ID))
             {
-                Debug.Log($"Module {t.Name} has no or empty ModuleID attribute.");
+                Debug.LogError($"Module '{moduleType.Name}' has no or empty ModuleID attribute.");
                 return null;
-            }            
+            }
 
-            foreach(var tool in types)
-            {
-                var toolInst = Activator.CreateInstance(tool) as ISubTool;
-                if(toolInst.ParentModuleID.Equals(attr.ID, StringComparison.InvariantCultureIgnoreCase))
-                    tools.Add(toolInst);
+            //Loop through tools whose ParentID matches our ID and assign them to our module
+            var childToolTypes = subToolTypeCache.Where(t => t.GetCustomAttribute<AutoLoadAttribute>()?.ParentModuleID == modAttr.ID);
+            foreach(var toolType in childToolTypes)
+            {                
+                var toolInst = Activator.CreateInstance(toolType) as ISubTool;
+                if(toolInst != null)
+                    tools.Add(toolInst);                   
             }
 
             module.SubTools = tools.OrderBy(x => x.OrderInUI).ToList();
@@ -84,15 +96,20 @@ namespace Pumkin.AvatarTools.UI
 
         public static bool AssignToParent(IUIModule module)
         {
-            if(string.IsNullOrEmpty(module.ParentModuleID))
-                return false;
-
-            var parent = ModuleIDManager.GetModule(module.ParentModuleID);
+            var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>();            
+            var parent = ModuleIDManager.GetModule(attr?.ParentModuleID);
             if(parent == null)
                 return false;
 
             parent.ChildModules.Add(module);
             return true;
-        }        
+        }
+
+        public static void RefreshCachedTypes()
+        {
+            typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>()?.ToList();
+            subToolTypeCache = TypeHelpers.GetChildTypesOf<ISubTool>(typeCache)?.ToList();
+            moduleTypeCache = TypeHelpers.GetChildTypesOf<IUIModule>(typeCache)?.ToList();
+        }
     }
 }

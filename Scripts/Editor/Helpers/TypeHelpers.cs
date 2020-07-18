@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.AvatarTools.Helpers
+namespace Pumkin.UnityTools.Helpers
 {
     class TypeHelpers
     {
@@ -29,7 +29,7 @@ namespace Pumkin.AvatarTools.Helpers
         }
 
         /// <summary>
-        /// Gets all instantiatable types that derive from T, from all assemblies
+        /// Gets all instantiatable types that derive from <typeparamref name="T"/>, from all assemblies
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -38,19 +38,57 @@ namespace Pumkin.AvatarTools.Helpers
             return GetChildTypesOf<T>(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        public static IEnumerable<Type> GetChildTypesOf<T>(IEnumerable<Type> types)
-        {
-            return types?.Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract) ?? null;
-        }
-
         /// <summary>
-        /// Gets all instantiatable types that derive from T, from given assemblies
+        /// Gets all instantiatable types that derive from <typeparamref name="T"/>, from given assemblies
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public static IEnumerable<Type> GetChildTypesOf<T>(params Assembly[] assemblies)
         {
             return GetChildTypesOf<T>(assemblies?.SelectMany(x => x.GetTypes()));            
+        }
+
+        /// <summary>
+        /// Gets all instantiatable types that derive from <typeparamref name="T"/>, from a IEnumerable of types
+        /// </summary>
+        /// <typeparam name="T">Type to search for children of</typeparam>
+        /// <param name="types">Types to search in</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetChildTypesOf<T>(IEnumerable<Type> types)
+        {
+            return types?.Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract) ?? null;
+        }
+
+        /// <summary>
+        /// Gets all instantiatable types that derive from <paramref name="type"/>, from all assemblies
+        /// </summary>
+        /// <param name="type">Type to search for children of</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetChildTypesOf(Type type)
+        {
+            return GetChildTypesOf(type, AppDomain.CurrentDomain.GetAssemblies());
+        }
+
+        /// <summary>
+        /// Gets all instantiatable types that derive from T, from given assemblies
+        /// </summary>
+        /// <param name="type">Type to search for children of</param>
+        /// <param name="assemblies">Assemblies to search in</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetChildTypesOf(Type type, params Assembly[] assemblies)
+        {
+            return GetChildTypesOf(type, assemblies?.SelectMany(x => x.GetTypes()));
+        }
+
+        /// <summary>
+        /// Gets all instantiatable types that derive from <paramref name="type"/>, from <paramref name="types"/>
+        /// </summary>
+        /// <param name="type">Type to search for children of</param>
+        /// <param name="types">Types to search in</param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetChildTypesOf(Type type, IEnumerable<Type> types)
+        {
+            return types?.Where(x => type.IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract) ?? null;
         }
 
         /// <summary>

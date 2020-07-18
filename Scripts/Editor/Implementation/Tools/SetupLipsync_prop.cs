@@ -1,5 +1,5 @@
-﻿using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.Helpers;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad]
+    [AutoLoad("tools_lipsync", "tools")]
     class SetupLipsync_prop : SubToolBase
     {
 
@@ -52,8 +52,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         public SetupLipsync_prop()
         {
             Name = "Setup Lipsync Properties";
-            Description = "Sets up lipsync on your avatar. Doesn't need the VRChat SDK to be in the project to compile";
-            ParentModuleID = "main_tools";
+            Description = "Sets up lipsync on your avatar. Doesn't need the VRChat SDK to be in the project to compile";            
         }
 
         public override bool DoAction(GameObject target)

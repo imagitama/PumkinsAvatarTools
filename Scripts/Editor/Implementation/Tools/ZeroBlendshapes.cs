@@ -1,4 +1,4 @@
-﻿using Pumkin.AvatarTools.Attributes;
+﻿using Pumkin.UnityTools.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,16 +7,15 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools
+namespace Pumkin.UnityTools.Implementation.Tools
 {
-    [AutoLoad]    
+    [AutoLoad("tools_zeroblendshapes")]
     class ZeroBlendshapes : SubToolBase
     {
         public ZeroBlendshapes()
         {
             Name = "Zero Blendshapes";
-            Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0";
-            ParentModuleID = "main_tools";            
+            Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0";            
         }
 
         public override bool DoAction(GameObject target)

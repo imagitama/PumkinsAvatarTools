@@ -1,5 +1,5 @@
-﻿using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.Implementation.Modules;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Implementation.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {    
+    [AutoLoad("tools_randompose")]
     class RandomPose : SubToolBase
     {
         public RandomPose()
         {
             Name = "Random Pose";
-            Description = "Set a random pose for testing";
-            ParentModuleID = "main_tools";
+            Description = "Set a random pose for testing";            
         }
 
         public override bool DoAction(GameObject target)

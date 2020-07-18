@@ -1,19 +1,19 @@
-﻿using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.UI;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Interfaces;
+using Pumkin.UnityTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Pumkin.AvatarTools.Implementation.Modules
+namespace Pumkin.UnityTools.Implementation.Modules
 {
-    [AutoLoad]
-    [ModuleID("main_tools")]
+    [AutoLoad("tools")]
     class ToolsModule : UIModuleBase
     {
         public ToolsModule()
         {
             Name = "Tools";
             Description = "Various tools";
+            OrderInUI = 1;
         }
     }
 }

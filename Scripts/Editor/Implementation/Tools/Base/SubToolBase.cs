@@ -1,15 +1,14 @@
-﻿using Pumkin.AvatarTools.Interfaces;
+﻿using Pumkin.UnityTools.Interfaces;
 using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Implementation.Tools
+namespace Pumkin.UnityTools.Implementation.Tools
 {
     abstract class SubToolBase : ISubTool
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public string ParentModuleID { get; set; }
+        public string Description { get; set; }        
         public string GameConfigurationString { get; set; }
         public bool AllowUpdate
         {
@@ -22,20 +21,23 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             {
                 if(_allowUpdate == value)
                     return;
-
-                _allowUpdate = value;
-                if(value)
+                
+                if(_allowUpdate = value)    //Intentional assign + check
+                {
                     SetupUpdateCallback();
+                    EditorApplication.update += updateCallback;
+                }
                 else
-                    updateCallback = null;
-                //EditorApplication.update -= updateCallback;                               
+                {
+                    EditorApplication.update -= updateCallback;
+                }
             }
         }
 
         bool _allowUpdate;
         GUIContent _content;
 
-        GUIContent Content 
+        protected virtual GUIContent Content 
         {
             get
             {
@@ -54,33 +56,30 @@ namespace Pumkin.AvatarTools.Implementation.Tools
         public SubToolBase() 
         {
             Name = "Base Tool";
-            Description = "Base tool description";
-            ParentModuleID = "";
+            Description = "Base tool description";            
             GameConfigurationString = "generic";
             OrderInUI = 0;
         }
 
         void SetupUpdateCallback()
         {
-            if(updateCallback != null)
-                return;
-
-            Debug.Log($"Setting up Update callback for {Name}");
-            updateCallback = new EditorApplication.CallbackFunction(Update);
-            EditorApplication.update += updateCallback;
+            if(updateCallback == null)
+            {
+                Debug.Log($"Setting up Update callback for {Name}");
+                updateCallback = new EditorApplication.CallbackFunction(Update);
+            }            
         }
 
-        public SubToolBase(string name, string description, string category)
+        public SubToolBase(string name, string description)
         {
             Name = name;
-            Description = description;
-            ParentModuleID = category;
+            Description = description;            
         }
 
         public virtual void DrawUI()
         {
             if(GUILayout.Button(Content))
-                TryExecute(AvatarTools.SelectedAvatar);            
+                TryExecute(PumkinTools.SelectedAvatar);            
         }
 
         public bool TryExecute(GameObject target)
