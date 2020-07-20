@@ -12,17 +12,25 @@ namespace Pumkin.UnityTools.UI
     {
         public static GUIStyle MenuFoldout { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
-        public static GUIStyle EditorLine { get; private set; }
+        public static GUIStyle EditorLine { get; private set; }        
 
         static Styles()
         {
-            //EditorStyles
             MenuFoldout = new GUIStyle("foldout")
             {
                 fontSize = 14,
                 alignment = TextAnchor.MiddleLeft,
                 fontStyle = FontStyle.Bold
             };
+
+            //MenuFoldout = new GUIStyle("ToolbarDropDown")
+            //{
+            //    fontSize = 13,
+            //    fixedHeight = 26,
+            //    fontStyle = FontStyle.Bold,
+            //    contentOffset = new Vector2(5f, 0),
+            //    stretchWidth = true
+            //};
 
             TitleLabel = new GUIStyle("label")
             {

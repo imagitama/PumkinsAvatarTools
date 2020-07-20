@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
@@ -22,6 +23,7 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
               -0.4676594f, 0.811684f, 0.8116839f, -0.7706831f, 0.4232127f, 0.6456538f, 0.6362569f, 0.6678051f, -0.4589976f, 0.8116843f, 0.8116842f,
               0.668391f, -0.5737844f, 0.811684f, 0.8116837f, 0.6669571f, -0.6492739f, 0.8116841f, 0.8116843f, 0.6667888f, -0.4676568f, 0.8116842f, 0.8116836f
         };
+        Animator anim;
 
         public ForceTPose()
         {
@@ -29,11 +31,11 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             Description = "Sets your humanoid avatar into a T-Pose";            
         }
 
-        public override bool Prepare(GameObject target)
+        protected override bool Prepare(GameObject target)
         {
             if(base.Prepare(target))
             {
-                var anim = target.GetComponent<Animator>(); //Check if target is humanoid
+                anim = target.GetComponent<Animator>(); //Check if target is humanoid
                 if(anim == null || !anim.isHuman)
                 {
                     Debug.LogError($"'{target.name}' is not humanoid");
@@ -44,10 +46,8 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             return false;
         }
 
-        public override bool DoAction(GameObject target)
+        protected override bool DoAction(GameObject target)
         {
-            var anim = target.GetComponent<Animator>();
-
             Vector3 pos = target.transform.position;
             Quaternion rot = target.transform.rotation;
 
@@ -58,10 +58,34 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             var humanPose = new HumanPose();
             humanPoseHandler.GetHumanPose(ref humanPose);
 
-            //A long time ago CATS used to export avatars with a Armature scale of 100. This caused issues applying poses.
-            //For now we'll just hardcode search for "Armature".
-            //TODO: Find a better way to get the armature and check if it's scale could cause issues when tposing
-            Transform armature = target.transform.Find("Armature");
+            //Find the Armature            
+            Transform armature;
+            if((armature = target.transform.Find("Armature")) == null)
+            {
+                //Get the GUID of the avatar, which should also identify the mesh data, for some reason
+                AssetDatabase.TryGetGUIDAndLocalFileIdentifier(anim.avatar, out string guid, out long _);
+                var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
+                foreach(var ren in renders)
+                {
+                    AssetDatabase.TryGetGUIDAndLocalFileIdentifier(ren.sharedMesh, out string meshGuid, out long _);
+                    if(guid != meshGuid)    //Find the correct SkinnedMeshRenderer by comparing this renderer's mesh to the one our animator is using
+                        continue;
+                                        
+                    if(ren.rootBone != ren.transform.root) //Get the parent of the root bone, which should be the armature if root is hips
+                        armature = ren.rootBone.parent;
+                    else
+                        armature = ren.rootBone;
+                    break;
+                }
+            }
+
+            if(!armature)
+            {
+                Debug.LogError("Can't find armature. Tried searching for 'Armature' and looking through SkinnedMeshRenderers' root bones.");
+                return false;
+            }
+
+            //Change body position.y to prevent sinking too much
             if(!(armature && armature.localScale == Vector3.one))
             {
                 if(humanPose.bodyPosition.y < 1 && !Mathf.Approximately(humanPose.bodyPosition.y, 1))                    

@@ -20,5 +20,7 @@ namespace Pumkin.UnityTools.Interfaces
         bool IsHidden { get; set; }
 
         void Draw();
+
+        void OrderSubTools();
     }
 }

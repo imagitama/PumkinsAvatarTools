@@ -25,13 +25,13 @@ namespace Pumkin.UnityTools
 
         void OnEnable()
         {
-            UI = UIBuilder.BuildUI();            
+            if(!UI)
+                UI = UIBuilder.BuildUI();
         }
 
         private void OnGUI()
-        {
-            if(UI != null)
-                UI.Draw();            
+        {            
+            UI?.Draw();            
         }
     }
 }

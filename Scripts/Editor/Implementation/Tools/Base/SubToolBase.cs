@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Interfaces;
+﻿using Pumkin.UnityTools.Implementation.Settings;
+using Pumkin.UnityTools.Interfaces;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -33,10 +34,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 }
             }
         }
-
-        bool _allowUpdate;
-        GUIContent _content;
-
+        public int OrderInUI { get; set; }
         protected virtual GUIContent Content 
         {
             get
@@ -48,8 +46,11 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 _content = value;
             }
         }
+        public SettingsContainer Settings { get; protected set; }
+        public bool ExpandSettings { get; protected set; }
 
-        public int OrderInUI { get; set; }
+        bool _allowUpdate;
+        GUIContent _content;
 
         EditorApplication.CallbackFunction updateCallback;
 
@@ -59,6 +60,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
             Description = "Base tool description";            
             GameConfigurationString = "generic";
             OrderInUI = 0;
+            Settings = new SettingsContainer();
         }
 
         void SetupUpdateCallback()
@@ -78,10 +80,22 @@ namespace Pumkin.UnityTools.Implementation.Tools
 
         public virtual void DrawUI()
         {
-            if(GUILayout.Button(Content))
-                TryExecute(PumkinTools.SelectedAvatar);            
-        }
+            EditorGUILayout.BeginHorizontal();
+            {
+                if(GUILayout.Button(Content))
+                    TryExecute(PumkinTools.SelectedAvatar);
+                if(Settings.Count > 0 && GUILayout.Button("S", GUILayout.MaxWidth(20)))
+                    ExpandSettings = !ExpandSettings;
+            }
+            EditorGUILayout.EndHorizontal();
 
+            if(ExpandSettings && Settings.Count > 0)
+                foreach(var set in Settings)
+                {
+                    
+                }
+        }
+        
         public bool TryExecute(GameObject target)
         {
             try
@@ -99,7 +113,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
             return false;
         }
 
-        public virtual bool Prepare(GameObject target)
+        protected virtual bool Prepare(GameObject target)
         {
             if(!target)
             {
@@ -115,9 +129,9 @@ namespace Pumkin.UnityTools.Implementation.Tools
             return true;
         }        
 
-        public abstract bool DoAction(GameObject target);
+        protected abstract bool DoAction(GameObject target);
 
-        public virtual void Finish(GameObject target)
+        protected virtual void Finish(GameObject target)
         {
             Debug.Log($"{Name} completed successfully.");
         }

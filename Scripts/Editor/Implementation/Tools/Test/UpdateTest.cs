@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.PumkinsAvatarTools.Scripts.Editor.Implementation.Tools
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
     [AutoLoad("test_update")]
     class UpdateTest : SubToolBase
@@ -16,7 +16,7 @@ namespace Assets.PumkinsAvatarTools.Scripts.Editor.Implementation.Tools
         public UpdateTest()
         {
             Name = "Update Test";
-            AllowUpdate = true;            
+            AllowUpdate = false;            
         }
 
         public override void DrawUI()
@@ -24,9 +24,10 @@ namespace Assets.PumkinsAvatarTools.Scripts.Editor.Implementation.Tools
             AllowUpdate = EditorGUILayout.Toggle(Content, AllowUpdate);            
         }
 
-        public override bool DoAction(GameObject target)
+        protected override bool DoAction(GameObject target)
         {
-            throw new NotImplementedException();
+            Debug.Log("Nothing");
+            return false;
         }
 
         public override void Update()

@@ -54,7 +54,7 @@ namespace Pumkin.UnityTools.UI
                     var tool = Activator.CreateInstance(type) as ISubTool;
                     if(tool != null)
                         UI.OrphanHolder.SubTools.Add(tool);
-                }                
+                }
             }
                         
             UI.OrderModules();
@@ -87,6 +87,7 @@ namespace Pumkin.UnityTools.UI
                     tools.Add(toolInst);                   
             }
 
+            //Order subtools based on their OrderInUI
             module.SubTools = tools.OrderBy(x => x.OrderInUI).ToList();
 
             if(ModuleIDManager.RegisterModule(module))

@@ -73,6 +73,14 @@ namespace Pumkin.UnityTools.Implementation.Modules
             
         }
 
+        public virtual void OrderSubTools()
+        {
+            if(SubTools == null || SubTools.Count == 0)
+                return;
+
+            SubTools = SubTools.OrderBy(t => t.OrderInUI).ToList();
+        }
+
         public static implicit operator bool(UIModuleBase module)
         {
             return !ReferenceEquals(module, null);

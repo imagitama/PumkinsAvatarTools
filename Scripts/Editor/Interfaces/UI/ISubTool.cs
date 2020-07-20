@@ -41,7 +41,7 @@ namespace Pumkin.UnityTools.Interfaces
         void DrawUI();
 
         /// <summary>
-        /// Calls Prepare() => DoAction() => Finish()
+        /// Should call Prepare() => Execute() => Finish()
         /// </summary>
         /// <param name="target">Target GameObject</param>
         /// <returns>True if everything succeeded</returns>

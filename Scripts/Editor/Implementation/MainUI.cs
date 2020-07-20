@@ -93,11 +93,12 @@ namespace Pumkin.UnityTools.UI
         }
 
         /// <summary>
-        /// Orders modules by their OrderInUI value, then place OrphanHolder as the last module
+        /// Orders modules by their OrderInUI value
         /// </summary>
         public void OrderModules()
         {
-            UIModules = UIModules.OrderBy(c => c.OrderInUI).ToList();            
+            UIModules = UIModules.OrderBy(m => m.OrderInUI).ToList();
+            OrphanHolder.OrderSubTools();
         }
 
         public static implicit operator bool(MainUI ui)

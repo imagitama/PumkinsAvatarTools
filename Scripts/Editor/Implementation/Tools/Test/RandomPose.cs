@@ -18,7 +18,7 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             Description = "Set a random pose for testing";            
         }
 
-        public override bool DoAction(GameObject target)
+        protected override bool DoAction(GameObject target)
         {
             var rng = new System.Random();
             int range = 5;

@@ -1,105 +1,138 @@
-﻿//using Pumkin.Interfaces;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using UnityEngine;
-//using Pumkin.AvatarTools.Helpers;
-//using Pumkin.AvatarTools.Attributes;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine;
 
-//namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
-//{
-//    [AutoLoad]
-//    class SetupLipsync : SubToolBase
-//    {
-//        public SetupLipsync() : base()
-//        {
-//            Name = "Setup Lipsync";
-//            Description = "Sets up lipsync on your avatar";
-//            ParentModuleID = "main_tools";
-//            GameConfigurationString = "VRChat";
-//        }   
+namespace Pumkin.UnityTools.Implementation.Tools.SubTools
+{
+    [AutoLoad("tools_lipsync", "tools")]
+    class SetupLipsync : SubToolBase
+    {
 
-//        public override bool DoAction(GameObject target)
-//        {
-//            var descriptor = target.GetOrAddComponent<VRCSDK2.VRC_AvatarDescriptor>();
+        Type LipSyncStyleEnumType
+        {
+            get
+            {
+                return _lipSyncStyleEnumType ?? (_lipSyncStyleEnumType = TypeHelpers.GetType($"{VRCDescriptorType.FullName}+LipSyncStyle"));
+            }            
+        }
+        Type VRCDescriptorType
+        {
+            get => _vrcDescriptorType ?? (_vrcDescriptorType = TypeHelpers.GetType("VRC.SDKBase.VRC_AvatarDescriptor"));            
+        }
+        List<string> RequiredVisemeNames
+        {
+            get
+            {                
+                if(_requiredVisemeNames == null)
+                {
+                    var visemeNamesType = TypeHelpers.GetType($"{VRCDescriptorType.FullName}+Viseme");
+                    if(visemeNamesType == null)
+                        return null;
 
-//            //Get required viseme names from the visemes enum and remove last entry called "Count"
-//            var requiredVisemes = Enum.GetNames(typeof(VRCSDK2.VRC_AvatarDescriptor.Viseme)).ToList();
-//            requiredVisemes.RemoveAt(requiredVisemes.Count - 1);
+                    //Get required viseme names from the visemes enum and remove last entry called "Count"
+                    _requiredVisemeNames = Enum.GetNames(visemeNamesType).ToList();
+                    if(_requiredVisemeNames != null)
+                        _requiredVisemeNames.RemoveAt(_requiredVisemeNames.Count - 1);
+                }
+                return _requiredVisemeNames;
+            }
+        }
 
-//            if(descriptor.VisemeBlendShapes == null || descriptor.VisemeBlendShapes.Length != requiredVisemes.Count)            
-//                descriptor.VisemeBlendShapes = new string[requiredVisemes.Count];            
+        List<string> _requiredVisemeNames;
+        Type _vrcDescriptorType;
 
-//            var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-//            bool foundShape = false;            
+        //VRC.SDKBase.VRC_AvatarDescriptor+LipSyncStyle enum: { Default = 0, JawFlapBone = 1, JawFlapBlendShape = 2, VisemeBlendShape = 3 }
+        Type _lipSyncStyleEnumType;
 
-//            //Look for a renderer with one matching viseme and asign it as the face mesh renderer 
-//            //After that search through all visemes and assign the matching ones
-//            for(int i = 0; i < renders.Length; i++)
-//            {
-//                for(int j = 0; j < requiredVisemes.Count; j++)
-//                {
-//                    string shapeName = "-none-";
-//                    for(int k = 0; k < renders[i].sharedMesh.blendShapeCount; k++)
-//                    {                        
-//                        string tempShape = renders[i].sharedMesh.GetBlendShapeName(k);
+        public SetupLipsync()
+        {
+            Name = "Setup Lipsync";
+            Description = "Sets up lipsync on your avatar.";            
+        }
 
-//                        if(tempShape.EndsWith(requiredVisemes[j], StringComparison.InvariantCultureIgnoreCase) 
-//                            || tempShape.StartsWith(requiredVisemes[j], StringComparison.InvariantCultureIgnoreCase))
-//                        {
-//                            shapeName = tempShape;
-//                            foundShape = true;
-//                            break;
-//                        }
-//                    }
-//                    descriptor.VisemeBlendShapes[j] = shapeName;
+        protected override bool DoAction(GameObject target)
+        {            
+            var vrcDescType = Helpers.TypeHelpers.GetType("VRC.SDKBase.VRC_AvatarDescriptor");
+            if(vrcDescType == null)
+            {
+                Debug.LogError("VRC.SDKBase.VRC_AvatarDescriptor not found in project");
+                return false;
+            }
+            
+            var descriptor = target.GetComponent(vrcDescType) ?? target.AddComponent(vrcDescType);
+            var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>();
+            
+            var serialDesc = new SerializedObject(descriptor);
 
-//                    if(foundShape)
-//                        descriptor.VisemeSkinnedMesh = renders[i];
-//                }
-//                if(foundShape)
-//                    break;
-//            }
 
-//            //Decided what kind of lip sync type to set depending on what we found
-//            if(descriptor.VisemeSkinnedMesh == null)
-//            {                
-//                Debug.LogError("No SkinnedMesh found");
-//                return false;
-//            }
-//            else
-//            {                                
-//                if(foundShape)
-//                {
-//                    descriptor.lipSync = VRCSDK2.VRC_AvatarDescriptor.LipSyncStyle.VisemeBlendShape;                    
-//                }
-//                else
-//                {
-//                    var anim = target.GetComponent<Animator>();
-//                    if(anim && anim.isHuman)
-//                    {
-//                        var jaw = anim.GetBoneTransform(HumanBodyBones.Jaw);
-//                        if(jaw)
-//                        {
-//                            descriptor.lipSync = VRCSDK2.VRC_AvatarDescriptor.LipSyncStyle.JawFlapBone;
-//                            descriptor.lipSyncJawBone = jaw;
-//                        }
-//                        else
-//                        {                            
-//                            descriptor.lipSync = VRCSDK2.VRC_AvatarDescriptor.LipSyncStyle.Default;
-//                        }                        
-//                    }
-//                    else
-//                    {                        
-//                        descriptor.lipSync = VRCSDK2.VRC_AvatarDescriptor.LipSyncStyle.Default;                        
-//                    }                    
-//                    Debug.LogError("Mesh has no Blendshapes");
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-//    }
-//}
+            //Decide on a lipsync type
+            var lipSyncType = serialDesc.FindProperty("lipSync");
+                        
+            if(renders.Length > 0 && SetupVisemeBlendshapes(renders, serialDesc))   //Got required visemes so VisemeBlendShape style
+            {
+                lipSyncType.intValue = (int)Enum.Parse(LipSyncStyleEnumType, "VisemeBlendShape", true);
+            }
+            else
+            {
+                var anim = target.GetComponent<Animator>();
+                Transform jaw = null;
+
+                if(anim.isHuman)                
+                    jaw = anim.GetBoneTransform(HumanBodyBones.Jaw);
+
+                if(jaw) //Got a humanoid jaw so use that
+                {
+                    lipSyncType.intValue = (int)Enum.Parse(LipSyncStyleEnumType, "JawFlapBone", true);
+                    serialDesc.FindProperty("lipSyncJawBone").objectReferenceValue = jaw;
+                }
+                else //Should have been set by default but set to 'default' in case they change the enum
+                {
+                    lipSyncType.intValue = (int)(Enum.Parse(LipSyncStyleEnumType, "Default", true));
+                }
+            }   //Ignore JawFlapBlendShape because nobody uses it
+
+            serialDesc.ApplyModifiedPropertiesWithoutUndo();
+            return true;
+        }
+
+        bool SetupVisemeBlendshapes(SkinnedMeshRenderer[] renders, SerializedObject serialDesc)
+        {
+            var descVisemes = serialDesc.FindProperty("VisemeBlendShapes");
+            var visemeMesh = serialDesc.FindProperty("VisemeSkinnedMesh");
+            descVisemes.arraySize = RequiredVisemeNames.Count;
+
+            for(int iRender = 0; iRender < renders.Length; iRender++)
+            {
+                bool foundShapeInRenderer = false;
+                for(int iReqViseme = 0; iReqViseme < RequiredVisemeNames.Count; iReqViseme++)
+                {
+                    string shapeName = "-none-";
+                    for(int iShape = 0; iShape < renders[iRender].sharedMesh.blendShapeCount; iShape++)
+                    {
+                        string tempShape = renders[iRender].sharedMesh.GetBlendShapeName(iShape);
+
+                        if(tempShape.EndsWith(RequiredVisemeNames[iReqViseme], StringComparison.InvariantCultureIgnoreCase)
+                            || tempShape.StartsWith(RequiredVisemeNames[iReqViseme], StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            shapeName = tempShape;
+                            foundShapeInRenderer = true;
+                            break;
+                        }
+                    }
+                    visemeMesh.objectReferenceValue = renders[iRender];
+                    descVisemes.GetArrayElementAtIndex(iReqViseme).stringValue = shapeName;
+                }
+                if(foundShapeInRenderer)
+                    return true;
+            }
+            return false;
+        }
+    }
+}
