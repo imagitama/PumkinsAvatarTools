@@ -1,6 +1,8 @@
-﻿using Pumkin.UnityTools.Implementation.Settings;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces;
 using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,19 +50,30 @@ namespace Pumkin.UnityTools.Implementation.Tools
         }
         public SettingsContainer Settings { get; protected set; }
         public bool ExpandSettings { get; protected set; }
+        protected abstract SerializedObject SerializedSettings { get; }
 
         bool _allowUpdate;
         GUIContent _content;
 
         EditorApplication.CallbackFunction updateCallback;
 
+
         public SubToolBase() 
         {
-            Name = "Base Tool";
-            Description = "Base tool description";            
-            GameConfigurationString = "generic";
-            OrderInUI = 0;
-            Settings = new SettingsContainer();
+            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
+            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
+            {
+                Name = uiDefAttr.FriendlyName;
+                Description = uiDefAttr.Description;
+                OrderInUI = uiDefAttr.OrderInUI;
+            }
+            else
+            {
+                Name = "Base Tool";
+                Description = "Base Tool description";
+                OrderInUI = 0;
+            }
+            SetupSettings();
         }
 
         void SetupUpdateCallback()
@@ -70,13 +83,9 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 Debug.Log($"Setting up Update callback for {Name}");
                 updateCallback = new EditorApplication.CallbackFunction(Update);
             }            
-        }
+        }        
 
-        public SubToolBase(string name, string description)
-        {
-            Name = name;
-            Description = description;            
-        }
+        protected abstract void SetupSettings();
 
         public virtual void DrawUI()
         {
@@ -84,16 +93,25 @@ namespace Pumkin.UnityTools.Implementation.Tools
             {
                 if(GUILayout.Button(Content))
                     TryExecute(PumkinTools.SelectedAvatar);
-                if(Settings.Count > 0 && GUILayout.Button("S", GUILayout.MaxWidth(20)))
+                if(GUILayout.Button("S", GUILayout.MaxWidth(20)))
                     ExpandSettings = !ExpandSettings;
             }
             EditorGUILayout.EndHorizontal();
 
-            if(ExpandSettings && Settings.Count > 0)
-                foreach(var set in Settings)
-                {
-                    
-                }
+            //Draw settings here
+            if(SerializedSettings == null || !ExpandSettings)
+                return;
+
+            
+
+            var it = SerializedSettings.GetIterator();
+            it.Next(true);
+            while(it.Next(false))
+            {
+                EditorGUILayout.PropertyField(it);
+            }
+
+            SerializedSettings.ApplyModifiedProperties();
         }
         
         public bool TryExecute(GameObject target)
@@ -141,5 +159,6 @@ namespace Pumkin.UnityTools.Implementation.Tools
             if(!AllowUpdate)
                 return;
         }
+
     }
 }

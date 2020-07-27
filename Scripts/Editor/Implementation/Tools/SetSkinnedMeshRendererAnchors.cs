@@ -1,5 +1,6 @@
 ﻿using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Implementation.Settings;
+using Pumkin.UnityTools.Interfaces.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +12,40 @@ using UnityEngine;
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
     [AutoLoad("tools_setRenderAnchors", "tools")]
+    [UIDefinition("Set SkinnedMeshRenderer Anchors")]
     class SetSkinnedMeshRendererAnchors : SubToolBase
     {
-        enum AnchorType { HumanBone, TransformPath };
+        protected override SerializedObject SerializedSettings { get => serializedSettings; }
         
-        AnchorType anchorType = AnchorType.HumanBone;
-        HumanBodyBones humanBone = HumanBodyBones.Spine;
-        string bonePath = "Armature/Hips/Spine";
-        
-        public SetSkinnedMeshRendererAnchors()
+        SetSkinnedMeshRendererAnchor_settings settings;
+        SerializedObject serializedSettings;
+
+        public SetSkinnedMeshRendererAnchors() { }        
+
+        protected override void SetupSettings()
         {
-            Name = "Set Renderer anchors to {0}";
-            Settings.RegisterSetting(new Setting("anchorType", anchorType, "Anchor Type"));
+            settings = ScriptableObject.CreateInstance<SetSkinnedMeshRendererAnchor_settings>();            
+            serializedSettings = new SerializedObject(settings);
         }
 
         protected override bool DoAction(GameObject target)
         {
             var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            var anim = target.GetComponent<Animator>();
+            var anim = target.GetComponent<Animator>();                   
 
             Transform bone = null;
-            string path = null;
-            anchorType = Settings.GetSettingValue<AnchorType>("anchorType");
+            string path = null;            
 
-            if(anchorType == AnchorType.HumanBone)
+            if(settings.anchorType == SetSkinnedMeshRendererAnchor_settings.AnchorType.HumanBone)
             {
                 if(!anim.isHuman)
                     Debug.LogError($"{target.name} isn't humanoid");
-                bone = anim.GetBoneTransform(humanBone);
-                path = $"{humanBone.GetType()}.{humanBone.ToString()}";
+                bone = anim.GetBoneTransform(settings.humanBone);
+                path = $"{settings.humanBone.GetType()}.{settings.humanBone.ToString()}";
             }
             else
             {
-                path = bonePath;
+                path = settings.bonePath;
                 if(!string.IsNullOrEmpty(path))
                     bone = target.transform.Find(path);
             }

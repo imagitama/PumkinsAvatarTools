@@ -2,9 +2,8 @@
 
 namespace Pumkin.UnityTools.Interfaces.Settings
 {
-    interface ISettingContainer : IEnumerable<ISetting>
+    interface ISettingsContainer
     {
-        T GetSettingValue<T>(string settingName);
         bool LoadFromConfigFile(string filePath);
         bool SaveToConfigFile(string filePath);
     }
