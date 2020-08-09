@@ -11,30 +11,38 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad("tools_setRenderAnchors", "tools")]
-    [UIDefinition("Set SkinnedMeshRenderer Anchors")]
+    [AutoLoad("tools_setRenderAnchors", "tools_setupAvatar")]
+    [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]
     class SetSkinnedMeshRendererAnchors : SubToolBase
-    {
-        protected override SerializedObject SerializedSettings { get => serializedSettings; }
-        
-        SetSkinnedMeshRendererAnchor_settings settings;
-        SerializedObject serializedSettings;
+    {        
+        public override SettingsContainer Settings { get => settings; }
+
+        SetSkinnedMeshRendererAnchor_settings settings;        
 
         public SetSkinnedMeshRendererAnchors() { }        
 
         protected override void SetupSettings()
         {
-            settings = ScriptableObject.CreateInstance<SetSkinnedMeshRendererAnchor_settings>();            
-            serializedSettings = new SerializedObject(settings);
+            settings = ScriptableObject.CreateInstance<SetSkinnedMeshRendererAnchor_settings>();                        
+        }
+
+        protected override bool Prepare(GameObject target)
+        {
+            return (settings.setSkinnedMeshRenderers || settings.setMeshRenderers) &&
+                base.Prepare(target);
         }
 
         protected override bool DoAction(GameObject target)
         {
-            var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-            var anim = target.GetComponent<Animator>();                   
-
+            var anim = target.GetComponent<Animator>();
             Transform bone = null;
-            string path = null;            
+            string path = null;
+            
+            var renders = new List<Component>();
+            if(settings.setMeshRenderers)
+                renders.AddRange(target.GetComponentsInChildren<MeshRenderer>(true));
+            if(settings.setSkinnedMeshRenderers)
+                renders.AddRange(target.GetComponentsInChildren<SkinnedMeshRenderer>(true));            
 
             if(settings.anchorType == SetSkinnedMeshRendererAnchor_settings.AnchorType.HumanBone)
             {
@@ -56,7 +64,7 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
                 return false;
             }                        
                 
-            var so = new SerializedObject(renders);
+            var so = new SerializedObject(renders.ToArray());
             var anchors = so.FindProperty("m_ProbeAnchor");
             if(anchors == null)
                 return false;

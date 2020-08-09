@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Helpers;
+﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Interfaces;
 using Pumkin.UnityTools.UI;
 using System;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using System.Reflection;
 
 namespace Pumkin.UnityTools.Implementation.Modules
 {
@@ -37,9 +39,20 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
         public UIModuleBase()
         {
-            Name = "Generic Module";
-            Description = "A generic module";            
-            GameConfigurationString = "generic";
+            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
+            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
+            {
+                Name = uiDefAttr.FriendlyName;
+                Description = uiDefAttr.Description;
+                OrderInUI = uiDefAttr.OrderInUI;
+            }            
+            else
+            {
+                Name = "Generic Module";
+                Description = "A generic module";
+                GameConfigurationString = "generic";
+            }
+
             IsExpanded = false;
             
             SubTools = new List<ISubTool>();
@@ -48,9 +61,12 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
         public virtual void Draw()
         {
-            DrawHeader();
-            if(IsExpanded)
-                DrawContent();
+            UIHelpers.VerticalBox(() =>
+            {
+                DrawHeader();
+                if(IsExpanded)
+                    DrawContent();
+            });            
         }
 
         public virtual void DrawHeader()
@@ -61,8 +77,11 @@ namespace Pumkin.UnityTools.Implementation.Modules
         public virtual void DrawContent()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
-            EditorGUILayout.Space();
+            if(!string.IsNullOrEmpty(Description))
+            {
+                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
+                EditorGUILayout.Space();
+            }
 
             foreach(var tool in SubTools)
                 tool?.DrawUI();

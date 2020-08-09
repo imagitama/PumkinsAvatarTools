@@ -23,5 +23,43 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
         
         [UIDefinition("Humanoid Bone Path")]
         public string bonePath = "Armature/Hips/Spine";
+        
+        public bool setSkinnedMeshRenderers = true;
+        public bool setMeshRenderers = true;
+    }
+
+    [CustomEditor(typeof(SetSkinnedMeshRendererAnchor_settings))]
+    public class SetSkinnedMeshRenderer_settingsEditor : Editor
+    {
+        SetSkinnedMeshRendererAnchor_settings settings;
+        SerializedObject serialSettings;
+
+        private void OnEnable()
+        {
+            settings = (SetSkinnedMeshRendererAnchor_settings)target;
+            serialSettings = new SerializedObject(settings);
+        }
+
+        public override void OnInspectorGUI()
+        {
+            var anchorType = serialSettings.FindProperty(nameof(SetSkinnedMeshRendererAnchor_settings.anchorType));
+            var humanBone = serialSettings.FindProperty(nameof(SetSkinnedMeshRendererAnchor_settings.humanBone));
+            var bonePath = serialSettings.FindProperty(nameof(SetSkinnedMeshRendererAnchor_settings.bonePath));
+            var setSkinnedMeshRenderers = serialSettings.FindProperty(nameof(SetSkinnedMeshRendererAnchor_settings.setSkinnedMeshRenderers));
+            var setMeshRenderers = serialSettings.FindProperty(nameof(SetSkinnedMeshRendererAnchor_settings.setMeshRenderers));
+
+            EditorGUILayout.PropertyField(anchorType);
+            if(settings.anchorType == SetSkinnedMeshRendererAnchor_settings.AnchorType.HumanBone)
+                EditorGUILayout.PropertyField(humanBone);
+            else
+                EditorGUILayout.PropertyField(bonePath);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(setSkinnedMeshRenderers);
+            EditorGUILayout.PropertyField(setMeshRenderers);
+
+            serialSettings.ApplyModifiedProperties();
+        }
     }
 }

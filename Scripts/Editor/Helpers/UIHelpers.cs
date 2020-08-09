@@ -24,5 +24,18 @@ namespace Pumkin.UnityTools.Helpers
             if(spacedOut)
                 EditorGUILayout.Space();
         }
+
+        public static void VerticalBox(Action action, GUIStyle style = null)
+        {
+            EditorGUILayout.BeginVertical(style ?? Styles.Box);
+            action.Invoke();
+            EditorGUILayout.EndVertical();
+        }
+        public static void HorizontalBox(Action action, GUIStyle style)
+        {
+            EditorGUILayout.BeginHorizontal(style ?? Styles.Box);
+            action.Invoke();
+            EditorGUILayout.EndHorizontal();
+        }
     }
 }

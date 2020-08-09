@@ -51,7 +51,7 @@ namespace Pumkin.UnityTools.UI
                     if(!mod.IsHidden)
                     {
                         mod.Draw();
-                        UIHelpers.DrawGUILine();
+                        //UIHelpers.DrawGUILine();
                     }
                 }
                 else
@@ -66,7 +66,7 @@ namespace Pumkin.UnityTools.UI
                 if(!OrphanHolder.IsHidden)
                 {
                     OrphanHolder.Draw();
-                    UIHelpers.DrawGUILine();
+                    //UIHelpers.DrawGUILine();
                 }
             }
         }

@@ -7,13 +7,9 @@ using UnityEditor;
 namespace Pumkin.UnityTools.Implementation.Modules
 {
     [AutoLoad("tools")]
+    [UIDefinition("Tools", Description = "Various tools", OrderInUI = 1)]
     class ToolsModule : UIModuleBase
     {
-        public ToolsModule()
-        {
-            Name = "Tools";
-            Description = "Various tools";
-            OrderInUI = 1;
-        }
+        
     }
 }

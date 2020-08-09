@@ -1,9 +1,11 @@
 ﻿using Pumkin.UnityTools.Attributes;
+using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces;
 using System;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools
@@ -48,12 +50,11 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 _content = value;
             }
         }
-        public SettingsContainer Settings { get; protected set; }
-        public bool ExpandSettings { get; protected set; }
-        protected abstract SerializedObject SerializedSettings { get; }
+        public abstract SettingsContainer Settings { get; }
+        public bool ExpandSettings { get; protected set; }        
 
         bool _allowUpdate;
-        GUIContent _content;
+        GUIContent _content;        
 
         EditorApplication.CallbackFunction updateCallback;
 
@@ -73,7 +74,8 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 Description = "Base Tool description";
                 OrderInUI = 0;
             }
-            SetupSettings();
+            SetupSettings();            
+            //if(Settings && Settings.Editor) { } //Ensure editor is created if needed
         }
 
         void SetupUpdateCallback()
@@ -83,9 +85,9 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 Debug.Log($"Setting up Update callback for {Name}");
                 updateCallback = new EditorApplication.CallbackFunction(Update);
             }            
-        }        
+        }
 
-        protected abstract void SetupSettings();
+        protected virtual void SetupSettings() { }
 
         public virtual void DrawUI()
         {
@@ -93,25 +95,21 @@ namespace Pumkin.UnityTools.Implementation.Tools
             {
                 if(GUILayout.Button(Content))
                     TryExecute(PumkinTools.SelectedAvatar);
-                if(GUILayout.Button("S", GUILayout.MaxWidth(20)))
-                    ExpandSettings = !ExpandSettings;
+                if(Settings)
+                    if(GUILayout.Button("S", GUILayout.MaxWidth(20)))
+                        ExpandSettings = !ExpandSettings;
             }
             EditorGUILayout.EndHorizontal();
 
-            //Draw settings here
-            if(SerializedSettings == null || !ExpandSettings)
+            //Draw settings here            
+            if(!Settings || !ExpandSettings)
                 return;
 
-            
-
-            var it = SerializedSettings.GetIterator();
-            it.Next(true);
-            while(it.Next(false))
+            UIHelpers.VerticalBox(() =>
             {
-                EditorGUILayout.PropertyField(it);
-            }
-
-            SerializedSettings.ApplyModifiedProperties();
+                EditorGUILayout.Space();
+                Settings.Editor.OnInspectorGUI();
+            });
         }
         
         public bool TryExecute(GameObject target)
