@@ -24,14 +24,25 @@ namespace Pumkin.UnityTools.UI
             MainUI UI = new MainUI();
             ModuleIDManager.ClearCache();
 
-            RefreshCachedTypes();
+            RefreshCachedTypes(PumkinTools.ConfigurationString);
             
             //Build modules from typeCache
             foreach(var t in moduleTypeCache)
             {
-                var mod = BuildModule(t);
-                if(mod != null)
-                    UI.UIModules.Add(mod);
+                IUIModule mod = null;
+                try
+                {
+                    mod = BuildModule(t);
+                }
+                catch(Exception e)
+                {
+                    Debug.LogError($"{(t?.Name ?? "Unknown module")} threw an exception: {e.Message}");
+                }
+                finally
+                {
+                    if(mod != null)
+                        UI.UIModules.Add(mod);
+                }               
             }
 
             //Assign child modules to their parents
@@ -106,11 +117,29 @@ namespace Pumkin.UnityTools.UI
             return true;
         }
 
-        public static void RefreshCachedTypes()
+        public static void RefreshCachedTypes(string configurationString)
         {
             typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>()?.ToList();
             subToolTypeCache = TypeHelpers.GetChildTypesOf<ISubTool>(typeCache)?.ToList();
             moduleTypeCache = TypeHelpers.GetChildTypesOf<IUIModule>(typeCache)?.ToList();
+
+            if(!string.IsNullOrEmpty(configurationString))
+            {
+                FilterList(ref typeCache);
+                FilterList(ref subToolTypeCache);
+                FilterList(ref moduleTypeCache);
+
+                void FilterList(ref List<Type> list)
+                {                        
+                    list = list.Where((t) =>
+                    {
+                        var attr = t.GetCustomAttribute<AutoLoadAttribute>();
+                        if(attr)
+                            return attr.ConfigurationString.Equals(configurationString, StringComparison.InvariantCultureIgnoreCase);
+                        return false;
+                    }).ToList();                    
+                }                
+            }
         }
     }
 }

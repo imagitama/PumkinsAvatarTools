@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Pumkin.UnityTools.Implementation.Modules
-{    
+{
     class OrphanHolderModule : UIModuleBase
     {
         public override bool IsHidden { get => SubTools.Count == 0 && ChildModules.Count == 0; }

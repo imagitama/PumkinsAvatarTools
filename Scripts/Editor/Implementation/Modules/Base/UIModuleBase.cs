@@ -71,7 +71,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
         public virtual void DrawHeader()
         {
-            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);            
+            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);
         }
 
         public virtual void DrawContent()
@@ -79,8 +79,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
             EditorGUILayout.Space();
             if(!string.IsNullOrEmpty(Description))
             {
-                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
-                EditorGUILayout.Space();
+                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);                
             }
 
             foreach(var tool in SubTools)

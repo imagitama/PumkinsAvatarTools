@@ -13,7 +13,9 @@ namespace Pumkin.UnityTools.UI
 {
     class MainUI
     {
-        public List<IUIModule> UIModules = new List<IUIModule>();        
+        public List<IUIModule> UIModules = new List<IUIModule>();
+        bool drawSettings = false;
+        int configurationIndex = 0;
 
         public IUIModule OrphanHolder
         {
@@ -23,7 +25,11 @@ namespace Pumkin.UnityTools.UI
 
         IUIModule _orphanHolder;
 
-        public MainUI() { }
+        public MainUI() 
+        {
+            var index = Array.IndexOf(PumkinTools.Configurations, PumkinTools.ConfigurationString);
+            configurationIndex = index > 0 ? index : 0;
+        }
 
         public MainUI(List<IUIModule> modules)
         {
@@ -31,42 +37,62 @@ namespace Pumkin.UnityTools.UI
         }
 
         public void Draw()
-        {            
-            EditorGUILayout.LabelField("Pumkin's Avatar Tools", Styles.TitleLabel);
-
+        {
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.LabelField("Pumkin's Avatar Tools", Styles.TitleLabel);
+                if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
+                    drawSettings = !drawSettings;
+            }
+            EditorGUILayout.EndHorizontal();
+            
             GUILayout.Space(20f);
 
-            PumkinTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
-            
-            if(GUILayout.Button("Select from Scene"))
-                PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
-
-            UIHelpers.DrawGUILine();
-
-            //Draw modules
-            foreach(var mod in UIModules)
+            if(drawSettings)
             {
-                if(mod != null)
+                EditorGUI.BeginChangeCheck();
                 {
-                    if(!mod.IsHidden)
+                    configurationIndex = EditorGUILayout.Popup("Configuration", configurationIndex, PumkinTools.Configurations);
+                }
+                if(EditorGUI.EndChangeCheck())
+                {
+                    PumkinTools.ConfigurationString = PumkinTools.Configurations[configurationIndex];
+                }                
+            }
+            else
+            {
+                PumkinTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
+
+                if(GUILayout.Button("Select from Scene"))
+                    PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
+
+                UIHelpers.DrawGUILine();
+
+                //Draw modules
+                foreach(var mod in UIModules)
+                {
+                    if(mod != null)
                     {
-                        mod.Draw();
-                        //UIHelpers.DrawGUILine();
+                        if(!mod.IsHidden)
+                        {
+                            mod.Draw();
+                            //UIHelpers.DrawGUILine();
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"'{mod}' is null");
                     }
                 }
-                else
-                {
-                    Debug.Log($"'{mod}' is null");
-                }
-            }
 
-            //Draw Orphan Holder
-            if(OrphanHolder != null)
-            {
-                if(!OrphanHolder.IsHidden)
+                //Draw Orphan Holder
+                if(OrphanHolder != null)
                 {
-                    OrphanHolder.Draw();
-                    //UIHelpers.DrawGUILine();
+                    if(!OrphanHolder.IsHidden)
+                    {
+                        OrphanHolder.Draw();
+                        //UIHelpers.DrawGUILine();
+                    }
                 }
             }
         }

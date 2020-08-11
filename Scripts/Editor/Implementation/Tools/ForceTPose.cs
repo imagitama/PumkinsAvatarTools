@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad("tools_tpose", "tools")]
+    [AutoLoad("tools_tpose", ParentModuleID = "tools_fixAvatar")]
     class ForceTPose : SubToolBase
     {
         readonly float[] TPOSE_MUSCLES =

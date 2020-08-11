@@ -14,17 +14,27 @@ namespace Pumkin.UnityTools.UI
         public static GUIStyle TitleLabel { get; private set; }
         public static GUIStyle EditorLine { get; private set; }        
         public static GUIStyle RegionBG { get; private set; }
-
         public static GUIStyle Box { get; private set; }
+        public static GUIStyle IconButton { get; private set; }
+        public static GUIStyle MediumIconButton { get; private set; }
+        public static GUIStyle MediumButton { get; private set; }        
 
         static Styles()
-        {            
+        {
             MenuFoldout = new GUIStyle("foldout")
             {
                 fontSize = 14,
                 alignment = TextAnchor.MiddleLeft,
-                fontStyle = FontStyle.Bold,                
-            };            
+                fontStyle = FontStyle.Bold,
+            };
+
+            //MenuFoldout = new GUIStyle("ToolbarDropDown")
+            //{
+            //    fontSize = 13,
+            //    fixedHeight = 26,
+            //    fontStyle = FontStyle.Bold,
+            //    contentOffset = new Vector2(5f, 0),
+            //};
 
             //MenuFoldout = new GUIStyle("ToolbarDropDown")
             //{
@@ -37,6 +47,7 @@ namespace Pumkin.UnityTools.UI
 
             TitleLabel = new GUIStyle("label")
             {
+                padding = new RectOffset(1, 1, 3, 3),
                 fontSize = 16,
                 stretchHeight = true,
                 fixedHeight = 24,
@@ -68,6 +79,27 @@ namespace Pumkin.UnityTools.UI
                 border = new RectOffset(6, 6, 6, 6),
                 fontSize = 12,
                 alignment = TextAnchor.UpperLeft
+            };
+
+            IconButton = new GUIStyle("button")
+            {         
+                fixedWidth = 18f,
+                fixedHeight = 18f,
+                imagePosition = ImagePosition.ImageOnly,
+                padding = new RectOffset(0, 0, 0, 0),
+            };
+
+            MediumButton = new GUIStyle("button")
+            {
+                fixedHeight = 22f,
+            };
+
+            MediumIconButton = new GUIStyle("button")
+            {
+                fixedWidth = MediumButton.fixedHeight,
+                fixedHeight = MediumButton.fixedHeight,
+                imagePosition = ImagePosition.ImageOnly,
+                padding = new RectOffset(0, 0, 0, 0),
             };
         }
     }

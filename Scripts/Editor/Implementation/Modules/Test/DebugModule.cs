@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Modules
 {    
-    [AutoLoad("test")]
+    [AutoLoad("test", ConfigurationString = "debug")]
     class DebugModule : UIModuleBase
     {        
         public DebugModule()
@@ -31,7 +31,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
                 AvatarToolsWindow.UI.RemoveModule("tools");
 
             if(GUILayout.Button("Build UI"))
-                AvatarToolsWindow.UI = UIBuilder.BuildUI();            
+                AvatarToolsWindow.UI = UIBuilder.BuildUI();
         }
     }
 }

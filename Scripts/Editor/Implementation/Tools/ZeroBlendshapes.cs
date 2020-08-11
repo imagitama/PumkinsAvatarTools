@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools
 {
-    [AutoLoad("tools_zeroblendshapes", "tools")]
+    [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
     class ZeroBlendshapes : SubToolBase
     {
         SkinnedMeshRenderer[] renders;

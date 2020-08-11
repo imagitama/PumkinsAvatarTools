@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad("tools_reverTransforms", "tools")]
+    [AutoLoad("tools_reverTransforms", ParentModuleID = "tools_fixAvatar")]
     class RevertTransforms : SubToolBase
     {
         public override SettingsContainer Settings => null;

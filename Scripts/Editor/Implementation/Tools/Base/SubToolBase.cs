@@ -2,6 +2,7 @@
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces;
+using Pumkin.UnityTools.UI;
 using System;
 using System.Reflection;
 using UnityEditor;
@@ -93,10 +94,10 @@ namespace Pumkin.UnityTools.Implementation.Tools
         {
             EditorGUILayout.BeginHorizontal();
             {
-                if(GUILayout.Button(Content))
+                if(GUILayout.Button(Content, Styles.MediumButton))
                     TryExecute(PumkinTools.SelectedAvatar);
                 if(Settings)
-                    if(GUILayout.Button("S", GUILayout.MaxWidth(20)))
+                    if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
                         ExpandSettings = !ExpandSettings;
             }
             EditorGUILayout.EndHorizontal();

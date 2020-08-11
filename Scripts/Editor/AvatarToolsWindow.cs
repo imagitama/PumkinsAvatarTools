@@ -21,8 +21,8 @@ namespace Pumkin.UnityTools
 
             editorWindow.Show();
             editorWindow.titleContent = new GUIContent("Pumkin Tools");
-        }
-
+        }        
+        
         void OnEnable()
         {
             if(!UI)

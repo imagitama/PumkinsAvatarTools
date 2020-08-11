@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad("tools_setRenderAnchors", "tools_setupAvatar")]
+    [AutoLoad("tools_setRenderAnchors", ParentModuleID = "tools_setupAvatar")]
     [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]
     class SetSkinnedMeshRendererAnchors : SubToolBase
     {        
