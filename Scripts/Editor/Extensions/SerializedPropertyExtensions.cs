@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +11,6 @@ namespace Pumkin.Extensions
 {
 	public static class SerializedPropertyExtensions
 	{
-#if UNITY_EDITOR
-
 		/// <summary>
 		/// Gets value from SerializedProperty - even if value is nested
 		/// </summary>
@@ -59,7 +58,6 @@ namespace Pumkin.Extensions
 				value = list[i].Value;
 			}
 		}
-#endif // UNITY_EDITOR
 	}
-
 }
+#endif

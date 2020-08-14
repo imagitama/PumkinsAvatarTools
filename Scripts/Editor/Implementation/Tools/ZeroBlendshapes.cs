@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Implementation.Settings;
 using System;
 using System.Collections.Generic;
@@ -11,17 +12,10 @@ using UnityEngine;
 namespace Pumkin.UnityTools.Implementation.Tools
 {
     [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
+    [UIDefinition("Zero Blendshapes", Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0")]
     class ZeroBlendshapes : SubToolBase
     {
-        SkinnedMeshRenderer[] renders;
-
-        public override SettingsContainer Settings => null;
-
-        public ZeroBlendshapes()
-        {
-            Name = "Zero Blendshapes";
-            Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0";
-        }
+        SkinnedMeshRenderer[] renders;        
 
         protected override bool Prepare(GameObject target)
         {
@@ -46,3 +40,4 @@ namespace Pumkin.UnityTools.Implementation.Tools
         }
     }
 }
+#endif

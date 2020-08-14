@@ -12,12 +12,12 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
-    [AutoLoad("tools_reverTransforms", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Reset Pose", Description = "Reverts the location, rotation and scale of your avatar back to prefab")]
-    class RevertTransforms : SubToolBase
+    [AutoLoad("tool_resetScale", ParentModuleID = "tools_fixAvatar")]
+    [UIDefinition("Reset Scale", Description = "Resets your selected object's scale to prefab")]
+    class ResetScale : SubToolBase
     {
         protected override bool Prepare(GameObject target)
-        {
+        {            
             if(!base.Prepare(target))
                 return false;
             return PrefabHelpers.HasPrefab(target);
@@ -25,13 +25,11 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 
         protected override bool DoAction(GameObject target)
         {
-            Type transType = typeof(Transform);
-            var overrides = PrefabUtility.GetObjectOverrides(target)
-                ?.Where(t => t.instanceObject.GetType() == transType && t.instanceObject);
-
-            foreach(var o in overrides)
-                o.Revert();
-
+            var pref = PrefabUtility.GetCorrespondingObjectFromSource(target);
+            if(!pref)
+                return false;
+            
+            target.transform.localScale = pref.transform.localScale;
             return true;
         }
     }

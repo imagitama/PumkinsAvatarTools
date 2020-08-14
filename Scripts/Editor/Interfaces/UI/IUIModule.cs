@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Interfaces
 {
-    interface IUIModule
+    public interface IUIModule
     {
         string Name { get; set; }
         string Description { get; set; }        
@@ -22,5 +23,7 @@ namespace Pumkin.UnityTools.Interfaces
         void Draw();
 
         void OrderSubTools();
+        void Start();
     }
 }
+#endif

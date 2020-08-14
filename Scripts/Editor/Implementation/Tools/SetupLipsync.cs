@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Settings;
 using System;
@@ -15,7 +16,6 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
     [AutoLoad("tools_lipsync", ParentModuleID = "tools_setupAvatar")]
     class SetupLipsync : SubToolBase
     {
-
         Type LipSyncStyleEnumType
         {
             get
@@ -44,9 +44,7 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
                 }
                 return _requiredVisemeNames;
             }
-        }
-
-        public override SettingsContainer Settings => null;
+        }        
 
         List<string> _requiredVisemeNames;
         Type _vrcDescriptorType;
@@ -139,3 +137,4 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
         }
     }
 }
+#endif

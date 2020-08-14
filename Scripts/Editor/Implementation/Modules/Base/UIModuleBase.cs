@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Interfaces;
 using Pumkin.UnityTools.UI;
@@ -13,7 +14,7 @@ using System.Reflection;
 
 namespace Pumkin.UnityTools.Implementation.Modules
 {
-    abstract class UIModuleBase : IUIModule
+    public abstract class UIModuleBase : IUIModule
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -35,16 +36,26 @@ namespace Pumkin.UnityTools.Implementation.Modules
         }              
         public int OrderInUI { get; set; }
 
-        protected GUIContent _content;        
+        protected GUIContent _content;
+
+        UIDefinitionAttribute uiDefinition;
+
+        bool firstDraw = true;
+
+        bool shouldDrawHeader = true;
+        bool shouldDrawBorder = true;
 
         public UIModuleBase()
         {
-            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
-            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
+            uiDefinition = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);            
+            if(uiDefinition != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
             {
-                Name = uiDefAttr.FriendlyName;
-                Description = uiDefAttr.Description;
-                OrderInUI = uiDefAttr.OrderInUI;
+                Name = uiDefinition.FriendlyName;
+                Description = uiDefinition.Description;
+                OrderInUI = uiDefinition.OrderInUI;
+                
+                shouldDrawHeader = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoHeader);
+                shouldDrawBorder = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoBorder);
             }            
             else
             {
@@ -56,22 +67,40 @@ namespace Pumkin.UnityTools.Implementation.Modules
             IsExpanded = false;
             
             SubTools = new List<ISubTool>();
-            ChildModules = new List<IUIModule>();
+            ChildModules = new List<IUIModule>();            
         }
 
-        public virtual void Draw()
+        public virtual void Start() { }
+
+        public void Draw()
         {
-            UIHelpers.VerticalBox(() =>
+            if(firstDraw)
             {
-                DrawHeader();
-                if(IsExpanded)
+                Start();
+                firstDraw = false;
+            }
+            Action drawContent = () =>
+            {
+                if(shouldDrawHeader)
+                    DrawHeader();
+                if(IsExpanded || !shouldDrawHeader)
                     DrawContent();
-            });            
+            };
+
+            if(shouldDrawBorder)
+            {
+                UIHelpers.VerticalBox(drawContent);
+            }
+            else
+            {
+                drawContent.Invoke();
+                EditorGUILayout.Space();
+            }
         }
 
         public virtual void DrawHeader()
-        {
-            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);
+        {            
+            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);            
         }
 
         public virtual void DrawContent()
@@ -80,7 +109,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
             if(!string.IsNullOrEmpty(Description))
             {
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);                
-            }
+            }            
 
             foreach(var tool in SubTools)
                 tool?.DrawUI();
@@ -105,3 +134,4 @@ namespace Pumkin.UnityTools.Implementation.Modules
         }
     }
 }
+#endif

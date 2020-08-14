@@ -1,4 +1,5 @@
-﻿//using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+//using Pumkin.UnityTools.Attributes;
 //using Pumkin.UnityTools.Implementation.Modules;
 //using System;
 //using System.Collections.Generic;
@@ -36,3 +37,4 @@
 //        }
 //    }
 //}
+#endif

@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Helpers;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,3 +93,4 @@ namespace Pumkin.Extensions
         }
     }
 }
+#endif

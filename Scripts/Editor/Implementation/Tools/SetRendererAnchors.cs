@@ -1,6 +1,7 @@
 ﻿using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces.Settings;
+#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,20 +11,18 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
-{
+{    
     [AutoLoad("tools_setRenderAnchors", ParentModuleID = "tools_setupAvatar")]
-    [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]
-    class SetSkinnedMeshRendererAnchors : SubToolBase
+    [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]    
+    class SetRendererAnchors : SubToolBase
     {        
         public override SettingsContainer Settings { get => settings; }
 
-        SetSkinnedMeshRendererAnchor_settings settings;        
-
-        public SetSkinnedMeshRendererAnchors() { }        
+        SetRendererAnchors_Settings settings;           
 
         protected override void SetupSettings()
         {
-            settings = ScriptableObject.CreateInstance<SetSkinnedMeshRendererAnchor_settings>();                        
+            settings = ScriptableObject.CreateInstance<SetRendererAnchors_Settings>();                        
         }
 
         protected override bool Prepare(GameObject target)
@@ -44,7 +43,7 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             if(settings.setSkinnedMeshRenderers)
                 renders.AddRange(target.GetComponentsInChildren<SkinnedMeshRenderer>(true));            
 
-            if(settings.anchorType == SetSkinnedMeshRendererAnchor_settings.AnchorType.HumanBone)
+            if(settings.anchorType == SubTools.SetRendererAnchors_Settings.AnchorType.HumanBone)
             {
                 if(!anim.isHuman)
                     Debug.LogError($"{target.name} isn't humanoid");
@@ -74,4 +73,45 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
             return true;
         }
     }
+
+    internal class SetRendererAnchors_Settings : SettingsContainer
+    {
+        public enum AnchorType { HumanBone, TransformPath };
+
+        public AnchorType anchorType = AnchorType.HumanBone;
+
+        public HumanBodyBones humanBone = HumanBodyBones.Spine;
+
+        public string bonePath = "Armature/Hips/Spine";
+
+        public bool setSkinnedMeshRenderers = true;
+        public bool setMeshRenderers = true;
+    }
+
+    [CustomEditor(typeof(SetRendererAnchors_Settings))]
+    internal class SetRendererAnchors_SettingsEditor : SettingsEditor
+    {
+        public override void OnInspectorGUI()
+        {
+            var anchorType = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.anchorType));
+            var humanBone = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.humanBone));
+            var bonePath = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.bonePath));
+            var setSkinnedMeshRenderers = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.setSkinnedMeshRenderers));
+            var setMeshRenderers = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.setMeshRenderers));
+
+            EditorGUILayout.PropertyField(anchorType);
+            if(anchorType.enumValueIndex == (int)SetRendererAnchors_Settings.AnchorType.HumanBone)
+                EditorGUILayout.PropertyField(humanBone);
+            else
+                EditorGUILayout.PropertyField(bonePath);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(setSkinnedMeshRenderers);
+            EditorGUILayout.PropertyField(setMeshRenderers);
+
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
 }
+#endif

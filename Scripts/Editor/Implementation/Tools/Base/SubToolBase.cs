@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces;
@@ -11,6 +12,9 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Tools
 {
+    /// <summary>
+    /// Base sub tool class. Should be inherited to create a tool
+    /// </summary>
     abstract class SubToolBase : ISubTool
     {
         public string Name { get; set; }
@@ -51,7 +55,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 _content = value;
             }
         }
-        public abstract SettingsContainer Settings { get; }
+        public virtual SettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; protected set; }        
 
         bool _allowUpdate;
@@ -59,6 +63,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
 
         EditorApplication.CallbackFunction updateCallback;
 
+        public SerializedObject serializedObject;
 
         public SubToolBase() 
         {
@@ -71,12 +76,11 @@ namespace Pumkin.UnityTools.Implementation.Tools
             }
             else
             {
-                Name = "Base Tool";
+                Name = GetType().Name;
                 Description = "Base Tool description";
                 OrderInUI = 0;
             }
-            SetupSettings();            
-            //if(Settings && Settings.Editor) { } //Ensure editor is created if needed
+            SetupSettings();
         }
 
         void SetupUpdateCallback()
@@ -119,6 +123,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
             {
                 if(Prepare(target) && DoAction(target))
                 {
+                    serializedObject.ApplyModifiedProperties();
                     Finish(target);
                     return true;
                 }
@@ -138,11 +143,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
                 return false;
             }
 
-            Debug.Log($"Registering undo: {Name}");
-            Undo.RegisterFullObjectHierarchyUndo(target, Name);
-            if(target.scene.name == null) //In case it's a prefab instance, which it probably is
-                PrefabUtility.RecordPrefabInstancePropertyModifications(target);
-
+            serializedObject = new SerializedObject(target);
             return true;
         }        
 
@@ -161,3 +162,4 @@ namespace Pumkin.UnityTools.Implementation.Tools
 
     }
 }
+#endif

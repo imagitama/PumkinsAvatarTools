@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +14,13 @@ namespace Pumkin.UnityTools.Attributes
         public string FriendlyName { get; set; }
         public string Description { get; set; }
         public int OrderInUI { get; set; }
+        public List<string> ModuleStyles { get; set; }
 
-        public UIDefinitionAttribute(string friendlyName)
+        public UIDefinitionAttribute(string friendlyName, params string[] styles)
         {
             FriendlyName = friendlyName;
+            ModuleStyles = styles.ToList() ?? new List<string>();
         }
     }
 }
+#endif

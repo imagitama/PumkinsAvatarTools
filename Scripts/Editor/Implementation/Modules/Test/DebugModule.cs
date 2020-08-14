@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.UI;
 using System;
 using System.Collections.Generic;
@@ -35,3 +36,4 @@ namespace Pumkin.UnityTools.Implementation.Modules
         }
     }
 }
+#endif

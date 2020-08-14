@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Implementation.Settings;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using UnityEngine;
 namespace Pumkin.UnityTools.Implementation.Tools.SubTools
 {
     [AutoLoad("tools_tpose", ParentModuleID = "tools_fixAvatar")]
+    [UIDefinition("Force T-Pose", Description = "Sets your humanoid avatar into a T-Pose")]
     class ForceTPose : SubToolBase
     {
         readonly float[] TPOSE_MUSCLES =
@@ -25,13 +27,6 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
               0.668391f, -0.5737844f, 0.811684f, 0.8116837f, 0.6669571f, -0.6492739f, 0.8116841f, 0.8116843f, 0.6667888f, -0.4676568f, 0.8116842f, 0.8116836f
         };
         Animator anim;
-        public override SettingsContainer Settings => null;        
-
-        public ForceTPose()
-        {
-            Name = "Force T-Pose";
-            Description = "Sets your humanoid avatar into a T-Pose";
-        }
 
         protected override bool Prepare(GameObject target)
         {
@@ -103,3 +98,4 @@ namespace Pumkin.UnityTools.Implementation.Tools.SubTools
         }
     }
 }
+#endif

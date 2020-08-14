@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.UI;
 using System;
@@ -77,4 +78,4 @@ namespace Pumkin.UnityTools
         }        
     }
 }
-
+#endif

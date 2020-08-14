@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Interfaces
 {
-    interface ISubTool
+    public interface ISubTool
     {
         /// <summary>
         /// The name of the tool. Used in the UI.
@@ -53,3 +54,4 @@ namespace Pumkin.UnityTools.Interfaces
         void Update();
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.UI;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,3 +40,4 @@ namespace Pumkin.UnityTools.Helpers
         }
     }
 }
+#endif

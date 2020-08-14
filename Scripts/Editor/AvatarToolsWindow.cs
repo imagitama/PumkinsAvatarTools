@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Implementation.Tools;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Implementation.Tools;
 using Pumkin.UnityTools.Implementation.Tools.SubTools;
 using Pumkin.UnityTools.Interfaces;
 using Pumkin.UnityTools.UI;
@@ -35,3 +36,4 @@ namespace Pumkin.UnityTools
         }
     }
 }
+#endif

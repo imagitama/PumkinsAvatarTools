@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Helpers;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Modules;
 using Pumkin.UnityTools.Interfaces;
 using System;
@@ -11,6 +12,9 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.UI
 {
+    /// <summary>
+    /// Main UI class, responsible for drawing everything
+    /// </summary>
     class MainUI
     {
         public List<IUIModule> UIModules = new List<IUIModule>();
@@ -133,3 +137,4 @@ namespace Pumkin.UnityTools.UI
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 
 namespace Pumkin.UnityTools.Interfaces.Settings
 {
@@ -8,3 +9,4 @@ namespace Pumkin.UnityTools.Interfaces.Settings
         bool SaveToConfigFile(string filePath);
     }
 }
+#endif

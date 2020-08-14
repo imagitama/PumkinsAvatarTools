@@ -1,4 +1,5 @@
-﻿using Pumkin.UnityTools.Interfaces.Settings;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Interfaces.Settings;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Pumkin.UnityTools.Implementation.Settings
                     editor = Editor.CreateEditor(this);
                 return editor;
             } 
-        }
+        }        
 
         public bool SaveToConfigFile(string filePath)
         {            
@@ -35,3 +36,4 @@ namespace Pumkin.UnityTools.Implementation.Settings
         }
     }
 }
+#endif
