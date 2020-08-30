@@ -135,9 +135,10 @@ namespace Pumkin.UnityTools.UI
                     list = list.Where((t) =>
                     {
                         var attr = t.GetCustomAttribute<AutoLoadAttribute>();
-                        if(attr)
-                            return attr.ConfigurationString.Equals(configurationString, StringComparison.InvariantCultureIgnoreCase);
-                        return false;
+                        if(!attr)
+                            return false;
+                        return attr.ConfigurationStrings.Contains(configurationString, StringComparer.InvariantCultureIgnoreCase)
+                            || attr.ConfigurationStrings.Contains(PumkinTools.DEFAULT_CONFIGURATION, StringComparer.InvariantCultureIgnoreCase);
                     }).ToList();                    
                 }                
             }

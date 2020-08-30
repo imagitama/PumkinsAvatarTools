@@ -17,8 +17,10 @@ namespace Pumkin.UnityTools
         public delegate void AvatarChangeHandler(GameObject selection);
         public static event AvatarChangeHandler AvatarSelectionChanged;
 
+        public const string DEFAULT_CONFIGURATION = "generic";
+
         static GameObject _selectedAvatar;
-        static string _configurationString = "generic";
+        static string _configurationString = DEFAULT_CONFIGURATION;
         static string[] _configurations;
 
         static PumkinTools()
@@ -30,7 +32,7 @@ namespace Pumkin.UnityTools
         { 
             get
             {
-                if(_configurations == null)
+                //if(_configurations == null)
                     RefreshConfigurations();
                 return _configurations;
             }
@@ -49,9 +51,10 @@ namespace Pumkin.UnityTools
         public static void RefreshConfigurations()
         {
             var conf = new HashSet<string>();
-            var cache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>()
-                .Select(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationString);
-            Configurations = new HashSet<string>(cache).ToArray();
+            var cache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>().ToList();
+
+            var configCache = cache.SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings).ToList();
+            Configurations = new HashSet<string>(configCache).ToArray();
         }        
 
         public static GameObject SelectedAvatar 

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Modules
 {    
-    [AutoLoad("test", ConfigurationString = "debug")]
+    [AutoLoad("test", "debug")]
     class DebugModule : UIModuleBase
     {        
         public DebugModule()

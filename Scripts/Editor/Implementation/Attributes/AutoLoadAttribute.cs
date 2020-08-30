@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pumkin.Extensions;
 
 namespace Pumkin.UnityTools.Attributes
 {
@@ -11,8 +12,8 @@ namespace Pumkin.UnityTools.Attributes
     class AutoLoadAttribute : Attribute
     {
         private string parentModuleID;
-        private string configurationString;
-        private string id;        
+        private string[] configurationStrings;
+        private string id;
 
         /// <summary>
         /// The ID of the module or tool, used to organize the UI
@@ -38,18 +39,18 @@ namespace Pumkin.UnityTools.Attributes
         }
 
         /// <summary>
-        /// Configuration name, used to only load modules or tools if the selected configuration matches, ex: vrchat
+        /// Configuration names, used to only load modules or tools if the selected configuration matches, ex: vrchat
         /// </summary>
-        public string ConfigurationString
+        public string[] ConfigurationStrings
         {
-            get => configurationString;
-            set => configurationString = string.IsNullOrWhiteSpace(value) ? "generic" : value;
+            get => configurationStrings;
+            set => configurationStrings = value.IsNullOrEmpty() ? new string[] { PumkinTools.DEFAULT_CONFIGURATION } : value;
         }
 
-        public AutoLoadAttribute(string id)
+        public AutoLoadAttribute(string id, params string[] configurationStrings)
         {
             ID = id;
-            ConfigurationString = default;
+            ConfigurationStrings = configurationStrings;
         }
 
         public static implicit operator bool(AutoLoadAttribute attr)
