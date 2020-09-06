@@ -19,7 +19,7 @@ namespace Pumkin.UnityTools.Helpers
             var prefType = PrefabUtility.GetPrefabAssetType(obj);
             if(prefType == PrefabAssetType.MissingAsset || prefType == PrefabAssetType.NotAPrefab)
             {
-                Debug.Log("Not a prefab");
+                PumkinTools.Log("Not a prefab");
                 return false;
             }
             return true;

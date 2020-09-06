@@ -23,7 +23,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
         public List<IUIModule> ChildModules { get; set; }
         public List<ISubTool> SubTools { get; set; }
         public virtual bool IsHidden { get; set; }        
-        public GUIContent LabelContent
+        public virtual GUIContent GUIContent
         {
             get
             {
@@ -100,24 +100,26 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
         public virtual void DrawHeader()
         {            
-            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, LabelContent, true, Styles.MenuFoldout);            
+            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, GUIContent, true, Styles.MenuFoldout);            
         }
 
         public virtual void DrawContent()
         {
             EditorGUILayout.Space();
-            if(!string.IsNullOrEmpty(Description))
-            {
-                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);                
-            }            
+            if(!string.IsNullOrEmpty(Description))            
+                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
+            
+            DrawChildren();
+        }        
 
+        public virtual void DrawChildren()
+        {
             foreach(var tool in SubTools)
                 tool?.DrawUI();
 
             EditorGUILayout.Space();
             foreach(var child in ChildModules)
                 child?.Draw();
-            
         }
 
         public virtual void OrderSubTools()

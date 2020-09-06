@@ -85,7 +85,7 @@ namespace Pumkin.UnityTools.UI
                     }
                     else
                     {
-                        Debug.Log($"'{mod}' is null");
+                        PumkinTools.Log($"'{mod}' is null");
                     }
                 }
 

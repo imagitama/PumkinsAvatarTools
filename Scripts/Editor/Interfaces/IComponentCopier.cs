@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,8 @@ namespace Pumkin.Interfaces.ComponentCopier
 {
     public interface IComponentCopier
     {
-        void CopyComponents(GameObject objFrom, GameObject objTo);
+        string ComponentName { get; set; }
+        bool TryCopyComponents(GameObject objFrom, GameObject objTo);
     }
 }
 #endif

@@ -78,7 +78,12 @@ namespace Pumkin.UnityTools
         public static void Log(string msg, UnityEngine.Object context)
         {
             LogHandler.LogFormat(LogType.Log, context, msg, new string[0]);
-        }        
+        }
+
+        public static void Log(string msg)
+        {
+            LogHandler.LogFormat(LogType.Log, null, msg, new string[0]);
+        }
     }
 }
 #endif

@@ -1,7 +1,7 @@
-﻿using Pumkin.UnityTools.Attributes;
+﻿#if UNITY_EDITOR
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Implementation.Settings;
 using Pumkin.UnityTools.Interfaces.Settings;
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.Linq;

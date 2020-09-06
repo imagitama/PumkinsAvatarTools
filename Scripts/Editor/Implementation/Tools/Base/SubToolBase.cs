@@ -87,7 +87,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
         {
             if(updateCallback == null)
             {
-                Debug.Log($"Setting up Update callback for {Name}");
+                PumkinTools.Log($"Setting up Update callback for {Name}");
                 updateCallback = new EditorApplication.CallbackFunction(Update);
             }            
         }
@@ -151,7 +151,7 @@ namespace Pumkin.UnityTools.Implementation.Tools
 
         protected virtual void Finish(GameObject target)
         {
-            Debug.Log($"{Name} completed successfully.");
+            PumkinTools.Log($"{Name} completed successfully.");
         }
 
         public virtual void Update()

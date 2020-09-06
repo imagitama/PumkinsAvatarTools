@@ -14,7 +14,7 @@ namespace Pumkin.UnityTools.Interfaces
         string Description { get; set; }        
         string GameConfigurationString { get; set; }
         bool IsExpanded { get; set; }        
-        GUIContent LabelContent { get; set; }
+        GUIContent GUIContent { get; set; }
         List<IUIModule> ChildModules { get; set; }
         List<ISubTool> SubTools { get; set; }        
         int OrderInUI { get; set; }

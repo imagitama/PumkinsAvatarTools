@@ -48,7 +48,7 @@ namespace Pumkin.UnityTools.Implementation.Logging
         //            break;
         //        case LogType.Log:
         //        default:
-        //            Debug.Log(msg);
+        //            PumkinTools.Log(msg);
         //            break;
         //    }
         //}
@@ -120,7 +120,7 @@ namespace Pumkin.UnityTools.Implementation.Logging
 
         //public void LogWarning(string tag, object message, UnityEngine.Object context)
         //{
-        //    Debug.Log();
+        //    PumkinTools.Log();
         //}
     }
 }
