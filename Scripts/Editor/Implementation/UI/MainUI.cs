@@ -128,7 +128,7 @@ namespace Pumkin.UnityTools.UI
         public void OrderModules()
         {
             UIModules = UIModules.OrderBy(m => m.OrderInUI).ToList();
-            OrphanHolder.OrderSubTools();
+            OrphanHolder.OrderSubItems();
         }
 
         public static implicit operator bool(MainUI ui)

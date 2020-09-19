@@ -13,8 +13,8 @@ namespace Pumkin.UnityTools.Implementation.Modules
     [UIDefinition("Component Copiers", OrderInUI = 2)]
     class ComponentCopiersModule : UIModuleBase
     {
-        public static GameObject CopyToAvatar { get; set; }
-        GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy to");
+        public static GameObject CopyFromAvatar { get; set; }
+        GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
 
         public override void DrawContent()
         {
@@ -23,12 +23,26 @@ namespace Pumkin.UnityTools.Implementation.Modules
             if(!string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
 
-            CopyToAvatar = EditorGUILayout.ObjectField(AvatarSelectorContent, CopyToAvatar, typeof(GameObject), true) as GameObject;
+            CopyFromAvatar = EditorGUILayout.ObjectField(AvatarSelectorContent, CopyFromAvatar, typeof(GameObject), true) as GameObject;
 
             if(GUILayout.Button("Select from Scene"))
-                CopyToAvatar = Selection.activeGameObject ?? CopyToAvatar;
-            
-            UIHelpers.DrawGUILine();
+                CopyFromAvatar = Selection.activeGameObject ?? CopyFromAvatar;
+
+#if PUMKIN_DEV
+            if(GUILayout.Button("Autoselect"))
+            {
+                CopyFromAvatar = GameObject.Find("copyFrom");
+                PumkinTools.SelectedAvatar = GameObject.Find("copyTo");
+            }
+#endif
+
+
+            UIHelpers.DrawGUILine();            
+
+            EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromAvatar);
+            foreach(var copier in SubItems)            
+                copier?.DrawUI();
+            EditorGUI.EndDisabledGroup();
         }
     }
 }

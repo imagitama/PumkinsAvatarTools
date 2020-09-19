@@ -16,13 +16,13 @@ namespace Pumkin.UnityTools.Interfaces
         bool IsExpanded { get; set; }        
         GUIContent GUIContent { get; set; }
         List<IUIModule> ChildModules { get; set; }
-        List<ISubTool> SubTools { get; set; }        
+        List<ISubItem> SubItems { get; set; }        
         int OrderInUI { get; set; }
         bool IsHidden { get; set; }
 
         void Draw();
 
-        void OrderSubTools();
+        void OrderSubItems();
         void Start();
     }
 }

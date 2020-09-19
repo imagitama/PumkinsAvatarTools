@@ -10,7 +10,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
 {
     class OrphanHolderModule : UIModuleBase
     {
-        public override bool IsHidden { get => SubTools.Count == 0 && ChildModules.Count == 0; }
+        public override bool IsHidden { get => SubItems.Count == 0 && ChildModules.Count == 0; }
         public OrphanHolderModule()
         {
             Name = "Uncategorized";

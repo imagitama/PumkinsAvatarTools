@@ -1,35 +1,84 @@
 ﻿#if UNITY_EDITOR
+using Pumkin.Extensions;
 using Pumkin.Interfaces.ComponentCopier;
+using Pumkin.UnityTools.Attributes;
 using Pumkin.UnityTools.Helpers;
 using Pumkin.UnityTools.Implementation.Modules;
 using Pumkin.UnityTools.Implementation.Settings;
+using Pumkin.UnityTools.Interfaces;
 using Pumkin.UnityTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Pumkin.UnityTools.Implementation.Copiers
 {
     abstract class ComponentCopierBase : IComponentCopier
     {
-        GUIContent Content { get; set; }
-        public string ComponentName { get; set; }
-
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string GameConfigurationString { get; set; }        
+        public int OrderInUI { get; set; }
+        
+        protected bool fixReferences = false;        
+        protected virtual GUIContent Content 
+        {
+            get
+            {
+                if(_content == null)
+                    _content = new GUIContent(Name, Description);
+                return _content;
+            }
+            set
+            {
+                _content = value;
+            }
+        }
+        public abstract string ComponentTypeNameFull { get; }
         public virtual SettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; private set; }
-
-        protected abstract bool DoCopy(GameObject objFrom, GameObject objTo);
+        protected Type ComponentType
+        {
+            get
+            {
+                if(_componentType == null)
+                    _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
+                return _componentType;
+            }
+        }
         
+        GUIContent _content;
+        Type _componentType;
+
+        public ComponentCopierBase()
+        {
+            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
+            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
+            {
+                Name = uiDefAttr.FriendlyName;
+                Description = uiDefAttr.Description;
+                OrderInUI = uiDefAttr.OrderInUI;
+            }
+            else
+            {
+                Name = GetType().Name;
+                Description = "Base Copier description";
+                OrderInUI = 0;
+            }            
+        }
+
         public virtual void DrawUI()
         {
             EditorGUILayout.BeginHorizontal();
             {
                 if(GUILayout.Button(Content, Styles.MediumButton))
-                    TryCopyComponents(PumkinTools.SelectedAvatar, ComponentCopiersModule.CopyToAvatar);
+                    TryCopyComponents(ComponentCopiersModule.CopyFromAvatar, PumkinTools.SelectedAvatar);
                 if(Settings)
                     if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
                         ExpandSettings = !ExpandSettings;
@@ -47,16 +96,6 @@ namespace Pumkin.UnityTools.Implementation.Copiers
             });
         }
 
-        protected virtual bool Prepare(GameObject objFrom, GameObject objTo)
-        {
-            return false;
-        }
-
-        protected virtual void Finish(GameObject objFrom, GameObject objTo)
-        {            
-            PumkinTools.Log($"{ComponentName} copier completed successfully.");
-        }
-
         public bool TryCopyComponents(GameObject objFrom, GameObject objTo)
         {
             try
@@ -72,6 +111,73 @@ namespace Pumkin.UnityTools.Implementation.Copiers
                 Debug.LogException(e);
             }
             return false;
+        }
+        
+        protected virtual bool Prepare(GameObject objFrom, GameObject objTo)
+        {
+            if((!objFrom || !objTo) || (objFrom == objTo))
+                return false;
+            if(ComponentType == null)
+            {
+                PumkinTools.Log($"{Name}: Couldn't find component type");
+                return false;
+            }
+
+            return true;
+        }
+
+        protected virtual void Finish(GameObject objFrom, GameObject objTo)
+        {            
+            PumkinTools.Log($"{ComponentTypeNameFull} copier completed successfully.");
+        }
+
+
+        protected virtual bool DoCopy(GameObject objFrom, GameObject objTo)
+        {
+            var compsFrom = objFrom.GetComponentsInChildren(ComponentType, true);
+            
+            foreach(var coFrom in compsFrom)
+            {
+                var transPath = coFrom.transform.GetPathInHierarchy();
+                var trans = objTo.transform.Find(transPath);
+                if(!trans)
+                    continue;
+                
+                var existComps = trans.gameObject.GetComponents(ComponentType);                
+
+                ComponentUtility.CopyComponent(coFrom);
+                ComponentUtility.PasteComponentAsNew(trans.gameObject);
+
+                var addedComp = trans.gameObject.GetComponents(ComponentType)
+                    .Except(existComps)
+                    .FirstOrDefault();
+
+                FixReferences(addedComp, objTo.transform);
+            }            
+            return true;
+        }
+
+        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot)
+        {
+            var serialComp = new SerializedObject(comp);
+
+            serialComp.ForEachPropertyVisible(true, x =>
+            {
+                if(x.propertyType != SerializedPropertyType.ObjectReference || x.name == "m_Script")
+                    return;
+
+                var rf = x.objectReferenceValue;
+                var trans = x.objectReferenceValue as Transform;
+                if(trans != null)
+                {
+                    var tPath = trans.GetPathInHierarchy();
+                    var transTarget = targetHierarchyRoot.Find(tPath);
+                    if(transTarget != null)                    
+                        x.objectReferenceValue = transTarget;                    
+                }
+            });
+
+            serialComp.ApplyModifiedProperties();
         }
     }
 }

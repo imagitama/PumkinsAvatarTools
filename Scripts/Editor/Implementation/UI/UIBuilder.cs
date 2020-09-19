@@ -17,7 +17,7 @@ namespace Pumkin.UnityTools.UI
     static class UIBuilder
     {
         static List<Type> typeCache;
-        static List<Type> subToolTypeCache;
+        static List<Type> subItemTypeCache;
         static List<Type> moduleTypeCache;
         
         public static MainUI BuildUI()
@@ -58,14 +58,14 @@ namespace Pumkin.UnityTools.UI
             }
 
             //Create and assign subtools that don't belong to any modules
-            foreach(var type in subToolTypeCache)
+            foreach(var type in subItemTypeCache)
             {
                 var attr = type.GetCustomAttribute<AutoLoadAttribute>();
                 if(string.IsNullOrEmpty(attr.ParentModuleID))
                 {
                     var tool = Activator.CreateInstance(type) as ISubTool;
                     if(tool != null)
-                        UI.OrphanHolder.SubTools.Add(tool);
+                        UI.OrphanHolder.SubItems.Add(tool);
                 }
             }
                         
@@ -80,7 +80,7 @@ namespace Pumkin.UnityTools.UI
 
         public static IUIModule BuildModule(Type moduleType)
         {
-            var tools = new List<ISubTool>();            
+            var items = new List<ISubItem>();
             var module = Activator.CreateInstance(moduleType) as IUIModule;
 
             var modAttr = module.GetType().GetCustomAttribute<AutoLoadAttribute>(false);
@@ -90,17 +90,17 @@ namespace Pumkin.UnityTools.UI
                 return null;
             }
 
-            //Loop through tools whose ParentID matches our ID and assign them to our module
-            var childToolTypes = subToolTypeCache.Where(t => t.GetCustomAttribute<AutoLoadAttribute>()?.ParentModuleID == modAttr.ID);
-            foreach(var toolType in childToolTypes)
+            //Loop through items whose ParentID matches our ID and assign them to our module
+            var childItemTypes = subItemTypeCache.Where(t => t.GetCustomAttribute<AutoLoadAttribute>()?.ParentModuleID == modAttr.ID);
+            foreach(var itemType in childItemTypes)
             {                
-                var toolInst = Activator.CreateInstance(toolType) as ISubTool;
-                if(toolInst != null)
-                    tools.Add(toolInst);                   
+                var itemInst = Activator.CreateInstance(itemType) as ISubItem;
+                if(itemInst != null)
+                    items.Add(itemInst);                   
             }
 
             //Order subtools based on their OrderInUI
-            module.SubTools = tools.OrderBy(x => x.OrderInUI).ToList();
+            module.SubItems = items.OrderBy(x => x.OrderInUI).ToList();
 
             if(ModuleIDManager.RegisterModule(module))
                 return module;
@@ -121,13 +121,13 @@ namespace Pumkin.UnityTools.UI
         public static void RefreshCachedTypes(string configurationString)
         {
             typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>()?.ToList();
-            subToolTypeCache = TypeHelpers.GetChildTypesOf<ISubTool>(typeCache)?.ToList();
+            subItemTypeCache = TypeHelpers.GetChildTypesOf<ISubItem>(typeCache)?.ToList();
             moduleTypeCache = TypeHelpers.GetChildTypesOf<IUIModule>(typeCache)?.ToList();
 
             if(!string.IsNullOrEmpty(configurationString))
             {
                 FilterList(ref typeCache);
-                FilterList(ref subToolTypeCache);
+                FilterList(ref subItemTypeCache);
                 FilterList(ref moduleTypeCache);
 
                 void FilterList(ref List<Type> list)

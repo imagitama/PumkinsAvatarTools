@@ -21,7 +21,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
         public string GameConfigurationString { get; set; }
         public bool IsExpanded { get; set; }
         public List<IUIModule> ChildModules { get; set; }
-        public List<ISubTool> SubTools { get; set; }
+        public List<ISubItem> SubItems { get; set; }
         public virtual bool IsHidden { get; set; }        
         public virtual GUIContent GUIContent
         {
@@ -66,7 +66,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
             IsExpanded = false;
             
-            SubTools = new List<ISubTool>();
+            SubItems = new List<ISubItem>();
             ChildModules = new List<IUIModule>();            
         }
 
@@ -114,7 +114,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
 
         public virtual void DrawChildren()
         {
-            foreach(var tool in SubTools)
+            foreach(var tool in SubItems)
                 tool?.DrawUI();
 
             EditorGUILayout.Space();
@@ -122,12 +122,12 @@ namespace Pumkin.UnityTools.Implementation.Modules
                 child?.Draw();
         }
 
-        public virtual void OrderSubTools()
+        public virtual void OrderSubItems()
         {
-            if(SubTools == null || SubTools.Count == 0)
+            if(SubItems == null || SubItems.Count == 0)
                 return;
 
-            SubTools = SubTools.OrderBy(t => t.OrderInUI).ToList();
+            SubItems = SubItems.OrderBy(t => t.OrderInUI).ToList();
         }
 
         public static implicit operator bool(UIModuleBase module)

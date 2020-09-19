@@ -26,7 +26,7 @@ namespace Pumkin.UnityTools.Implementation.Modules
             base.DrawContent();
 
             if(GUILayout.Button("Remove reset transforms from tools"))
-                AvatarToolsWindow.UI.FindModule("tools")?.SubTools.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
+                AvatarToolsWindow.UI.FindModule("tools")?.SubItems.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
 
             if(GUILayout.Button("Remove tools module"))
                 AvatarToolsWindow.UI.RemoveModule("tools");
