@@ -1,18 +1,13 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Implementation.Settings;
-using Pumkin.UnityTools.Interfaces.Settings;
-using System;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Implementation.Settings;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Tools.SubTools
-{    
-    [AutoLoad("tools_setRenderAnchors", ParentModuleID = "tools_setupAvatar")]
+namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
+{
+    [AutoLoad("tools_setRenderAnchors", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
     [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]    
     class SetRendererAnchors : SubToolBase
     {        

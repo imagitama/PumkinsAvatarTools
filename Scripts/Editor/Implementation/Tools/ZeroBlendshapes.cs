@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Implementation.Settings;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Implementation.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Tools
+namespace Pumkin.AvatarTools.Implementation.Tools
 {
     [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
     [UIDefinition("Zero Blendshapes", Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0")]

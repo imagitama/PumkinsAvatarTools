@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.UI
+namespace Pumkin.AvatarTools.UI
 {
     static class Icons
     {
@@ -16,6 +16,11 @@ namespace Pumkin.UnityTools.UI
         static Icons()
         {
             Settings = EditorGUIUtility.IconContent("Settings");            
+        }
+
+        public static Texture GetIconFromType(Type type)
+        {
+            return null;
         }
     }
 }

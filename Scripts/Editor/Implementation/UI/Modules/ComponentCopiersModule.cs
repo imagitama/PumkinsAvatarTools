@@ -1,18 +1,20 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.Interfaces.ComponentCopier;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AutoLoad("copiers")]
-    [UIDefinition("Component Copiers", OrderInUI = 2)]
+    [AutoLoad(DefaultModuleIDs.COPIER)]
+    [UIDefinition("Component Copier", OrderInUI = 1)]
     class ComponentCopiersModule : UIModuleBase
     {
+        bool canCopy = true;
         public static GameObject CopyFromAvatar { get; set; }
         GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
 
@@ -40,9 +42,33 @@ namespace Pumkin.UnityTools.Implementation.Modules
             UIHelpers.DrawGUILine();            
 
             EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromAvatar);
-            foreach(var copier in SubItems)            
-                copier?.DrawUI();
+            {
+                foreach(var copier in SubItems)
+                {
+                    Helpers.UIHelpers.VerticalBox(() =>
+                    {
+                        copier?.DrawUI();
+                    });
+                }
+            }
             EditorGUI.EndDisabledGroup();
+            
+            UIHelpers.DrawGUILine();
+
+            EditorGUI.BeginDisabledGroup(!canCopy);
+            {
+                if(GUILayout.Button("Copy Selected", Styles.MediumButton))
+                {
+                    foreach(var copier in SubItems)
+                    {
+                        var c = copier as IComponentCopier;
+                        if(c.Active)
+                            c?.TryCopyComponents(CopyFromAvatar, PumkinTools.SelectedAvatar);
+                    }
+                }
+            }
+            EditorGUI.EndDisabledGroup();
+            EditorGUILayout.Space();
         }
     }
 }

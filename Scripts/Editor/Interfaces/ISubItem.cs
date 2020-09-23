@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
 
-namespace Pumkin.UnityTools.Interfaces
+namespace Pumkin.AvatarTools.Interfaces
 {
     public interface ISubItem
     {

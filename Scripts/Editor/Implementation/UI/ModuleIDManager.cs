@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Interfaces;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
     static class ModuleIDManager
     {

@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.UnityTools
+namespace Pumkin.AvatarTools
 {
     static class PumkinTools
     {
@@ -83,6 +83,16 @@ namespace Pumkin.UnityTools
         public static void Log(string msg)
         {
             LogHandler.LogFormat(LogType.Log, null, msg, new string[0]);
+        }
+
+        public static void LogWarning(string msg)
+        {
+            LogHandler.LogFormat(LogType.Warning, null, msg, new string[0]);
+        }
+
+        public static void LogWarning(string msg, UnityEngine.Object context)
+        {
+            LogHandler.LogFormat(LogType.Warning, context, msg, new string[0]);
         }
     }
 }

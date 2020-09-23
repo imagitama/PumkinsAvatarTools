@@ -1,14 +1,14 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
+using Pumkin.AvatarTools.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AutoLoad("tools_fixAvatar", ParentModuleID = "tools")]
+    [AutoLoad(DefaultModuleIDs.TOOLS_FIX_AVATAR, ParentModuleID = DefaultModuleIDs.TOOLS)]
     [UIDefinition("Fix Avatar", OrderInUI = 1)]
     class FixAvatarModule : UIModuleBase
     {

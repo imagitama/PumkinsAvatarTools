@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.UI
+namespace Pumkin.AvatarTools.UI
 {
     static class Styles
     {
@@ -80,7 +80,7 @@ namespace Pumkin.UnityTools.UI
                 border = new RectOffset(6, 6, 6, 6),
                 fontSize = 12,
                 alignment = TextAnchor.UpperLeft
-            };
+            };     
 
             IconButton = new GUIStyle("button")
             {         

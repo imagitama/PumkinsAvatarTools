@@ -5,14 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Pumkin.UnityTools;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.Attributes;
+using Pumkin.AvatarTools;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.Attributes;
 using UnityEngine;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Implementation.Modules;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Implementation.Modules;
 
-namespace Pumkin.UnityTools.UI
+namespace Pumkin.AvatarTools.UI
 {
     static class UIBuilder
     {

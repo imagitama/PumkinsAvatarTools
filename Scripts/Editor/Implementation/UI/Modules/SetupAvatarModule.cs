@@ -1,16 +1,16 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Implementation.Modules;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Implementation.Modules;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AutoLoad("tools_setupAvatar", ParentModuleID = "tools")]
+    [AutoLoad(DefaultModuleIDs.TOOLS_SETUP_AVATAR, ParentModuleID = DefaultModuleIDs.TOOLS)]
     [UIDefinition("Setup Avatar", OrderInUI = 0)]
     class SetupAvatarModule : UIModuleBase
     {

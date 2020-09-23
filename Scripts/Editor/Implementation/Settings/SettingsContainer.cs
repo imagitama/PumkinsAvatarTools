@@ -1,15 +1,10 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Interfaces.Settings;
+using Pumkin.Interfaces.Settings;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Settings
+namespace Pumkin.AvatarTools.Implementation.Settings
 {
     [Serializable]
     public abstract class SettingsContainer : ScriptableObject, ISettingsContainer

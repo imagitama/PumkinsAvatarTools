@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Helpers
+namespace Pumkin.AvatarTools.Helpers
 {
     public static class DebugHelpers
     {

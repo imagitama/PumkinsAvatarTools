@@ -1,8 +1,8 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Reflection;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
     public abstract class UIModuleBase : IUIModule
     {
@@ -122,12 +122,14 @@ namespace Pumkin.UnityTools.Implementation.Modules
                 child?.Draw();
         }
 
-        public virtual void OrderSubItems()
+        public virtual void OrderChildren()
         {
-            if(SubItems == null || SubItems.Count == 0)
+            if(SubItems?.Count == 0 && ChildModules?.Count == 0)
                 return;
 
             SubItems = SubItems.OrderBy(t => t.OrderInUI).ToList();
+            ChildModules = ChildModules.OrderBy(t => t.OrderInUI).ToList();
+            ChildModules.ForEach(x => x.OrderChildren());
         }
 
         public static implicit operator bool(UIModuleBase module)

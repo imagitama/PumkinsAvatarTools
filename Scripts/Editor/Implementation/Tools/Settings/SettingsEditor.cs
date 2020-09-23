@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 
-namespace Pumkin.UnityTools.Implementation.Tools.SubTools
+namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
 {
     /// <summary>
     /// Base editor that should be inherited when creating an editor for settings

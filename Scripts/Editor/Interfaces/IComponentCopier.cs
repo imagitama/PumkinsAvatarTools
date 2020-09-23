@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Interfaces;
+using Pumkin.AvatarTools.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +11,8 @@ namespace Pumkin.Interfaces.ComponentCopier
     {
         string ComponentTypeNameFull { get; }
         bool TryCopyComponents(GameObject objFrom, GameObject objTo);
+
+        bool Active { get; set; }
     }
 }
 #endif

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Helpers
+namespace Pumkin.AvatarTools.Helpers
 {
     public static class PathHelpers
     {

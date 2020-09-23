@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Interfaces
+namespace Pumkin.AvatarTools.Interfaces
 {
     public interface ISubTool : ISubItem
     {

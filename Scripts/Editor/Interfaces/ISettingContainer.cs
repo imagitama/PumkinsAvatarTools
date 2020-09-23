@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
 
-namespace Pumkin.UnityTools.Interfaces.Settings
+namespace Pumkin.Interfaces.Settings
 {
     interface ISettingsContainer
     {

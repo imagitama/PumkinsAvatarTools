@@ -1,13 +1,13 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Implementation.Tools;
-using Pumkin.UnityTools.Implementation.Tools.SubTools;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Implementation.Tools;
+using Pumkin.AvatarTools.Implementation.Tools.SubTools;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools
+namespace Pumkin.AvatarTools
 {
     class AvatarToolsWindow : EditorWindow
     {

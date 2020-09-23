@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Logging
+namespace Pumkin.AvatarTools.Implementation.Logging
 {
     class LogHandler : ILogHandler  //TODO: Implement ILogger properly
     {

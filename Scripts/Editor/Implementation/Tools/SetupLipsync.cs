@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Implementation.Settings;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Implementation.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Tools.SubTools
+namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
 {
     [AutoLoad("tools_lipsync", "vrchat", ParentModuleID = "tools_setupAvatar")]
     class SetupLipsync : SubToolBase

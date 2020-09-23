@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Interfaces
+namespace Pumkin.AvatarTools.Interfaces
 {
     public interface IUIModule
     {
@@ -22,7 +22,7 @@ namespace Pumkin.UnityTools.Interfaces
 
         void Draw();
 
-        void OrderSubItems();
+        void OrderChildren();
         void Start();
     }
 }

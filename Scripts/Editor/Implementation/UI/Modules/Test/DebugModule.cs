@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {    
-    [AutoLoad("test", "debug")]
+    [AutoLoad(DefaultModuleIDs.DEBUG, "debug")]
     class DebugModule : UIModuleBase
     {        
         public DebugModule()

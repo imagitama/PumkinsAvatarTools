@@ -1,14 +1,14 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Pumkin.UnityTools.Implementation.Modules
+namespace Pumkin.AvatarTools.Implementation.Modules
 {
-    [AutoLoad("tools")]
-    [UIDefinition("Tools", Description = "Various tools", OrderInUI = 1)]
+    [AutoLoad(DefaultModuleIDs.TOOLS)]
+    [UIDefinition("Tools", Description = "Various tools", OrderInUI = 0)]
     class ToolsModule : UIModuleBase
     {
         

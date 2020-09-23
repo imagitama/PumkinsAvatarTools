@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 
-namespace Pumkin.UnityTools.Helpers
+namespace Pumkin.AvatarTools.Helpers
 {
     public static class AttributeHelpers
     {

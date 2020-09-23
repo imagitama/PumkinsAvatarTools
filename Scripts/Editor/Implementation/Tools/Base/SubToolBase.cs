@@ -1,16 +1,16 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Implementation.Settings;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Implementation.Settings;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.AnimatedValues;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Tools
+namespace Pumkin.AvatarTools.Implementation.Tools
 {
     /// <summary>
     /// Base sub tool class. Should be inherited to create a tool

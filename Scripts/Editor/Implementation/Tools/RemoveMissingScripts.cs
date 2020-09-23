@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Attributes;
+using Pumkin.AvatarTools.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Tools.SubTools
+namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
 {
     [AutoLoad("tools_removeMissingScripts", ParentModuleID = "tools_fixAvatar")]
     [UIDefinition("Remove Missing Scripts")]

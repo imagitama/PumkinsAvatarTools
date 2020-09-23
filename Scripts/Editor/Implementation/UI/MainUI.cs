@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Implementation.Modules;
-using Pumkin.UnityTools.Interfaces;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Implementation.Modules;
+using Pumkin.AvatarTools.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace Pumkin.UnityTools.UI
+namespace Pumkin.AvatarTools.UI
 {
     /// <summary>
     /// Main UI class, responsible for drawing everything
@@ -128,7 +129,8 @@ namespace Pumkin.UnityTools.UI
         public void OrderModules()
         {
             UIModules = UIModules.OrderBy(m => m.OrderInUI).ToList();
-            OrphanHolder.OrderSubItems();
+            UIModules.ForEach(x => x.OrderChildren());
+            OrphanHolder.OrderChildren();
         }
 
         public static implicit operator bool(MainUI ui)

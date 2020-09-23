@@ -1,12 +1,12 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.Extensions;
 using Pumkin.Interfaces.ComponentCopier;
-using Pumkin.UnityTools.Attributes;
-using Pumkin.UnityTools.Helpers;
-using Pumkin.UnityTools.Implementation.Modules;
-using Pumkin.UnityTools.Implementation.Settings;
-using Pumkin.UnityTools.Interfaces;
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Implementation.Modules;
+using Pumkin.AvatarTools.Implementation.Settings;
+using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Implementation.Copiers
+namespace Pumkin.AvatarTools.Implementation.Copiers
 {
     abstract class ComponentCopierBase : IComponentCopier
     {
@@ -27,12 +27,12 @@ namespace Pumkin.UnityTools.Implementation.Copiers
         public int OrderInUI { get; set; }
         
         protected bool fixReferences = false;        
-        protected virtual GUIContent Content 
+        protected virtual GUIContent Content
         {
             get
             {
                 if(_content == null)
-                    _content = new GUIContent(Name, Description);
+                    _content = CreateGUIContent();
                 return _content;
             }
             set
@@ -43,6 +43,7 @@ namespace Pumkin.UnityTools.Implementation.Copiers
         public abstract string ComponentTypeNameFull { get; }
         public virtual SettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; private set; }
+        public bool Active { get; set; }
         protected Type ComponentType
         {
             get
@@ -52,7 +53,7 @@ namespace Pumkin.UnityTools.Implementation.Copiers
                 return _componentType;
             }
         }
-        
+
         GUIContent _content;
         Type _componentType;
 
@@ -70,15 +71,22 @@ namespace Pumkin.UnityTools.Implementation.Copiers
                 Name = GetType().Name;
                 Description = "Base Copier description";
                 OrderInUI = 0;
-            }            
+            }
+            Content = CreateGUIContent();
+        }
+
+        protected GUIContent CreateGUIContent()
+        {
+            return new GUIContent(Name, Icons.GetIconFromType(ComponentType));
         }
 
         public virtual void DrawUI()
         {
             EditorGUILayout.BeginHorizontal();
             {
-                if(GUILayout.Button(Content, Styles.MediumButton))
-                    TryCopyComponents(ComponentCopiersModule.CopyFromAvatar, PumkinTools.SelectedAvatar);
+                //if(GUILayout.Button(Content, Styles.MediumButton))
+                //    TryCopyComponents(ComponentCopiersModule.CopyFromAvatar, PumkinTools.SelectedAvatar);
+                Active = EditorGUILayout.ToggleLeft(Content, Active);
                 if(Settings)
                     if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
                         ExpandSettings = !ExpandSettings;

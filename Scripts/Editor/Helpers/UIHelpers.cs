@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.UnityTools.UI;
+using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.UnityTools.Helpers
+namespace Pumkin.AvatarTools.Helpers
 {
     public static class UIHelpers
     {
@@ -32,7 +32,7 @@ namespace Pumkin.UnityTools.Helpers
             action.Invoke();
             EditorGUILayout.EndVertical();
         }
-        public static void HorizontalBox(Action action, GUIStyle style)
+        public static void HorizontalBox(Action action, GUIStyle style = null)
         {
             EditorGUILayout.BeginHorizontal(style ?? Styles.Box);
             action.Invoke();

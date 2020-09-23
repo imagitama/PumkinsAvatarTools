@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Pumkin.Extensions;
 
-namespace Pumkin.UnityTools.Attributes
+namespace Pumkin.AvatarTools.Attributes
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     class AutoLoadAttribute : Attribute
