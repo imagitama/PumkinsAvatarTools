@@ -1,5 +1,6 @@
 ﻿using Pumkin.AvatarTools.Helpers;
 using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.UI;
 using Pumkin.Interfaces.ComponentDestroyer;
 using System;
 using System.Collections.Generic;
@@ -18,27 +19,46 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
         public string Description { get; set; }
         public string GameConfigurationString { get; set; }
         public int OrderInUI { get; set; }
+        public virtual GUIContent Content
+        {
+            get
+            {
+                if(_content == null)
+                    _content = CreateGUIContent();
+                return _content;
+            }
+        }
+        public Type ComponentType 
+        {
+            get
+            {
+                if(_componentType == null)
+                    _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
+                return _componentType;
+            }
+        }
 
-        Type type;
+        Type _componentType;
+        GUIContent _content;        
 
         public ComponentDestroyerBase()
         {
             if(!string.IsNullOrWhiteSpace(ComponentTypeNameFull))
-                type = TypeHelpers.GetType(ComponentTypeNameFull);
+                _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
             else
                 throw new ArgumentNullException(ComponentTypeNameFull, $"{ComponentTypeNameFull} is invalid");
 
-            Name = type.Name;
+            Name = _componentType.Name;
         }
 
         public void Finish(GameObject target)
         {
-            PumkinTools.Log($"Successfully removed all {type?.Name ?? "Unknown Type"} from {target.name}");
+            PumkinTools.Log($"Successfully removed all {_componentType?.Name ?? "Unknown Type"} from {target.name}");
         }
 
         public bool Prepare(GameObject target)
         {
-            if(type == null)
+            if(_componentType == null)
             {
                 PumkinTools.LogWarning($"Can't use {GetType().Name} as it doesn't have a valid type.");
                 return false;
@@ -47,7 +67,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
             if(!target)
                 return false;
 
-            Undo.RegisterCompleteObjectUndo(target, $"Destroy Components {type.Name}");
+            Undo.RegisterCompleteObjectUndo(target, $"Destroy Components {_componentType.Name}");
             return true;
         }
 
@@ -70,7 +90,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
 
         protected bool DoDestroyComponents(GameObject target)
         {
-            foreach(var co in target.GetComponentsInChildren(type, true))
+            foreach(var co in target.GetComponentsInChildren(_componentType, true))
             {
                 try
                 {
@@ -84,9 +104,14 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
             return true;
         }
 
+        protected virtual GUIContent CreateGUIContent()
+        {
+            return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
+        }
+
         public void DrawUI()
         {
-            if(GUILayout.Button(Name))            
+            if(GUILayout.Button(Content, Styles.TextIconButton))            
                 TryDestroyComponents(PumkinTools.SelectedAvatar);
         }
     }

@@ -11,6 +11,7 @@ namespace Pumkin.AvatarTools.UI
     {
         public const string NoHeader = "noHeader";
         public const string NoBorder = "noBorder";
+        public const string DrawDescriptionBox = "drawDescription";
     }
 }
 #endif

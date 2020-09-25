@@ -44,6 +44,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
         bool shouldDrawHeader = true;
         bool shouldDrawBorder = true;
+        bool shouldDrawDescriptionBox = false;
 
         public UIModuleBase()
         {
@@ -56,6 +57,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
                 
                 shouldDrawHeader = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoHeader);
                 shouldDrawBorder = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoBorder);
+                shouldDrawDescriptionBox = uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.DrawDescriptionBox);
             }            
             else
             {
@@ -106,7 +108,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         public virtual void DrawContent()
         {
             EditorGUILayout.Space();
-            if(!string.IsNullOrEmpty(Description))            
+            if(shouldDrawDescriptionBox && !string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
             
             DrawChildren();
@@ -119,7 +121,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
             EditorGUILayout.Space();
             foreach(var child in ChildModules)
-                child?.Draw();
+                child?.Draw();            
         }
 
         public virtual void OrderChildren()

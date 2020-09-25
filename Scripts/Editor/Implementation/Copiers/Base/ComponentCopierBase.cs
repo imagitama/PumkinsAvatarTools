@@ -27,7 +27,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
         public int OrderInUI { get; set; }
         
         protected bool fixReferences = false;        
-        protected virtual GUIContent Content
+        public virtual GUIContent Content
         {
             get
             {
@@ -44,7 +44,8 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
         public virtual SettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; private set; }
         public bool Active { get; set; }
-        protected Type ComponentType
+
+        public Type ComponentType
         {
             get
             {
@@ -52,7 +53,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
                     _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
                 return _componentType;
             }
-        }
+        }        
 
         GUIContent _content;
         Type _componentType;
@@ -75,9 +76,9 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
             Content = CreateGUIContent();
         }
 
-        protected GUIContent CreateGUIContent()
+        protected virtual GUIContent CreateGUIContent()
         {
-            return new GUIContent(Name, Icons.GetIconFromType(ComponentType));
+            return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
         }
 
         public virtual void DrawUI()

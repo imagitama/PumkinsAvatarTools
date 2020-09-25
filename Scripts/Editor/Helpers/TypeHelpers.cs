@@ -11,7 +11,7 @@ namespace Pumkin.AvatarTools.Helpers
     class TypeHelpers
     {
         /// <summary>
-        /// Gets type from name
+        /// Gets type from full name
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns>Type or null</returns>

@@ -17,6 +17,7 @@ namespace Pumkin.AvatarTools.UI
         public static GUIStyle RegionBG { get; private set; }
         public static GUIStyle Box { get; private set; }
         public static GUIStyle IconButton { get; private set; }
+        public static GUIStyle TextIconButton { get; private set; }
         public static GUIStyle MediumIconButton { get; private set; }
         public static GUIStyle MediumButton { get; private set; }        
 
@@ -101,6 +102,12 @@ namespace Pumkin.AvatarTools.UI
                 fixedHeight = MediumButton.fixedHeight,
                 imagePosition = ImagePosition.ImageOnly,
                 padding = new RectOffset(0, 0, 0, 0),
+            };
+
+            TextIconButton = new GUIStyle("button")
+            {
+                stretchHeight = false,
+                fixedHeight = 20,
             };
         }
     }

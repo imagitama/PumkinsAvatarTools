@@ -1,5 +1,7 @@
 ﻿#if UNITY_EDITOR
 
+using UnityEngine;
+
 namespace Pumkin.AvatarTools.Interfaces
 {
     public interface ISubItem
@@ -30,6 +32,11 @@ namespace Pumkin.AvatarTools.Interfaces
         /// Draws the UI
         /// </summary>
         void DrawUI();
+
+        /// <summary>
+        /// Label content
+        /// </summary>
+        GUIContent Content { get; }
     }
 }
 #endif

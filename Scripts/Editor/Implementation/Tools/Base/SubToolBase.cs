@@ -44,17 +44,21 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             }
         }
         public int OrderInUI { get; set; }
-        protected virtual GUIContent Content 
+        public virtual GUIContent Content 
         {
             get
             {
-                return _content ?? (_content = new GUIContent(Name, Description));
-            }
-            set
-            {
-                _content = value;
-            }
+                if(_content == null)
+                    _content = CreateGUIContent();
+                return _content;
+            }            
         }
+
+        protected virtual GUIContent CreateGUIContent()
+        {
+            return new GUIContent(Name, Description);
+        }
+
         public virtual SettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; protected set; }        
 
