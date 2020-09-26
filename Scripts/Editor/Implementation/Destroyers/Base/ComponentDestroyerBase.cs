@@ -28,7 +28,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
                 return _content;
             }
         }
-        public Type ComponentType 
+        public Type ComponentType
         {
             get
             {
@@ -39,7 +39,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
         }
 
         Type _componentType;
-        GUIContent _content;        
+        GUIContent _content;
 
         public ComponentDestroyerBase()
         {
@@ -81,7 +81,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
                     return true;
                 }
             }
-            catch(Exception e) 
+            catch(Exception e)
             {
                 Debug.LogException(e);
             }
@@ -111,7 +111,7 @@ namespace Pumkin.AvatarTools.Implementation.Destroyers
 
         public void DrawUI()
         {
-            if(GUILayout.Button(Content, Styles.TextIconButton))            
+            if(GUILayout.Button(Content, Styles.TextIconButton))
                 TryDestroyComponents(PumkinTools.SelectedAvatar);
         }
     }

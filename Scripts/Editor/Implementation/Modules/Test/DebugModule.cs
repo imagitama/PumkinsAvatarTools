@@ -1,5 +1,6 @@
-﻿#if UNITY_EDITOR
+﻿#if UNITY_EDITOR && PUMKIN_DEV
 using Pumkin.AvatarTools.Attributes;
+using Pumkin.AvatarTools.Helpers;
 using Pumkin.AvatarTools.UI;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,15 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Implementation.Modules
-{    
+{
     [AutoLoad(DefaultModuleIDs.DEBUG, "debug")]
     class DebugModule : UIModuleBase
-    {        
+    {
         public DebugModule()
         {
             Name = "Debug";
             Description = "Debug and test stuff";
-            OrderInUI = 100;            
+            OrderInUI = 100;
         }
 
         public override void DrawContent()
@@ -33,6 +34,9 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
             if(GUILayout.Button("Build UI"))
                 AvatarToolsWindow.UI = UIBuilder.BuildUI();
+
+            if(GUILayout.Button("Dump Default GUISkin"))
+                DebugHelpers.DumpDefaultGUISkin();
         }
     }
 }

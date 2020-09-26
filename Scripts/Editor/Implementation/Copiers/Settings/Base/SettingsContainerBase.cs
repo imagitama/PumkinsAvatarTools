@@ -7,26 +7,26 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Implementation.Settings
 {
     [Serializable]
-    public abstract class SettingsContainer : ScriptableObject, ISettingsContainer
-    {        
+    public abstract class SettingsContainerBase : ScriptableObject, ISettingsContainer
+    {
         protected Editor editor;
-        public Editor Editor 
-        { 
-            get 
+        public Editor Editor
+        {
+            get
             {
                 if(!editor)
                     editor = Editor.CreateEditor(this);
                 return editor;
-            } 
-        }        
+            }
+        }
 
         public bool SaveToConfigFile(string filePath)
-        {            
+        {
             throw new NotImplementedException();
         }
 
         public bool LoadFromConfigFile(string filePath)
-        {            
+        {
             throw new NotImplementedException();
         }
     }

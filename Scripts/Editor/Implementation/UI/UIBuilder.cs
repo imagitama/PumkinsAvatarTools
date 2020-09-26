@@ -19,14 +19,14 @@ namespace Pumkin.AvatarTools.UI
         static List<Type> typeCache;
         static List<Type> subItemTypeCache;
         static List<Type> moduleTypeCache;
-        
+
         public static MainUI BuildUI()
         {
             MainUI UI = new MainUI();
             ModuleIDManager.ClearCache();
 
             RefreshCachedTypes(PumkinTools.ConfigurationString);
-            
+
             //Build modules from typeCache
             foreach(var t in moduleTypeCache)
             {
@@ -43,7 +43,7 @@ namespace Pumkin.AvatarTools.UI
                 {
                     if(mod != null)
                         UI.UIModules.Add(mod);
-                }               
+                }
             }
 
             //Assign child modules to their parents
@@ -68,15 +68,15 @@ namespace Pumkin.AvatarTools.UI
                         UI.OrphanHolder.SubItems.Add(tool);
                 }
             }
-                        
+
             UI.OrderModules();
             return UI;
-        }        
+        }
 
         public static IUIModule BuildModule<T>() where T : IUIModule
         {
             return BuildModule(typeof(T));
-        }        
+        }
 
         public static IUIModule BuildModule(Type moduleType)
         {
@@ -93,10 +93,10 @@ namespace Pumkin.AvatarTools.UI
             //Loop through items whose ParentID matches our ID and assign them to our module
             var childItemTypes = subItemTypeCache.Where(t => t.GetCustomAttribute<AutoLoadAttribute>()?.ParentModuleID == modAttr.ID);
             foreach(var itemType in childItemTypes)
-            {                
+            {
                 var itemInst = Activator.CreateInstance(itemType) as ISubItem;
                 if(itemInst != null)
-                    items.Add(itemInst);                   
+                    items.Add(itemInst);
             }
 
             //Order subtools based on their OrderInUI
@@ -109,7 +109,7 @@ namespace Pumkin.AvatarTools.UI
 
         public static bool AssignToParent(IUIModule module)
         {
-            var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>();            
+            var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>();
             var parent = ModuleIDManager.GetModule(attr?.ParentModuleID);
             if(parent == null)
                 return false;
@@ -131,7 +131,7 @@ namespace Pumkin.AvatarTools.UI
                 FilterList(ref moduleTypeCache);
 
                 void FilterList(ref List<Type> list)
-                {                        
+                {
                     list = list.Where((t) =>
                     {
                         var attr = t.GetCustomAttribute<AutoLoadAttribute>();
@@ -139,8 +139,8 @@ namespace Pumkin.AvatarTools.UI
                             return false;
                         return attr.ConfigurationStrings.Contains(configurationString, StringComparer.InvariantCultureIgnoreCase)
                             || attr.ConfigurationStrings.Contains(PumkinTools.DEFAULT_CONFIGURATION, StringComparer.InvariantCultureIgnoreCase);
-                    }).ToList();                    
-                }                
+                    }).ToList();
+                }
             }
         }
     }

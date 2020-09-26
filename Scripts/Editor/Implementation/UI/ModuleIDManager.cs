@@ -15,14 +15,14 @@ namespace Pumkin.AvatarTools.Implementation.Modules
     static class ModuleIDManager
     {
         static Dictionary<string, IUIModule> IDCache = new Dictionary<string, IUIModule>();
-        
+
         public static bool RegisterModule(IUIModule module)
         {
             if(module == null)
                 return false;
             var typ = module.GetType();
             var attr = typ.GetCustomAttribute<AutoLoadAttribute>();
-            
+
             //var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>() ?? null;
             if(attr != null && IDCache.TryGetValue(attr.ID.ToUpperInvariant(), out _))
             {

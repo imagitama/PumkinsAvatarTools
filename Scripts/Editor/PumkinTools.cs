@@ -28,18 +28,18 @@ namespace Pumkin.AvatarTools
             RefreshConfigurations();
         }
 
-        public static string[] Configurations 
-        { 
+        public static string[] Configurations
+        {
             get
             {
                 //if(_configurations == null)
                     RefreshConfigurations();
                 return _configurations;
             }
-            set => _configurations = value; 
+            set => _configurations = value;
         }
-        public static string ConfigurationString 
-        { 
+        public static string ConfigurationString
+        {
             get => _configurationString;
             set
             {
@@ -55,9 +55,9 @@ namespace Pumkin.AvatarTools
 
             var configCache = cache.SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings).ToList();
             Configurations = new HashSet<string>(configCache).ToArray();
-        }        
+        }
 
-        public static GameObject SelectedAvatar 
+        public static GameObject SelectedAvatar
         {
             get => _selectedAvatar;
             set
@@ -75,6 +75,8 @@ namespace Pumkin.AvatarTools
 
         public static ILogHandler LogHandler { get; set; } = new Implementation.Logging.LogHandler();
 
+
+        //Temporary logger functions
         public static void Log(string msg, UnityEngine.Object context)
         {
             LogHandler.LogFormat(LogType.Log, context, msg, new string[0]);
@@ -93,6 +95,15 @@ namespace Pumkin.AvatarTools
         public static void LogWarning(string msg, UnityEngine.Object context)
         {
             LogHandler.LogFormat(LogType.Warning, context, msg, new string[0]);
+        }
+
+        public static void LogError(string msg)
+        {
+            LogHandler.LogFormat(LogType.Error, null, msg, new string[0]);
+        }
+        public static void LogError(string msg, UnityEngine.Object context)
+        {
+            LogHandler.LogFormat(LogType.Error, context, msg, new string[0]);
         }
     }
 }

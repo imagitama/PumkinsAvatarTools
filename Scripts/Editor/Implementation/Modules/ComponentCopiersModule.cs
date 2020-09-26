@@ -21,6 +21,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         public override void DrawContent()
         {
             EditorGUILayout.Space();
+            EditorGUILayout.Space();
 
             if(!string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
@@ -39,7 +40,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 #endif
 
 
-            UIHelpers.DrawGUILine();            
+            UIHelpers.DrawGUILine();
 
             EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromAvatar);
             {
@@ -52,7 +53,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
                 }
             }
             EditorGUI.EndDisabledGroup();
-            
+
             UIHelpers.DrawGUILine();
 
             EditorGUI.BeginDisabledGroup(!canCopy);

@@ -55,7 +55,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             var humanPose = new HumanPose();
             humanPoseHandler.GetHumanPose(ref humanPose);
 
-            //Find the Armature            
+            //Find the Armature
             Transform armature;
             if((armature = target.transform.Find("Armature")) == null)
             {

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using System.Reflection;
+using VRC.Core.BestHTTP.Examples;
 
 namespace Pumkin.AvatarTools.Implementation.Modules
 {
@@ -22,7 +23,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         public bool IsExpanded { get; set; }
         public List<IUIModule> ChildModules { get; set; }
         public List<ISubItem> SubItems { get; set; }
-        public virtual bool IsHidden { get; set; }        
+        public virtual bool IsHidden { get; set; }
         public virtual GUIContent GUIContent
         {
             get
@@ -33,7 +34,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
             {
                 _content = value;
             }
-        }              
+        }
         public int OrderInUI { get; set; }
 
         protected GUIContent _content;
@@ -48,17 +49,17 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
         public UIModuleBase()
         {
-            uiDefinition = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);            
+            uiDefinition = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
             if(uiDefinition != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
             {
                 Name = uiDefinition.FriendlyName;
                 Description = uiDefinition.Description;
                 OrderInUI = uiDefinition.OrderInUI;
-                
+
                 shouldDrawHeader = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoHeader);
                 shouldDrawBorder = !uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.NoBorder);
                 shouldDrawDescriptionBox = uiDefinition.ModuleStyles.Exists(t => t == UIModuleStyles.DrawDescriptionBox);
-            }            
+            }
             else
             {
                 Name = "Generic Module";
@@ -67,9 +68,9 @@ namespace Pumkin.AvatarTools.Implementation.Modules
             }
 
             IsExpanded = false;
-            
+
             SubItems = new List<ISubItem>();
-            ChildModules = new List<IUIModule>();            
+            ChildModules = new List<IUIModule>();
         }
 
         public virtual void Start() { }
@@ -101,18 +102,19 @@ namespace Pumkin.AvatarTools.Implementation.Modules
         }
 
         public virtual void DrawHeader()
-        {            
-            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, GUIContent, true, Styles.MenuFoldout);            
+        {
+            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, GUIContent, true, Styles.MenuFoldout);
         }
 
         public virtual void DrawContent()
         {
             EditorGUILayout.Space();
+
             if(shouldDrawDescriptionBox && !string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
-            
+
             DrawChildren();
-        }        
+        }
 
         public virtual void DrawChildren()
         {
@@ -121,7 +123,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
 
             EditorGUILayout.Space();
             foreach(var child in ChildModules)
-                child?.Draw();            
+                child?.Draw();
         }
 
         public virtual void OrderChildren()

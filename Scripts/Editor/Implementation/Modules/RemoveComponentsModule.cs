@@ -13,7 +13,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
     [AutoLoad(DefaultModuleIDs.DESTROYER, ParentModuleID = DefaultModuleIDs.TOOLS)]
     [UIDefinition("Remove Components", OrderInUI = 2)]
     class RemoveComponentsModule : UIModuleBase
-    {        
+    {
     }
 }
 #endif

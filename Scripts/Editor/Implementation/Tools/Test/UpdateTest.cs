@@ -13,16 +13,16 @@
 //{
 //    [AutoLoad("test_update")]
 //    class UpdateTest : SubToolBase
-//    {        
+//    {
 //        public UpdateTest()
 //        {
 //            Name = "Update Test";
-//            AllowUpdate = false;            
+//            AllowUpdate = false;
 //        }
 
 //        public override void DrawUI()
-//        {            
-//            AllowUpdate = EditorGUILayout.Toggle(Content, AllowUpdate);            
+//        {
+//            AllowUpdate = EditorGUILayout.Toggle(Content, AllowUpdate);
 //        }
 
 //        protected override bool DoAction(GameObject target)

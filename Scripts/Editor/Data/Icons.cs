@@ -15,7 +15,8 @@ namespace Pumkin.AvatarTools.UI
     static class Icons
     {
         public static GUIContent Settings { get; private set; }
-        public static GUIContent Default { get; private set; }        
+        public static GUIContent Options { get; private set; }
+        public static GUIContent Default { get; private set; }
         public static GUIContent DynamicBone { get; private set; }
         public static GUIContent DynamicBoneCollider { get; private set; }
 
@@ -23,7 +24,8 @@ namespace Pumkin.AvatarTools.UI
         {
             Default = EditorGUIUtility.IconContent("DefaultAsset Icon");
             Settings = EditorGUIUtility.IconContent("Settings");
-            
+            Options = EditorGUIUtility.IconContent("LookDevPaneOption", "Options");
+
             DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
             DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;
         }
@@ -41,10 +43,10 @@ namespace Pumkin.AvatarTools.UI
                 tex = Resources.Load<Texture>(type.Name);
             return tex;
         }
-        
+
         /// <summary>
         /// Loads icon texture from unity resources if type name matches texture name (ex: GameObject or GameObject-icon)
-        /// </summary>        
+        /// </summary>
         /// <returns></returns>
         public static Texture GetTypeIconFromResources<T>()
         {
@@ -63,7 +65,7 @@ namespace Pumkin.AvatarTools.UI
         {
             return GetIconTextureFromType(typeof(T));
         }
-        
+
         /// <summary>
         /// Gets icon texture from default unity icons or properties defined on this class
         /// </summary>
@@ -78,7 +80,7 @@ namespace Pumkin.AvatarTools.UI
                 if(cont != null && cont.image != null)
                     return cont.image;
             }
-            
+
             return FuncHelpers.InvokeWithoutUnityLogger(() =>
             {
                 return EditorGUIUtility.IconContent($"{type.Name} Icon")?.image ?? Default.image;

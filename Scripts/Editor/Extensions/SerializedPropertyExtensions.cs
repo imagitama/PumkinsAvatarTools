@@ -34,7 +34,7 @@ namespace Pumkin.Extensions
 		/// Sets value from SerializedProperty - even if value is nested
 		/// </summary>
 		/// <param name="property"></param>
-		/// <param name="value"></param>		
+		/// <param name="value"></param>
 		public static void SetValue(this SerializedProperty property, object value)
 		{
 			object obj = property.serializedObject.targetObject;

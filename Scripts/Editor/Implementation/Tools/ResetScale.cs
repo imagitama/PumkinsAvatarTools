@@ -17,7 +17,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
     class ResetScale : SubToolBase
     {
         protected override bool Prepare(GameObject target)
-        {            
+        {
             if(!base.Prepare(target))
                 return false;
             return PrefabHelpers.HasPrefab(target);
@@ -28,7 +28,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
             var pref = PrefabUtility.GetCorrespondingObjectFromSource(target);
             if(!pref)
                 return false;
-            
+
             target.transform.localScale = pref.transform.localScale;
             return true;
         }

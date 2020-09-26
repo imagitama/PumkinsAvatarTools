@@ -15,7 +15,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
     [UIDefinition("Zero Blendshapes", Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0")]
     class ZeroBlendshapes : SubToolBase
     {
-        SkinnedMeshRenderer[] renders;        
+        SkinnedMeshRenderer[] renders;
 
         protected override bool Prepare(GameObject target)
         {

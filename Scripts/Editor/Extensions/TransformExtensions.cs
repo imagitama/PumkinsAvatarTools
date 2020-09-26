@@ -29,7 +29,7 @@ namespace Pumkin.Extensions
                 if(!skipRootTransform)
                     path = transform.transform.root.name;
             }
-            return path;            
+            return path;
         }
 
         public static Transform FindOrCreate(this Transform transform, string transformPath, bool createIfMissing = false, Transform reference = null)
@@ -37,7 +37,7 @@ namespace Pumkin.Extensions
             var t = transform.Find(transformPath);
 
             if(t == null && createIfMissing)
-            {               
+            {
 
                 string[] arr = transformPath?.Split('\\', '/') ?? new string[0];
                 if(arr.Length > 0)

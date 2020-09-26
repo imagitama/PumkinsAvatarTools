@@ -21,7 +21,7 @@ namespace Pumkin.AvatarTools.Interfaces
         /// <param name="target">Target GameObject</param>
         /// <returns>True if everything succeeded</returns>
         bool TryExecute(GameObject target);
-        
+
         /// <summary>
         /// Runs every editor update, used when tool still needs to do stuff when it's UI isn't being drawing
         /// </summary>

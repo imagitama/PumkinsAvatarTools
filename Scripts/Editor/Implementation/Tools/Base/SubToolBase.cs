@@ -18,7 +18,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
     abstract class SubToolBase : ISubTool
     {
         public string Name { get; set; }
-        public string Description { get; set; }        
+        public string Description { get; set; }
         public string GameConfigurationString { get; set; }
         public bool AllowUpdate
         {
@@ -31,7 +31,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             {
                 if(_allowUpdate == value)
                     return;
-                
+
                 if(_allowUpdate = value)    //Intentional assign + check
                 {
                     SetupUpdateCallback();
@@ -44,14 +44,14 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             }
         }
         public int OrderInUI { get; set; }
-        public virtual GUIContent Content 
+        public virtual GUIContent Content
         {
             get
             {
                 if(_content == null)
                     _content = CreateGUIContent();
                 return _content;
-            }            
+            }
         }
 
         protected virtual GUIContent CreateGUIContent()
@@ -59,17 +59,17 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             return new GUIContent(Name, Description);
         }
 
-        public virtual SettingsContainer Settings { get => null; }
-        public bool ExpandSettings { get; protected set; }        
+        public virtual SettingsContainerBase Settings { get => null; }
+        public bool ExpandSettings { get; protected set; }
 
         bool _allowUpdate;
-        GUIContent _content;        
+        GUIContent _content;
 
         EditorApplication.CallbackFunction updateCallback;
 
         public SerializedObject serializedObject;
 
-        public SubToolBase() 
+        public SubToolBase()
         {
             var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
             if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
@@ -93,7 +93,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
             {
                 PumkinTools.Log($"Setting up Update callback for {Name}");
                 updateCallback = new EditorApplication.CallbackFunction(Update);
-            }            
+            }
         }
 
         protected virtual void SetupSettings() { }
@@ -105,12 +105,11 @@ namespace Pumkin.AvatarTools.Implementation.Tools
                 if(GUILayout.Button(Content, Styles.MediumButton))
                     TryExecute(PumkinTools.SelectedAvatar);
                 if(Settings)
-                    if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
-                        ExpandSettings = !ExpandSettings;
+                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.MediumIconButton);
             }
             EditorGUILayout.EndHorizontal();
 
-            //Draw settings here            
+            //Draw settings here
             if(!Settings || !ExpandSettings)
                 return;
 
@@ -120,7 +119,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
                 Settings.Editor.OnInspectorGUI();
             });
         }
-        
+
         public bool TryExecute(GameObject target)
         {
             try
@@ -149,7 +148,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools
 
             serializedObject = new SerializedObject(target);
             return true;
-        }        
+        }
 
         protected abstract bool DoAction(GameObject target);
 

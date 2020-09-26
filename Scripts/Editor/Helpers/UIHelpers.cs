@@ -17,12 +17,12 @@ namespace Pumkin.AvatarTools.Helpers
             return EditorGUILayout.Foldout(value, content, toggleOnClick, style);
         }
 
-        public static void DrawGUILine(float height = 1f, bool spacedOut = true)
+        public static void DrawGUILine(float height = 1f, bool spaceBefore = true, bool spaceAfter = true)
         {
-            if(spacedOut)
+            if(spaceBefore)
                 EditorGUILayout.Space();
             GUILayout.Box(GUIContent.none, Styles.EditorLine, GUILayout.ExpandWidth(true), GUILayout.Height(height));
-            if(spacedOut)
+            if(spaceAfter)
                 EditorGUILayout.Space();
         }
 
@@ -37,6 +37,14 @@ namespace Pumkin.AvatarTools.Helpers
             EditorGUILayout.BeginHorizontal(style ?? Styles.Box);
             action.Invoke();
             EditorGUILayout.EndHorizontal();
+        }
+
+        public static void DrawIndented(int indentLevel, Action action)
+        {
+            int old = EditorGUI.indentLevel;
+            EditorGUI.indentLevel = indentLevel;
+            action.Invoke();
+            EditorGUI.indentLevel = old;
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Pumkin.AvatarTools.Implementation.Logging
         //    {
         //        case LogType.Warning:
         //            Debug.LogWarning(msg);
-        //            break;                
+        //            break;
         //        case LogType.Assert:
         //            Debug.LogAssertion(msg);
         //            break;

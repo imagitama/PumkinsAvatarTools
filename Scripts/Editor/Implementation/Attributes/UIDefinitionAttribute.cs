@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pumkin.AvatarTools.Attributes
 {
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = false)]    
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = false)]
     class UIDefinitionAttribute : Attribute
     {
         public string FriendlyName { get; set; }

@@ -22,7 +22,7 @@ namespace Pumkin.AvatarTools.Attributes
         {
             get => id;
             private set
-            {  
+            {
                 if(string.IsNullOrWhiteSpace(value))
                     throw new NullReferenceException("ID cannot be null or empty");
                 id = value.ToUpperInvariant();

@@ -44,7 +44,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
                 }
                 return _requiredVisemeNames;
             }
-        }        
+        }
 
         List<string> _requiredVisemeNames;
         Type _vrcDescriptorType;

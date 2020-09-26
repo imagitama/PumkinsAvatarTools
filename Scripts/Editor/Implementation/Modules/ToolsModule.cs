@@ -11,7 +11,7 @@ namespace Pumkin.AvatarTools.Implementation.Modules
     [UIDefinition("Tools", Description = "Various tools", OrderInUI = 0)]
     class ToolsModule : UIModuleBase
     {
-        
+
     }
 }
 #endif

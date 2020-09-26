@@ -10,7 +10,7 @@ namespace Pumkin.AvatarTools.Helpers
     {
         /// <summary>
         /// Returns path as a string array split by / or \
-        /// </summary>      
+        /// </summary>
         public static string[] GetPathAsArray(string path)
         {
             if(string.IsNullOrEmpty(path))
@@ -21,7 +21,7 @@ namespace Pumkin.AvatarTools.Helpers
 
         /// <summary>
         /// Get path without object name.
-        /// </summary>        
+        /// </summary>
         /// <returns>Returns all text before last / or \. A paths ending like this (Armature/Hips/) will return Armature/ </returns>
         public static string GetPathNoName(string path)
         {

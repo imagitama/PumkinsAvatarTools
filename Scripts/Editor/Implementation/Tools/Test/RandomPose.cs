@@ -9,14 +9,14 @@
 //using UnityEngine;
 
 //namespace Pumkin.UnityTools.Implementation.Tools.SubTools
-//{    
+//{
 //    [AutoLoad("tools_randompose")]
 //    class RandomPose : SubToolBase
 //    {
 //        public RandomPose()
 //        {
 //            Name = "Random Pose";
-//            Description = "Set a random pose for testing";            
+//            Description = "Set a random pose for testing";
 //        }
 
 //        protected override bool DoAction(GameObject target)

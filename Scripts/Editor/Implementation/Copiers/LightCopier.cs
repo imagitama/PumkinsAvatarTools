@@ -11,7 +11,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
     [AutoLoad("copier_lights", ParentModuleID = DefaultModuleIDs.COPIER)]
     [UIDefinition("Lights", OrderInUI = 1)]
     class LightCopier : ComponentCopierBase
-    {        
+    {
         public override string ComponentTypeNameFull { get => typeof(Light).FullName; }
     }
 }

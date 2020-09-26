@@ -23,10 +23,10 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public string GameConfigurationString { get; set; }        
+        public string GameConfigurationString { get; set; }
         public int OrderInUI { get; set; }
-        
-        protected bool fixReferences = false;        
+
+        protected bool fixReferences = false;
         public virtual GUIContent Content
         {
             get
@@ -41,7 +41,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
             }
         }
         public abstract string ComponentTypeNameFull { get; }
-        public virtual SettingsContainer Settings { get => null; }
+        public virtual SettingsContainerBase Settings { get => null; }
         public bool ExpandSettings { get; private set; }
         public bool Active { get; set; }
 
@@ -53,7 +53,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
                     _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
                 return _componentType;
             }
-        }        
+        }
 
         GUIContent _content;
         Type _componentType;
@@ -74,6 +74,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
                 OrderInUI = 0;
             }
             Content = CreateGUIContent();
+            SetupSettings();
         }
 
         protected virtual GUIContent CreateGUIContent()
@@ -81,28 +82,30 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
             return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
         }
 
+        protected virtual void SetupSettings() { }
+
         public virtual void DrawUI()
         {
             EditorGUILayout.BeginHorizontal();
             {
-                //if(GUILayout.Button(Content, Styles.MediumButton))
-                //    TryCopyComponents(ComponentCopiersModule.CopyFromAvatar, PumkinTools.SelectedAvatar);
                 Active = EditorGUILayout.ToggleLeft(Content, Active);
                 if(Settings)
-                    if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
-                        ExpandSettings = !ExpandSettings;
+                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.IconButton);
             }
             EditorGUILayout.EndHorizontal();
 
-            //Draw settings here            
+            //Draw settings here
             if(!Settings || !ExpandSettings)
                 return;
 
-            UIHelpers.VerticalBox(() =>
+            EditorGUILayout.Space();
+
+            UIHelpers.DrawIndented(EditorGUI.indentLevel + 1, () =>
             {
-                EditorGUILayout.Space();
-                Settings.Editor.OnInspectorGUI();
+                Settings.Editor.OnInspectorGUINoScriptField();
             });
+
+            EditorGUILayout.Space();
         }
 
         public bool TryCopyComponents(GameObject objFrom, GameObject objTo)
@@ -110,7 +113,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
             try
             {
                 if(Prepare(objFrom, objTo) && DoCopy(objFrom, objTo))
-                {                    
+                {
                     Finish(objFrom, objTo);
                     return true;
                 }
@@ -121,7 +124,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
             }
             return false;
         }
-        
+
         protected virtual bool Prepare(GameObject objFrom, GameObject objTo)
         {
             if((!objFrom || !objTo) || (objFrom == objTo))
@@ -136,7 +139,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
         }
 
         protected virtual void Finish(GameObject objFrom, GameObject objTo)
-        {            
+        {
             PumkinTools.Log($"{ComponentTypeNameFull} copier completed successfully.");
         }
 
@@ -144,15 +147,15 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
         protected virtual bool DoCopy(GameObject objFrom, GameObject objTo)
         {
             var compsFrom = objFrom.GetComponentsInChildren(ComponentType, true);
-            
+
             foreach(var coFrom in compsFrom)
             {
                 var transPath = coFrom.transform.GetPathInHierarchy();
                 var trans = objTo.transform.Find(transPath);
                 if(!trans)
                     continue;
-                
-                var existComps = trans.gameObject.GetComponents(ComponentType);                
+
+                var existComps = trans.gameObject.GetComponents(ComponentType);
 
                 ComponentUtility.CopyComponent(coFrom);
                 ComponentUtility.PasteComponentAsNew(trans.gameObject);
@@ -162,7 +165,7 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
                     .FirstOrDefault();
 
                 FixReferences(addedComp, objTo.transform);
-            }            
+            }
             return true;
         }
 
@@ -181,8 +184,8 @@ namespace Pumkin.AvatarTools.Implementation.Copiers
                 {
                     var tPath = trans.GetPathInHierarchy();
                     var transTarget = targetHierarchyRoot.Find(tPath);
-                    if(transTarget != null)                    
-                        x.objectReferenceValue = transTarget;                    
+                    if(transTarget != null)
+                        x.objectReferenceValue = transTarget;
                 }
             });
 

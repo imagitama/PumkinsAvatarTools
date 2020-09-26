@@ -15,7 +15,7 @@ namespace Pumkin.AvatarTools.Helpers
                 return str;
 
             List<char> chars = str.ToCharArray().ToList();
-            for(int i = chars.Count - 2; i >= 0; i--)            
+            for(int i = chars.Count - 2; i >= 0; i--)
             {
                 if(char.IsUpper(str[i]))
                 {

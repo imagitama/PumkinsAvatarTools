@@ -13,13 +13,12 @@ namespace Pumkin.AvatarTools.UI
     {
         public static GUIStyle MenuFoldout { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
-        public static GUIStyle EditorLine { get; private set; }        
-        public static GUIStyle RegionBG { get; private set; }
+        public static GUIStyle EditorLine { get; private set; }
         public static GUIStyle Box { get; private set; }
         public static GUIStyle IconButton { get; private set; }
-        public static GUIStyle TextIconButton { get; private set; }
         public static GUIStyle MediumIconButton { get; private set; }
-        public static GUIStyle MediumButton { get; private set; }        
+        public static GUIStyle TextIconButton { get; private set; }
+        public static GUIStyle MediumButton { get; private set; }
 
         static Styles()
         {
@@ -61,18 +60,18 @@ namespace Pumkin.AvatarTools.UI
                 margin = new RectOffset(5, 5, 1, 1),
                 padding = new RectOffset(1, 1, 1, 1),
             };
-            
-            RegionBG = new GUIStyle("RegionBg")
-            {
-                margin = new RectOffset(3, 3, 3, 3),
-                padding = new RectOffset(10, 10, 6, 14),
-                border = new RectOffset(6, 6, 6, 6),
-                fontSize = 12,
-                alignment = TextAnchor.UpperLeft
-            };
-            string regionBgTexGUID = AssetDatabase.FindAssets("RegionBgStyleNormalState")[0];
-            Texture2D regionBgTex = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(regionBgTexGUID));
-            RegionBG.normal.background = regionBgTex;
+
+            //RegionBG = new GUIStyle("RegionBg")
+            //{
+            //    margin = new RectOffset(3, 3, 3, 3),
+            //    padding = new RectOffset(10, 10, 6, 14),
+            //    border = new RectOffset(6, 6, 6, 6),
+            //    fontSize = 12,
+            //    alignment = TextAnchor.UpperLeft
+            //};
+            //string regionBgTexGUID = AssetDatabase.FindAssets("RegionBgStyleNormalState")[0];
+            //Texture2D regionBgTex = AssetDatabase.LoadAssetAtPath<Texture2D>(AssetDatabase.GUIDToAssetPath(regionBgTexGUID));
+            //RegionBG.normal.background = regionBgTex;
 
             Box = new GUIStyle("box")
             {
@@ -81,10 +80,10 @@ namespace Pumkin.AvatarTools.UI
                 border = new RectOffset(6, 6, 6, 6),
                 fontSize = 12,
                 alignment = TextAnchor.UpperLeft
-            };     
+            };
 
             IconButton = new GUIStyle("button")
-            {         
+            {
                 fixedWidth = 18f,
                 fixedHeight = 18f,
                 imagePosition = ImagePosition.ImageOnly,

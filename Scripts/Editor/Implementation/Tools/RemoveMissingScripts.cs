@@ -17,7 +17,7 @@ namespace Pumkin.AvatarTools.Implementation.Tools.SubTools
         protected override bool DoAction(GameObject target)
         {
             var components = target.GetComponents<Component>();
-            int removedCount = 0;            
+            int removedCount = 0;
 
             for(var i = 0; i < components.Length; i++)
             {

@@ -30,7 +30,7 @@ namespace Pumkin.AvatarTools.UI
 
         IUIModule _orphanHolder;
 
-        public MainUI() 
+        public MainUI()
         {
             var index = Array.IndexOf(PumkinTools.Configurations, PumkinTools.ConfigurationString);
             configurationIndex = index > 0 ? index : 0;
@@ -38,7 +38,7 @@ namespace Pumkin.AvatarTools.UI
 
         public MainUI(List<IUIModule> modules)
         {
-            UIModules = modules;   
+            UIModules = modules;
         }
 
         public void Draw()
@@ -50,7 +50,7 @@ namespace Pumkin.AvatarTools.UI
                     drawSettings = !drawSettings;
             }
             EditorGUILayout.EndHorizontal();
-            
+
             GUILayout.Space(20f);
 
             if(drawSettings)
@@ -62,7 +62,7 @@ namespace Pumkin.AvatarTools.UI
                 if(EditorGUI.EndChangeCheck())
                 {
                     PumkinTools.ConfigurationString = PumkinTools.Configurations[configurationIndex];
-                }                
+                }
             }
             else
             {
@@ -117,10 +117,10 @@ namespace Pumkin.AvatarTools.UI
         {
             return UIModules.Remove(module);
         }
-        
+
         public int RemoveModule(string name)
         {
-            return UIModules.RemoveAll(m => string.Equals(m.Name, name, StringComparison.InvariantCultureIgnoreCase));            
+            return UIModules.RemoveAll(m => string.Equals(m.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>

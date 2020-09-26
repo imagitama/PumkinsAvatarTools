@@ -46,7 +46,7 @@ namespace Pumkin.AvatarTools.Helpers
         /// <returns></returns>
         public static IEnumerable<Type> GetChildTypesOf<T>(params Assembly[] assemblies)
         {
-            return GetChildTypesOf<T>(assemblies?.SelectMany(x => x.GetTypes()));            
+            return GetChildTypesOf<T>(assemblies?.SelectMany(x => x.GetTypes()));
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Pumkin.AvatarTools.Helpers
 
         /// <summary>
         /// Returns all instantiatable types with attribute
-        /// </summary>        
+        /// </summary>
         /// <param name="types">Types to search through</param>
         /// <returns></returns>
         public static IEnumerable<Type> GetTypesWithAttribute<T>(IEnumerable<Type> types) where T : Attribute
