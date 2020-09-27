@@ -1,13 +1,11 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Attributes;
-using Pumkin.AvatarTools.Helpers;
+using Pumkin.AvatarTools.Logger;
 using Pumkin.AvatarTools.UI;
-using System;
+using Pumkin.Core.Attributes;
+using Pumkin.Core.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools
@@ -44,7 +42,7 @@ namespace Pumkin.AvatarTools
             set
             {
                 _configurationString = string.IsNullOrWhiteSpace(value) ? "generic" : value;
-                AvatarToolsWindow.UI = UIBuilder.BuildUI();
+                PumkinToolsWindow.UI = UIBuilder.BuildUI();
             }
         }
 
@@ -73,7 +71,7 @@ namespace Pumkin.AvatarTools
             AvatarSelectionChanged?.Invoke(newSelection);
         }
 
-        public static ILogHandler LogHandler { get; set; } = new Implementation.Logging.LogHandler();
+        public static ILogHandler LogHandler { get; set; } = new LogHandler();
 
 
         //Temporary logger functions
