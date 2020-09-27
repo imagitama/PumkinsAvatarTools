@@ -19,6 +19,8 @@ namespace Pumkin.AvatarTools.UI
         bool drawSettings = false;
         int configurationIndex = 0;
 
+        Vector2 scroll = Vector2.zero;
+
         public IUIModule OrphanHolder
         {
             get => _orphanHolder ?? (_orphanHolder = new OrphanHolderModule());
@@ -70,13 +72,22 @@ namespace Pumkin.AvatarTools.UI
 
                 UIHelpers.DrawGUILine();
 
+                scroll = EditorGUILayout.BeginScrollView(scroll);
+
                 //Draw modules
                 foreach(var mod in UIModules)
                 {
                     if(mod != null)
                     {
-                        if(!mod.IsHidden)
-                            mod.DrawUI();
+                        try
+                        {
+                            if(!mod.IsHidden)
+                                mod.DrawUI();
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.LogException(e);
+                        }
                     }
                     else
                     {
@@ -85,15 +96,29 @@ namespace Pumkin.AvatarTools.UI
                 }
 
                 //Draw Orphan Holder module
-                if(OrphanHolder != null)
-                    if(!OrphanHolder.IsHidden)
-                        OrphanHolder.DrawUI();
+                try
+                {
+                    if(OrphanHolder != null)
+                        if(!OrphanHolder.IsHidden)
+                            OrphanHolder.DrawUI();
+                }
+                catch(Exception e)
+                {
+                    Debug.LogException(e);
+                }
+
+                EditorGUILayout.EndScrollView();
             }
         }
 
         public IUIModule FindModule(string name)
         {
             return UIModules.FirstOrDefault(s => string.Equals(name, s.Name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public bool HasModule(IUIModule module)
+        {
+            return UIModules.Exists(m => m == module);
         }
 
         public void AddModule(IUIModule module)

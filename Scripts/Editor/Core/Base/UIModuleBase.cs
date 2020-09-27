@@ -34,9 +34,21 @@ namespace Pumkin.AvatarTools.Base
         }
         public int OrderInUI { get; set; }
 
+
         protected GUIContent _content;
+        bool? isMainMenuModule = false;
 
         UIDefinitionAttribute uiDefinition;
+
+        bool IsMainMenuModule
+        {
+            get
+            {
+                if(isMainMenuModule == null)
+                    isMainMenuModule = PumkinToolsWindow.UI?.HasModule(this);
+                return (bool)isMainMenuModule;
+            }
+        }
 
         bool firstDraw = true;
 
@@ -82,23 +94,29 @@ namespace Pumkin.AvatarTools.Base
                 Start();
                 firstDraw = false;
             }
+
+            if(shouldDrawHeader)
+                DrawHeader();
+
             Action drawContent = () =>
             {
-                if(shouldDrawHeader)
-                    DrawHeader();
-                if(IsExpanded || !shouldDrawHeader)
-                    DrawContent();
+                DrawContent();
             };
 
-            if(shouldDrawBorder)
+            if(IsExpanded || !shouldDrawHeader)
             {
-                UIHelpers.VerticalBox(drawContent);
+                if(shouldDrawBorder)
+                {
+                    UIHelpers.VerticalBox(drawContent, Styles.ModuleBox);
+                }
+                else
+                {
+                    drawContent.Invoke();
+                    EditorGUILayout.Space();
+                }
             }
             else
-            {
-                drawContent.Invoke();
-                EditorGUILayout.Space();
-            }
+                GUILayout.Space(3f);
         }
 
         public virtual void DrawHeader()
@@ -108,7 +126,8 @@ namespace Pumkin.AvatarTools.Base
 
         public virtual void DrawContent()
         {
-            EditorGUILayout.Space();
+            if(SubItems.Count > 0)
+                EditorGUILayout.Space();
 
             if(shouldDrawDescriptionBox && !string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
@@ -123,8 +142,9 @@ namespace Pumkin.AvatarTools.Base
             else
                 SubItems.ForEach(s => s?.DrawUI());
 
+            if(SubItems.Count > 0)
+                EditorGUILayout.Space();
 
-            EditorGUILayout.Space();
             ChildModules?.ForEach(c => c?.DrawUI());
         }
 
@@ -135,7 +155,7 @@ namespace Pumkin.AvatarTools.Base
 
             SubItems = SubItems.OrderBy(t => t.OrderInUI).ToList();
 
-            //Try to order by settings so stuff pairs up nicer if needed
+            //Try to order by whether or not item has a settings button so stuff pairs up nicer
             if(shouldDrawChildrenInHorizontalPairs)
                 SubItems = SubItems.OrderBy(t => t.Settings != null).ToList();
 

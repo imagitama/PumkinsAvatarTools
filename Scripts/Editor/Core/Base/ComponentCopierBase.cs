@@ -84,7 +84,7 @@ namespace Pumkin.AvatarTools.Base
             {
                 Active = EditorGUILayout.ToggleLeft(Content, Active);
                 if(Settings != null)
-                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.IconButton);
+                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.Icon);
             }
             EditorGUILayout.EndHorizontal();
 

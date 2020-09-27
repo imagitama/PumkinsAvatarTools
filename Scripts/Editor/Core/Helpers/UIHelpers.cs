@@ -15,9 +15,17 @@ namespace Pumkin.Core.Helpers
 {
     public static class UIHelpers
     {
+
         public static bool DrawFoldout(bool value, GUIContent content, bool toggleOnClick, GUIStyle style)
         {
-            return EditorGUILayout.Foldout(value, content, toggleOnClick, style);
+            //Temporary wrapper until I decide to replace this with something nicer looking
+            Rect rect = GUILayoutUtility.GetRect(content, Styles.Box, GUILayout.ExpandWidth(true));
+            float oldLabel = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = rect.width;
+            bool result = EditorGUI.Foldout(rect, value, content, true, style);
+            EditorGUIUtility.labelWidth = oldLabel;
+            return result;
+            //return EditorGUILayout.Foldout(value, content, toggleOnClick, style);
         }
 
         public static void DrawGUILine(float height = 1f, bool spaceBefore = true, bool spaceAfter = true)

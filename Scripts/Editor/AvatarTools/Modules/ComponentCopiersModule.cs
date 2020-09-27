@@ -47,8 +47,8 @@ namespace Pumkin.AvatarTools.Modules
                 {
                     UIHelpers.VerticalBox(() =>
                     {
-                        copier?.DrawUI();
-                    });
+                        copier?.DrawUI(GUILayout.MinHeight(Styles.CopierTabHeight));
+                    }, Styles.CopierBox);
                 }
             }
             EditorGUI.EndDisabledGroup();
@@ -57,7 +57,7 @@ namespace Pumkin.AvatarTools.Modules
 
             EditorGUI.BeginDisabledGroup(!canCopy);
             {
-                if(GUILayout.Button("Copy Selected", Styles.MediumButton))
+                if(GUILayout.Button("Copy Selected", Styles.CopierCopyButton))
                 {
                     foreach(var copier in SubItems)
                     {

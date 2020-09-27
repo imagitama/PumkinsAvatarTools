@@ -12,23 +12,60 @@ namespace Pumkin.AvatarTools.UI
     static class Styles
     {
         public static GUIStyle MenuFoldout { get; private set; }
+        public static GUIStyle MenuFoldout_old { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
         public static GUIStyle EditorLine { get; private set; }
         public static GUIStyle Box { get; private set; }
         public static GUIStyle IconButton { get; private set; }
+        public static GUIStyle Icon { get; private set; }
         public static GUIStyle MediumIconButton { get; private set; }
         public static GUIStyle TextIconButton { get; private set; }
         public static GUIStyle MediumButton { get; private set; }
+        public static GUIStyle BigButton { get; private set; }
+
+        public static GUIStyle ModuleBox { get; private set; }
+        public static GUIStyle CopierBox { get; private set; }
         public static GUIStyle SubToolButton { get; private set; }
+        public static GUIStyle CopierCopyButton { get; private set; }
+
+        public static float CopierTabHeight { get; private set; } = 22f;
 
         static Styles()
         {
-            MenuFoldout = new GUIStyle("foldout")
+            MenuFoldout_old = new GUIStyle("foldout")
             {
                 fontSize = 14,
-                alignment = TextAnchor.MiddleLeft,
+                alignment = TextAnchor.UpperLeft,
+                imagePosition = ImagePosition.ImageLeft,
                 fontStyle = FontStyle.Bold,
+                stretchWidth = true,
+                stretchHeight = false,
+                contentOffset = new Vector2(0, -2),
             };
+
+            MenuFoldout = new GUIStyle("OffsetDropDown")
+            {
+                fontSize = 14,
+                fixedHeight = 30,
+                fontStyle = FontStyle.Bold,
+                contentOffset = new Vector2(8, -1),
+                padding = new RectOffset(4, 4, 4, 4),
+                stretchWidth = true,
+            };
+            {
+                var module = Resources.Load<Texture2D>("UI/module_pulldown");
+                var moduleAct = Resources.Load<Texture2D>("UI/module_pulldown act");
+                var moduleFocus = Resources.Load<Texture2D>("UI/module_pulldown focus");
+
+                if(module)
+                    MenuFoldout.normal.background = module;
+                if(moduleAct)
+                    MenuFoldout.active.background = moduleAct;
+                if(moduleFocus)
+                    MenuFoldout.focused.background = moduleFocus;
+            }
+
+
 
             TitleLabel = new GUIStyle("label")
             {
@@ -47,11 +84,32 @@ namespace Pumkin.AvatarTools.UI
 
             Box = new GUIStyle("box")
             {
-                margin = new RectOffset(3, 3, 3, 3),
+                margin = new RectOffset(3, 3, 3, 4),
                 padding = new RectOffset(10, 10, 6, 6),
                 border = new RectOffset(6, 6, 6, 6),
                 fontSize = 12,
-                alignment = TextAnchor.UpperLeft
+                alignment = TextAnchor.UpperLeft,
+            };
+
+            ModuleBox = new GUIStyle("helpBox")
+            {
+                margin = new RectOffset(4, 4, 3, 3),
+                padding = new RectOffset(6, 6, 6, 6),
+                border = new RectOffset(6, 6, 6, 6),
+                fontSize = 12,
+                alignment = TextAnchor.UpperLeft,
+                stretchWidth = true,
+                stretchHeight = false,
+            };
+
+            CopierBox = new GUIStyle("helpBox")
+            {
+                margin = new RectOffset(3, 3, 3, 3),
+                padding = new RectOffset(10, 10, 6, 3),
+                border = new RectOffset(6, 6, 6, 6),
+                fontSize = 12,
+                alignment = TextAnchor.UpperLeft,
+                stretchWidth = true,
             };
 
             IconButton = new GUIStyle("button")
@@ -60,6 +118,17 @@ namespace Pumkin.AvatarTools.UI
                 fixedHeight = 18f,
                 imagePosition = ImagePosition.ImageOnly,
                 padding = new RectOffset(0, 0, 0, 0),
+            };
+
+            Icon = new GUIStyle("label")
+            {
+                fixedWidth = 18f,
+                fixedHeight = 18f,
+                imagePosition = ImagePosition.ImageOnly,
+                alignment = TextAnchor.LowerRight,
+                padding = new RectOffset(0, 0, 0, 0),
+                margin = new RectOffset(0, 0, 0, 0),
+                border = new RectOffset(0, 0, 0, 0),
             };
 
             MediumButton = new GUIStyle("button")
@@ -81,10 +150,13 @@ namespace Pumkin.AvatarTools.UI
                 fixedHeight = 20,
             };
 
-            SubToolButton = new GUIStyle(MediumButton)
+            BigButton = new GUIStyle("button")
             {
-                stretchWidth = true,
+                fixedHeight = 28f,
             };
+
+            SubToolButton = MediumButton;
+            CopierCopyButton = BigButton;
         }
     }
 }
