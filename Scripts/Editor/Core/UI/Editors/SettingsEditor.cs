@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools.Base;
 using UnityEditor;
 
 namespace Pumkin.AvatarTools.UI.Editors
@@ -7,6 +8,7 @@ namespace Pumkin.AvatarTools.UI.Editors
     /// Base editor that should be inherited when creating an editor for settings
     /// Draws default editor but without the script field by default
     /// </summary>
+    [CustomEditor(typeof(SettingsContainerBase))]
     public abstract class SettingsEditor : Editor
     {
         protected bool hideScriptField = true;

@@ -3,7 +3,7 @@ using Pumkin.AvatarTools.Destroyers;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.Settings;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
@@ -19,7 +19,7 @@ namespace Pumkin.AvatarTools.Copiers
 
         protected override bool DoCopy(GameObject objFrom, GameObject objTo)
         {
-            if(settings.removeOldBones)
+            if(settings.removeAllBeforeCopying)
             {
                 var des = new DynamicBoneDestroyer();
                 if(!des.TryDestroyComponents(objTo))

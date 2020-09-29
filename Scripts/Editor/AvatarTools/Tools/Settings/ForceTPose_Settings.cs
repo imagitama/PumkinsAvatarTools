@@ -1,5 +1,5 @@
 ﻿using Pumkin.AvatarTools.Base;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Settings
 {

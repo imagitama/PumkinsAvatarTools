@@ -1,6 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Base;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using UnityEditor;
 using UnityEngine;
 

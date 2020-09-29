@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.Core.Attributes
+namespace Pumkin.Core
 {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false, Inherited = false)]
     class UIDefinitionAttribute : Attribute

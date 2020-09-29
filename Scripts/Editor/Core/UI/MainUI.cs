@@ -1,10 +1,13 @@
 ﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools.Base;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,8 +19,8 @@ namespace Pumkin.AvatarTools.UI
     class MainUI
     {
         public List<IUIModule> UIModules = new List<IUIModule>();
+        public List<UIModuleBase> mods = new List<UIModuleBase>();
         bool drawSettings = false;
-        int configurationIndex = 0;
 
         Vector2 scroll = Vector2.zero;
 
@@ -29,10 +32,11 @@ namespace Pumkin.AvatarTools.UI
 
         IUIModule _orphanHolder;
 
+        int selectedConfigIndex = 0;
+
         public MainUI()
         {
-            var index = Array.IndexOf(PumkinTools.Configurations, PumkinTools.ConfigurationString);
-            configurationIndex = index > 0 ? index : 0;
+            selectedConfigIndex = ConfigurationManager.CurrentConfigurationIndex;
         }
 
         public MainUI(List<IUIModule> modules)
@@ -56,11 +60,11 @@ namespace Pumkin.AvatarTools.UI
             {
                 EditorGUI.BeginChangeCheck();
                 {
-                    configurationIndex = EditorGUILayout.Popup("Configuration", configurationIndex, PumkinTools.Configurations);
+                    selectedConfigIndex = EditorGUILayout.Popup("Configuration", selectedConfigIndex, ConfigurationManager.Configurations);
                 }
                 if(EditorGUI.EndChangeCheck())
                 {
-                    PumkinTools.ConfigurationString = PumkinTools.Configurations[configurationIndex];
+                    ConfigurationManager.CurrentConfigurationString = ConfigurationManager.Configurations[selectedConfigIndex];
                 }
             }
             else
@@ -147,9 +151,14 @@ namespace Pumkin.AvatarTools.UI
             OrphanHolder.OrderChildren();
         }
 
+        /// <summary>
+        /// Returns null if null or if has no modules
+        /// </summary>
+        /// <param name="ui"></param>
         public static implicit operator bool(MainUI ui)
         {
-            return !ReferenceEquals(ui, null);
+            return !ReferenceEquals(ui, null) &&
+                (ui.UIModules.IsNullOrEmpty() && ui.OrphanHolder.ChildModules.IsNullOrEmpty());
         }
     }
 }

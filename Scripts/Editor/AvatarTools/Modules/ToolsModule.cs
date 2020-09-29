@@ -1,7 +1,9 @@
 ﻿#if UNITY_EDITOR
 
 using Pumkin.AvatarTools.Base;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
+using System;
+using UnityEngine;
 
 namespace Pumkin.AvatarTools.Modules
 {

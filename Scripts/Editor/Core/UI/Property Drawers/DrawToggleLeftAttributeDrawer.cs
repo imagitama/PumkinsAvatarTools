@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using UnityEditor;
 using UnityEngine;
 

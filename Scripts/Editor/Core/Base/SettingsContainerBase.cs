@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Base
 {
     [Serializable]
-    public abstract class SettingsContainerBase : ScriptableObject, ISettingsContainer
+    public class SettingsContainerBase : ScriptableObject, ISettingsContainer
     {
         protected Editor editor;
         public Editor Editor

@@ -3,7 +3,7 @@ using Pumkin.AvatarTools;
 using Pumkin.Core.Extensions;
 using System;
 
-namespace Pumkin.Core.Attributes
+namespace Pumkin.Core
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     class AutoLoadAttribute : Attribute
@@ -41,7 +41,7 @@ namespace Pumkin.Core.Attributes
         public string[] ConfigurationStrings
         {
             get => configurationStrings;
-            set => configurationStrings = value.IsNullOrEmpty() ? new string[] { PumkinTools.DEFAULT_CONFIGURATION } : value;
+            set => configurationStrings = value.IsNullOrEmpty() ? new string[] { ConfigurationManager.DEFAULT_CONFIGURATION } : value;
         }
 
         public AutoLoadAttribute(string id, params string[] configurationStrings)

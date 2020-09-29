@@ -7,7 +7,7 @@ using Pumkin.AvatarTools.Interfaces;
 using UnityEngine;
 using Pumkin.Core.Helpers;
 using Pumkin.AvatarTools.Modules;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.UI
 {
@@ -22,7 +22,7 @@ namespace Pumkin.AvatarTools.UI
             MainUI UI = new MainUI();
             ModuleIDManager.ClearCache();
 
-            RefreshCachedTypes(PumkinTools.ConfigurationString);
+            RefreshCachedTypes(ConfigurationManager.CurrentConfigurationString);
 
             //Build modules from typeCache
             foreach(var t in moduleTypeCache)
@@ -135,7 +135,7 @@ namespace Pumkin.AvatarTools.UI
                         if(!attr)
                             return false;
                         return attr.ConfigurationStrings.Contains(configurationString, StringComparer.InvariantCultureIgnoreCase)
-                            || attr.ConfigurationStrings.Contains(PumkinTools.DEFAULT_CONFIGURATION, StringComparer.InvariantCultureIgnoreCase);
+                            || attr.ConfigurationStrings.Contains(ConfigurationManager.DEFAULT_CONFIGURATION, StringComparer.InvariantCultureIgnoreCase);
                     }).ToList();
                 }
             }

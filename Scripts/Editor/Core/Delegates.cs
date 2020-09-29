@@ -8,8 +8,10 @@ using UnityEngine;
 
 namespace Pumkin.Core
 {
-    class DrawToggleLeftAttribute : PropertyAttribute
+    static class Delegates
     {
+        public delegate void SelectedChangeHandler(GameObject newSelection);
+        public delegate void StringChangeHandler(string str);
     }
 }
 #endif

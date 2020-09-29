@@ -1,58 +1,26 @@
 ﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools.Core;
 using Pumkin.AvatarTools.Logger;
 using Pumkin.AvatarTools.UI;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools
 {
     static class PumkinTools
     {
-        public delegate void AvatarChangeHandler(GameObject selection);
-        public static event AvatarChangeHandler AvatarSelectionChanged;
-
-        public const string DEFAULT_CONFIGURATION = "generic";
+        public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
 
         static GameObject _selectedAvatar;
-        static string _configurationString = DEFAULT_CONFIGURATION;
-        static string[] _configurations;
 
         static PumkinTools()
         {
-            RefreshConfigurations();
-        }
 
-        public static string[] Configurations
-        {
-            get
-            {
-                //if(_configurations == null)
-                    RefreshConfigurations();
-                return _configurations;
-            }
-            set => _configurations = value;
-        }
-        public static string ConfigurationString
-        {
-            get => _configurationString;
-            set
-            {
-                _configurationString = string.IsNullOrWhiteSpace(value) ? "generic" : value;
-                PumkinToolsWindow.UI = UIBuilder.BuildUI();
-            }
-        }
-
-        public static void RefreshConfigurations()
-        {
-            var conf = new HashSet<string>();
-            var cache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>().ToList();
-
-            var configCache = cache.SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings).ToList();
-            Configurations = new HashSet<string>(configCache).ToArray();
         }
 
         public static GameObject SelectedAvatar
@@ -61,20 +29,19 @@ namespace Pumkin.AvatarTools
             set
             {
                 if(_selectedAvatar != value)
-                    OnAvatarSelectionChanged(_selectedAvatar);
+                    OnAvatarSelectionChanged?.Invoke(value);
                 _selectedAvatar = value;
             }
         }
 
-        public static void OnAvatarSelectionChanged(GameObject newSelection)
+        public static void AvatarSelectionChanged(GameObject newSelection)
         {
-            AvatarSelectionChanged?.Invoke(newSelection);
+            OnAvatarSelectionChanged?.Invoke(newSelection);
         }
 
         public static ILogHandler LogHandler { get; set; } = new LogHandler();
 
-
-        //Temporary logger functions
+        //Temporary logger stuff
         public static void Log(string msg, UnityEngine.Object context)
         {
             LogHandler.LogFormat(LogType.Log, context, msg, new string[0]);
@@ -99,6 +66,7 @@ namespace Pumkin.AvatarTools
         {
             LogHandler.LogFormat(LogType.Error, null, msg, new string[0]);
         }
+
         public static void LogError(string msg, UnityEngine.Object context)
         {
             LogHandler.LogFormat(LogType.Error, context, msg, new string[0]);

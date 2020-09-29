@@ -9,7 +9,7 @@ using UnityEngine;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.AvatarTools.Interfaces;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Base
 {
@@ -35,9 +35,11 @@ namespace Pumkin.AvatarTools.Base
             }
         }
         public abstract string ComponentTypeNameFull { get; }
-        public virtual ISettingsContainer Settings { get => null; }
+        public virtual ISettingsContainer Settings { get => settings; }
         public bool ExpandSettings { get; private set; }
         public bool Active { get; set; }
+
+        CopierSettingsContainerBase settings;
 
         public Type ComponentType
         {
@@ -76,7 +78,10 @@ namespace Pumkin.AvatarTools.Base
             return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
         }
 
-        protected virtual void SetupSettings() { }
+        protected virtual void SetupSettings()
+        {
+            settings = ScriptableObject.CreateInstance<CopierSettingsContainerBase>();
+        }
 
         public virtual void DrawUI(params GUILayoutOption[] options)
         {
@@ -129,6 +134,17 @@ namespace Pumkin.AvatarTools.Base
                 return false;
             }
 
+            //TODO: Register copier and destroyer in some kind of manager
+            //if(settings.removeAllBeforeCopying)
+            //{
+            //    var desType = TypeHelpers.GetType($"{ComponentType.Name}Destroyer");
+            //    if(desType != null)
+            //    {
+            //        var des = Activator.CreateInstance(desType) as IComponentDestroyer;
+            //        des?.TryDestroyComponents(objTo);
+            //    }
+            //}
+
             return true;
         }
 
@@ -165,6 +181,9 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot)
         {
+            if(!comp)
+                return;
+
             var serialComp = new SerializedObject(comp);
 
             serialComp.ForEachPropertyVisible(true, x =>

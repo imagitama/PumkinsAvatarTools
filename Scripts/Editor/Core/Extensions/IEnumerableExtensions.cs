@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,11 @@ namespace Pumkin.Core.Extensions
         public static FlipFlopEnumerator<T> GetFlipFlopEnumerator<T>(this IEnumerable<T> collection)
         {
             return new FlipFlopEnumerator<T>(collection);
+        }
+
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
+        {
+            return collection != null && collection.Any();
         }
     }
 }

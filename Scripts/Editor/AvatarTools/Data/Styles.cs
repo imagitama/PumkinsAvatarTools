@@ -12,7 +12,6 @@ namespace Pumkin.AvatarTools.UI
     static class Styles
     {
         public static GUIStyle MenuFoldout { get; private set; }
-        public static GUIStyle MenuFoldout_old { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
         public static GUIStyle EditorLine { get; private set; }
         public static GUIStyle Box { get; private set; }
@@ -32,17 +31,6 @@ namespace Pumkin.AvatarTools.UI
 
         static Styles()
         {
-            MenuFoldout_old = new GUIStyle("foldout")
-            {
-                fontSize = 14,
-                alignment = TextAnchor.UpperLeft,
-                imagePosition = ImagePosition.ImageLeft,
-                fontStyle = FontStyle.Bold,
-                stretchWidth = true,
-                stretchHeight = false,
-                contentOffset = new Vector2(0, -2),
-            };
-
             MenuFoldout = new GUIStyle("OffsetDropDown")
             {
                 fontSize = 14,
@@ -82,13 +70,24 @@ namespace Pumkin.AvatarTools.UI
                 padding = new RectOffset(1, 1, 1, 1),
             };
 
-            Box = new GUIStyle("box")
+            //Box = new GUIStyle("box")
+            //{
+            //    margin = new RectOffset(3, 3, 3, 4),
+            //    padding = new RectOffset(10, 10, 6, 6),
+            //    border = new RectOffset(6, 6, 6, 6),
+            //    fontSize = 12,
+            //    alignment = TextAnchor.UpperLeft,
+            //};
+
+            Box = new GUIStyle("helpBox")
             {
-                margin = new RectOffset(3, 3, 3, 4),
-                padding = new RectOffset(10, 10, 6, 6),
+                margin = new RectOffset(4, 4, 3, 3),
+                padding = new RectOffset(6, 6, 6, 6),
                 border = new RectOffset(6, 6, 6, 6),
                 fontSize = 12,
                 alignment = TextAnchor.UpperLeft,
+                stretchWidth = true,
+                stretchHeight = false,
             };
 
             ModuleBox = new GUIStyle("helpBox")

@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.UI;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,6 +11,20 @@ namespace Pumkin.AvatarTools
         public static MainUI UI { get; set; }
         static Vector2 minWindowSize = new Vector2(360,580);
         static GUISkin guiSkin;
+
+        public static event Action OnWindowEnabled;
+        public static event Action OnWindowDisabled;
+        public static event Action OnWindowDestroyed;
+
+        public PumkinToolsWindow()
+        {
+            ConfigurationManager.OnConfigurationChanged += RebuildUI;
+        }
+
+        private void RebuildUI(string newConfig)
+        {
+            UI = UIBuilder.BuildUI();
+        }
 
         [MenuItem("Pumkin/Avatar Tools", false, 0)]
         public static void ShowWindow()
@@ -29,6 +44,17 @@ namespace Pumkin.AvatarTools
             if(!UI)
                 UI = UIBuilder.BuildUI();
             guiSkin = Resources.Load<GUISkin>("UI/PumkinToolsGUISkin");
+            OnWindowEnabled?.Invoke();
+        }
+
+        void OnDisable()
+        {
+            OnWindowDisabled?.Invoke();
+        }
+
+        private void OnDestroy()
+        {
+            OnWindowDestroyed?.Invoke();
         }
 
         private void OnGUI()

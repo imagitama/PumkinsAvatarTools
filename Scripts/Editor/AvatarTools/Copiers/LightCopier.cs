@@ -1,6 +1,6 @@
 ﻿using Pumkin.AvatarTools.Base;
 using Pumkin.AvatarTools.Modules;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers

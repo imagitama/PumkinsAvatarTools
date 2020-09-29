@@ -2,7 +2,7 @@
 using Pumkin.AvatarTools.Base;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.UI;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using UnityEditor;
 using UnityEngine;

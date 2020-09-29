@@ -7,11 +7,12 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using System.Reflection;
-using Pumkin.Core.Attributes;
+using Pumkin.Core;
 using Pumkin.Core.Helpers;
 
 namespace Pumkin.AvatarTools.Base
 {
+    [Serializable]
     public abstract class UIModuleBase : IUIModule
     {
         public string Name { get; set; }
@@ -21,6 +22,7 @@ namespace Pumkin.AvatarTools.Base
         public List<IUIModule> ChildModules { get; set; }
         public List<IItem> SubItems { get; set; }
         public virtual bool IsHidden { get; set; }
+        public int OrderInUI { get; set; }
         public virtual GUIContent GUIContent
         {
             get
@@ -32,23 +34,11 @@ namespace Pumkin.AvatarTools.Base
                 _content = value;
             }
         }
-        public int OrderInUI { get; set; }
 
-
-        protected GUIContent _content;
-        bool? isMainMenuModule = false;
+        [SerializeField] protected GUIContent _content;
 
         UIDefinitionAttribute uiDefinition;
 
-        bool IsMainMenuModule
-        {
-            get
-            {
-                if(isMainMenuModule == null)
-                    isMainMenuModule = PumkinToolsWindow.UI?.HasModule(this);
-                return (bool)isMainMenuModule;
-            }
-        }
 
         bool firstDraw = true;
 
