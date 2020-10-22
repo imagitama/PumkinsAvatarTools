@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Pumkin.Core.Helpers
 {
-    public static class DebugHelpers
+    public static class DevHelpers
     {
         public static void PrintPublicProperties(GameObject obj)
         {
@@ -31,6 +31,15 @@ namespace Pumkin.Core.Helpers
             var skin = ScriptableObject.CreateInstance<GUISkin>();
             AssetDatabase.CreateAsset(skin, @"Assets\PumkinsAvatarTools\Resources\UI\DefaultSkin.GUISkin");
             GUI.skin = old;
+        }
+
+        public static float[] GetHumanMusclesFromCurrentPose(GameObject avatarObj)
+        {
+            var anim = avatarObj.GetComponent<Animator>();
+            var hph = new HumanPoseHandler(anim.avatar, anim.transform);
+            var hp = new HumanPose();
+            hph.GetHumanPose(ref hp);
+            return hp.muscles;
         }
     }
 }

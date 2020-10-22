@@ -13,7 +13,7 @@ using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Base
 {
-    abstract class ComponentCopierBase : IComponentCopier
+    public abstract class ComponentCopierBase : IComponentCopier
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -50,6 +50,8 @@ namespace Pumkin.AvatarTools.Base
                 return _componentType;
             }
         }
+
+        public bool EnabledInUI { get; set; } = true;
 
         GUIContent _content;
         Type _componentType;

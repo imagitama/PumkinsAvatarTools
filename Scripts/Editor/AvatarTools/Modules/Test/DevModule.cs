@@ -8,9 +8,9 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Modules
 {
     [AutoLoad(DefaultModuleIDs.DEBUG, "debug")]
-    class DebugModule : UIModuleBase
+    class DevModule : UIModuleBase
     {
-        public DebugModule()
+        public DevModule()
         {
             Name = "Debug";
             Description = "Debug and test stuff";
@@ -31,7 +31,20 @@ namespace Pumkin.AvatarTools.Modules
                 PumkinToolsWindow.UI = UIBuilder.BuildUI();
 
             if(GUILayout.Button("Dump Default GUISkin"))
-                DebugHelpers.DumpDefaultGUISkin();
+                DevHelpers.DumpDefaultGUISkin();
+
+            if(GUILayout.Button("Log current pose muscles"))
+            {
+                var muscles = DevHelpers.GetHumanMusclesFromCurrentPose(PumkinTools.SelectedAvatar);
+                string s = "float[] pose = \n{";
+                for(int i = 0; i < muscles.Length; i++)
+                {
+                    s += $"{muscles[i]}f {((i != muscles.Length - 1) ? ", " : "")}";
+                    s += i % 13 == 0 ? "\n" : "";
+                }
+                s += "\n};";
+                Debug.Log(s);
+            }
         }
     }
 }

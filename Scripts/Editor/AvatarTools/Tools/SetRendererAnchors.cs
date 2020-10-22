@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_setRenderAnchors", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
     [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]
-    class SetRendererAnchors : SubToolBase
+    class SetRendererAnchors : ToolBase
     {
         public override ISettingsContainer Settings { get => settings; }
 
@@ -46,7 +46,7 @@ namespace Pumkin.AvatarTools.Tools
                 if(!anim.isHuman)
                     Debug.LogError($"{target.name} isn't humanoid");
                 bone = anim.GetBoneTransform(settings.humanBone);
-                path = $"{settings.humanBone.GetType()}.{settings.humanBone.ToString()}";
+                path = $"{settings.humanBone.GetType().Name}.{settings.humanBone}";
             }
             else
             {
@@ -57,7 +57,7 @@ namespace Pumkin.AvatarTools.Tools
 
             if(!bone)
             {
-                Debug.LogError($"Couldn't find bone at '{path}'");
+                PumkinTools.LogError($"Couldn't find '{path}'");
                 return false;
             }
 

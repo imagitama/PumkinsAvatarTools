@@ -14,7 +14,7 @@ namespace Pumkin.AvatarTools.Base
         {
             get
             {
-                if(!editor)
+                if(!editor || (editor && editor.serializedObject == null))
                     editor = Editor.CreateEditor(this);
                 return editor;
             }

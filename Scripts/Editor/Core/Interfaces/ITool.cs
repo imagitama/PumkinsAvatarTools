@@ -8,10 +8,10 @@ namespace Pumkin.AvatarTools.Interfaces
         /// <summary>
         /// Whether or not to allow Update() to run
         /// </summary>
-        bool AllowUpdate { get; set; }
+        bool CanUpdate { get; set; }
 
         /// <summary>
-        /// Should call Prepare() => Execute() => Finish()
+        /// Should call Prepare() => DoAction() => Finish()
         /// </summary>
         /// <param name="target">Target GameObject</param>
         /// <returns>True if everything succeeded</returns>

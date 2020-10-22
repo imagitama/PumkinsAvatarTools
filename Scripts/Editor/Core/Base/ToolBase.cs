@@ -1,24 +1,26 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.Tools;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Base
 {
     /// <summary>
-    /// Base sub tool class. Should be inherited to create a tool
+    /// Base tool class. Should be inherited to create a tool
     /// </summary>
-    abstract class SubToolBase : ITool
+    public abstract class ToolBase : ITool, IDisposable
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public string GameConfigurationString { get; set; }
-        public bool AllowUpdate
+        public bool CanUpdate
         {
             get
             {
@@ -31,14 +33,9 @@ namespace Pumkin.AvatarTools.Base
                     return;
 
                 if(_allowUpdate = value)    //Intentional assign + check
-                {
-                    SetupUpdateCallback();
-                    EditorApplication.update += updateCallback;
-                }
+                    SetupUpdateCallback(ref updateCallback, true);
                 else
-                {
-                    EditorApplication.update -= updateCallback;
-                }
+                    SetupUpdateCallback(ref updateCallback, false);
             }
         }
         public int OrderInUI { get; set; }
@@ -59,6 +56,7 @@ namespace Pumkin.AvatarTools.Base
 
         public virtual ISettingsContainer Settings { get => null; }
         public bool ExpandSettings { get; protected set; }
+        public bool EnabledInUI { get; set; } = true;
 
         bool _allowUpdate;
         GUIContent _content;
@@ -67,7 +65,7 @@ namespace Pumkin.AvatarTools.Base
 
         public SerializedObject serializedObject;
 
-        public SubToolBase()
+        public ToolBase()
         {
             var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
             if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
@@ -85,13 +83,18 @@ namespace Pumkin.AvatarTools.Base
             SetupSettings();
         }
 
-        void SetupUpdateCallback()
+        void SetupUpdateCallback(ref EditorApplication.CallbackFunction callback, bool add)
         {
-            if(updateCallback == null)
+            if(callback == null)
             {
                 PumkinTools.Log($"Setting up Update callback for {Name}");
-                updateCallback = new EditorApplication.CallbackFunction(Update);
+                callback = new EditorApplication.CallbackFunction(Update);
             }
+
+            if(!add)
+                EditorApplication.update -= callback;
+            else
+                EditorApplication.update += callback;
         }
 
         protected virtual void SetupSettings() { }
@@ -113,19 +116,19 @@ namespace Pumkin.AvatarTools.Base
                 UIHelpers.VerticalBox(() =>
                 {
                     EditorGUILayout.Space();
-                    Settings.Editor.OnInspectorGUI();
+                    Settings?.Editor?.OnInspectorGUI();
                 });
             }
         }
 
-        public bool TryExecute(GameObject target)
+        public virtual bool TryExecute(GameObject target)
         {
             try
             {
                 if(Prepare(target) && DoAction(target))
                 {
                     serializedObject.ApplyModifiedProperties();
-                    Finish(target);
+                    Finish(target, true);
                     return true;
                 }
             }
@@ -133,6 +136,7 @@ namespace Pumkin.AvatarTools.Base
             {
                 Debug.LogException(e);
             }
+            Finish(target, false);
             return false;
         }
 
@@ -150,17 +154,24 @@ namespace Pumkin.AvatarTools.Base
 
         protected abstract bool DoAction(GameObject target);
 
-        protected virtual void Finish(GameObject target)
+        protected virtual void Finish(GameObject target, bool success)
         {
-            PumkinTools.Log($"{Name} completed successfully.");
+            if(success)
+                PumkinTools.Log($"{Name} completed successfully");
+            else
+                PumkinTools.Log($"{Name} failed");
         }
 
         public virtual void Update()
         {
-            if(!AllowUpdate)
+            if(!CanUpdate)
                 return;
         }
 
+        public virtual void Dispose()
+        {
+            EditorApplication.update -= Update;
+        }
     }
 }
 #endif

@@ -1,15 +1,19 @@
-﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
+﻿using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tool_resetScale", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Reset Scale", Description = "Resets your selected object's scale to prefab")]
-    class ResetScale : ToolBase
+    [AutoLoad("tool_resetScale", "vrchat", ParentModuleID = "tools_fixAvatar", CanReplaceGenericItem = true)]
+    [UIDefinition("Reset Scale", Description = "Resets your selected object's scale to prefab and moves the viewpoint")]
+    class ResetScale_VRChat : ToolBase
     {
         protected override bool Prepare(GameObject target)
         {
@@ -24,9 +28,8 @@ namespace Pumkin.AvatarTools.Tools
             if(!pref)
                 return false;
 
-            target.transform.localScale = pref.transform.localScale;
+            VRChatHelpers.SetAvatarScale(target, pref.transform.localScale, true);
             return true;
         }
     }
 }
-#endif

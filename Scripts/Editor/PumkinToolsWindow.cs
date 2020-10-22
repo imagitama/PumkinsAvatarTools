@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools
 {
+    [ExecuteInEditMode, CanEditMultipleObjects]
     class PumkinToolsWindow : EditorWindow
     {
         public static MainUI UI { get; set; }

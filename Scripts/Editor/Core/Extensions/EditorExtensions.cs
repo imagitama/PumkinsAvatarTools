@@ -12,6 +12,9 @@ namespace Pumkin.Core.Extensions
     {
         public static bool OnInspectorGUINoScriptField(this Editor Inspector)
         {
+            if(!Inspector)
+                return false;
+
             EditorGUI.BeginChangeCheck();
 
             Inspector.serializedObject.Update();

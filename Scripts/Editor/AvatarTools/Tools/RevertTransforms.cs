@@ -11,7 +11,7 @@ namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_reverTransforms", ParentModuleID = "tools_fixAvatar")]
     [UIDefinition("Reset Pose", Description = "Reverts the location, rotation and scale of your avatar back to prefab")]
-    class RevertTransforms : SubToolBase
+    class RevertTransforms : ToolBase
     {
         protected override bool Prepare(GameObject target)
         {

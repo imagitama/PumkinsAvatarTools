@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Base
 {
-    abstract class ComponentDestroyerBase : IComponentDestroyer, IItem
+    public abstract class ComponentDestroyerBase : IComponentDestroyer, IItem
     {
         public abstract string ComponentTypeNameFull { get; }
         public string Name { get; set; }
@@ -34,6 +34,8 @@ namespace Pumkin.AvatarTools.Base
         }
 
         public virtual ISettingsContainer Settings => null;
+
+        public bool EnabledInUI { get; set; } = true;
 
         Type _componentType;
         GUIContent _content;

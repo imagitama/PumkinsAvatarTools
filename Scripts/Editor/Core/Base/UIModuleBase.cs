@@ -130,7 +130,16 @@ namespace Pumkin.AvatarTools.Base
             if(shouldDrawChildrenInHorizontalPairs)
                 UIHelpers.DrawUIPairs(SubItems);
             else
-                SubItems.ForEach(s => s?.DrawUI());
+            {
+                foreach(var sub in SubItems)
+                {
+                    if(sub == null)
+                        continue;
+                    EditorGUI.BeginDisabledGroup(!sub.EnabledInUI);
+                    sub.DrawUI();
+                    EditorGUI.EndDisabledGroup();
+                }
+            }
 
             if(SubItems.Count > 0)
                 EditorGUILayout.Space();

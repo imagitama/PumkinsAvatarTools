@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Settings;
+using Pumkin.Core.Helpers;
 using UnityEditor;
 
 namespace Pumkin.AvatarTools.UI.Editors

@@ -8,7 +8,7 @@ namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_removeMissingScripts", ParentModuleID = "tools_fixAvatar")]
     [UIDefinition("Remove Missing Scripts")]
-    class RemoveMissingScripts : SubToolBase
+    class RemoveMissingScripts : ToolBase
     {
         protected override bool DoAction(GameObject target)
         {

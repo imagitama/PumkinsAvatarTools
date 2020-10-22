@@ -8,7 +8,7 @@ namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
     [UIDefinition("Zero Blendshapes", Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0")]
-    class ZeroBlendshapes : SubToolBase
+    class ZeroBlendshapes : ToolBase
     {
         SkinnedMeshRenderer[] renders;
 

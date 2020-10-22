@@ -71,6 +71,11 @@ namespace Pumkin.AvatarTools
         {
             LogHandler.LogFormat(LogType.Error, context, msg, new string[0]);
         }
+
+        public static void LogVerbose(string msg)
+        {
+            LogHandler.LogFormat(LogType.Warning, null, msg, new string[0]);
+        }
     }
 }
 #endif

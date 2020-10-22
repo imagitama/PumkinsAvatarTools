@@ -39,6 +39,8 @@ namespace Pumkin.AvatarTools.Interfaces
         /// </summary>
         GUIContent Content { get; }
         ISettingsContainer Settings { get; }
+
+        bool EnabledInUI { get; set; }
     }
 }
 #endif

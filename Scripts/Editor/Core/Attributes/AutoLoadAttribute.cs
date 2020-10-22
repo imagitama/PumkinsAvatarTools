@@ -44,6 +44,14 @@ namespace Pumkin.Core
             set => configurationStrings = value.IsNullOrEmpty() ? new string[] { ConfigurationManager.DEFAULT_CONFIGURATION } : value;
         }
 
+        /// <summary>
+        /// Whether or not this can replace a generic item with the same ID
+        /// </summary>
+        public bool CanReplaceGenericItem
+        {
+            get; set;
+        }
+
         public AutoLoadAttribute(string id, params string[] configurationStrings)
         {
             ID = id;

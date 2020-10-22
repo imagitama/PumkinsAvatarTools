@@ -9,7 +9,7 @@ using UnityEditor;
 
 namespace Pumkin.AvatarTools.UI.Editors
 {
-    [CustomEditor(typeof(ForceTPose_Settings))]
+    [CustomEditor(typeof(SetTPose_Settings))]
     class ForceTPose_SettingsEditor : SettingsEditor
     {
 

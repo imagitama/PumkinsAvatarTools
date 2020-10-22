@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_lipsync", "vrchat", ParentModuleID = "tools_setupAvatar")]
-    class SetupLipsync : SubToolBase
+    class SetupLipsync : ToolBase
     {
         Type LipSyncStyleEnumType
         {
