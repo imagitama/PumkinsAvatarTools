@@ -29,13 +29,10 @@ namespace Pumkin.AvatarTools.Base
                     _content = CreateGUIContent();
                 return _content;
             }
-            set
-            {
-                _content = value;
-            }
+            set => _content = value;
         }
         public abstract string ComponentTypeNameFull { get; }
-        public virtual ISettingsContainer Settings { get => settings; }
+        public virtual ISettingsContainer Settings => settings;
         public bool ExpandSettings { get; private set; }
         public bool Active { get; set; }
 

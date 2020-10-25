@@ -31,7 +31,7 @@ namespace Pumkin.AvatarTools.Interfaces
         /// <summary>
         /// Draws the UI
         /// </summary>
-        /// <param name="rect">Optional rect to draw in</param>
+        /// <param name="options"></param>
         void DrawUI(params GUILayoutOption[] options);
 
         /// <summary>

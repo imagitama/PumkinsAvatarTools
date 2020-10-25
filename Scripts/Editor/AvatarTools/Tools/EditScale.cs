@@ -10,82 +10,67 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Pumkin.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
-using VRC.SDKBase;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tools_editScale", "vrchat", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
+    [AutoLoad("tools_editScale", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
     [UIDefinition("Edit Scale")]
     class EditScale : ToolSceneGUIBase
     {
-        SerializedObject serialDesc = null;
-
-        bool moveViewpoint = true;
-
-        Vector3 startView;
-        Vector3 startPosition;
-        Vector3 tempView;
-
         Vector3 startScale;
         float tempScale = 0;
 
+        private SerializedProperty scaleProp;
+        private SerializedObject serialTransform;
+
         public EditScale()
         {
-            WindowSize = new Vector2(200, 70);
+            WindowSize = new Vector2(200, 60);
         }
 
         protected override bool Prepare(GameObject target)
         {
             if(base.Prepare(target))
             {
-                if(VRChatTypes.VRC_AvatarDescriptor == null)
-                {
-                    PumkinTools.LogError("Couldn't find VRC_AvatarDescriptor type in project. Is the VRCSDK Imported?");
-                    return false;
-                }
-
                 startScale = target.transform.localScale;
-                startPosition = target.transform.position;
-
-                tempView = startView;
                 tempScale = startScale.y;
 
-                return true;
+                serialTransform = new SerializedObject(target.transform);
+                scaleProp = serialTransform.FindProperty("m_LocalScale");
+
+                if(scaleProp != null)
+                    return true;
             }
             return false;
         }
 
-        protected override void DrawInsideSceneWindowGUI()
-        {
-            base.DrawInsideSceneWindowGUI();
-            moveViewpoint = EditorGUILayout.ToggleLeft("Move Viewpoint", moveViewpoint);
-        }
-
         protected override bool DoAction(GameObject target)
         {
-            VRChatHelpers.SetAvatarScale(target, tempScale, moveViewpoint);
-
-            serializedObject.ApplyModifiedProperties();
+            serialTransform.ApplyModifiedProperties();
             return true;
         }
 
         protected override void PressedCancel(GameObject target)
         {
-            VRChatHelpers.SetAvatarScale(target, startScale.y, moveViewpoint);
             base.PressedCancel(target);
+            scaleProp.vector3Value = startScale;
+            serialTransform.ApplyModifiedProperties();
         }
 
         protected override void DrawHandles(GameObject target)
         {
             EditorGUI.BeginChangeCheck();
             {
-                tempScale = Handles.ScaleSlider(tempScale, startPosition, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(startPosition) * 2, 0.01f);
+                tempScale = Handles.ScaleSlider(tempScale, target.transform.position, Vector3.up,
+                    Quaternion.identity, HandleUtility.GetHandleSize(target.transform.position) * 2, 0.01f);
             }
             if(EditorGUI.EndChangeCheck())
             {
-                VRChatHelpers.SetAvatarScale(serializedObject.targetObject as GameObject, tempScale, moveViewpoint);
+                scaleProp.vector3Value = Vector3Helpers.ScaleVector(startScale, tempScale - startScale.y);
+                serialTransform.ApplyModifiedPropertiesWithoutUndo();
             }
         }
     }

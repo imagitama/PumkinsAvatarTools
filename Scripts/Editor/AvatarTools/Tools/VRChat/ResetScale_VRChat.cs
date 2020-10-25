@@ -17,9 +17,7 @@ namespace Pumkin.AvatarTools.Tools
     {
         protected override bool Prepare(GameObject target)
         {
-            if(!base.Prepare(target))
-                return false;
-            return PrefabHelpers.HasPrefab(target);
+            return base.Prepare(target) && PrefabHelpers.HasPrefab(target);
         }
 
         protected override bool DoAction(GameObject target)

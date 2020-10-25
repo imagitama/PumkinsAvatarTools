@@ -5,6 +5,7 @@ using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -163,10 +164,10 @@ namespace Pumkin.AvatarTools.Base
                     GUILayout.BeginHorizontal();
                     {
                         if(GUILayout.Button("Cancel", GUILayout.MinWidth(minButtonWidth)))
-                            PressedCancel(serializedObject.targetObject as GameObject);
+                            PressedCancel(serializedObject?.targetObject as GameObject);
 
                         if(GUILayout.Button("Apply", GUILayout.MinWidth(minButtonWidth)))
-                            PressedApply(serializedObject.targetObject as GameObject);
+                            PressedApply(serializedObject?.targetObject as GameObject);
                     }
                     GUILayout.EndHorizontal();
                 }
@@ -174,8 +175,20 @@ namespace Pumkin.AvatarTools.Base
             }
             Handles.EndGUI();
 
-            if(CanDrawSceneGUI)
-               DrawHandles(serializedObject.targetObject as GameObject);
+            try
+            {
+                if(CanDrawSceneGUI)
+                {
+                    if(!serializedObject?.targetObject)
+                    {
+                        Status = ToolStatus.Error;
+                        Finish(null, false);
+                    }
+                    else
+                        DrawHandles(serializedObject?.targetObject as GameObject);
+                }
+            }
+            catch {}
         }
 
         protected virtual void DrawHandles(GameObject target) { }
@@ -191,10 +204,6 @@ namespace Pumkin.AvatarTools.Base
             }
 
             serializedObject = new SerializedObject(target);
-            editorToolOld = UnityEditor.Tools.current;
-            UnityEditor.Tools.current = Tool.None;
-            CanDrawSceneGUI = true;
-            EnabledInUI = false;
             return true;
         }
 
@@ -202,8 +211,18 @@ namespace Pumkin.AvatarTools.Base
         {
             try
             {
-                Prepare(target);
-                return true;
+                if(Prepare(target))
+                {
+                    editorToolOld = UnityEditor.Tools.current;
+                    UnityEditor.Tools.current = Tool.None;
+                    CanDrawSceneGUI = true;
+                    EnabledInUI = false;
+                }
+                else
+                {
+                    Status = ToolStatus.Error;
+                    Finish(target, false);
+                }
             }
             catch(Exception e)
             {
@@ -220,7 +239,10 @@ namespace Pumkin.AvatarTools.Base
             UnityEditor.Tools.current = editorToolOld;
 
             if(success)
-                PumkinTools.Log($"{Name} completed successfuly");
+            {
+                Status = ToolStatus.CompletedOK;
+                PumkinTools.Log($"{Name} completed successfully");
+            }
             else
             {
                 if(Status == ToolStatus.Canceled)
@@ -228,8 +250,6 @@ namespace Pumkin.AvatarTools.Base
                 else
                     PumkinTools.Log($"{Name} failed");
             }
-
-            Status = ToolStatus.CompletedOK;
         }
 
         protected virtual void PressedApply(GameObject target)
