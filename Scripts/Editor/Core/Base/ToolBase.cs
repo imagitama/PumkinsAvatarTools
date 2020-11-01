@@ -87,7 +87,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(callback == null)
             {
-                PumkinTools.Log($"Setting up Update callback for {Name}");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
                 callback = new EditorApplication.CallbackFunction(Update);
             }
 
@@ -144,7 +144,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(!target)
             {
-                Debug.LogError("No avatar selected");
+                PumkinTools.LogError("No avatar selected");
                 return false;
             }
 
@@ -157,9 +157,9 @@ namespace Pumkin.AvatarTools.Base
         protected virtual void Finish(GameObject target, bool success)
         {
             if(success)
-                PumkinTools.Log($"{Name} completed successfully");
+                PumkinTools.Log($"<b>{Name}</b> completed successfully");
             else
-                PumkinTools.Log($"{Name} failed");
+                PumkinTools.LogWarning($"<b>{Name}</b> failed");
         }
 
         public virtual void Update()

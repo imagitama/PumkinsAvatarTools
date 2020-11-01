@@ -1,14 +1,16 @@
 ﻿#if UNITY_EDITOR
+using System;
 using Pumkin.AvatarTools.Core;
-using Pumkin.AvatarTools.Logger;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using UnityEditor;
 using UnityEngine;
+using Pumkin.Core.Logger;
 
 namespace Pumkin.AvatarTools
 {
@@ -39,42 +41,44 @@ namespace Pumkin.AvatarTools
             OnAvatarSelectionChanged?.Invoke(newSelection);
         }
 
-        public static ILogHandler LogHandler { get; set; } = new LogHandler();
 
-        //Temporary logger stuff
+        //Logger stuff
+        static PumkinLogger Logger { get; } = new PumkinLogger("blue", "Pumkin Tools");
+        static PumkinLogger VerboseLogger { get; } = new PumkinLogger("red", "Pumkin Tools Verbose");
+
         public static void Log(string msg, UnityEngine.Object context)
         {
-            LogHandler.LogFormat(LogType.Log, context, msg, new string[0]);
+            Logger.LogFormat(LogType.Log, context, msg);
         }
 
         public static void Log(string msg)
         {
-            LogHandler.LogFormat(LogType.Log, null, msg, new string[0]);
+            Logger.LogFormat(LogType.Log, null, msg);
         }
 
         public static void LogWarning(string msg)
         {
-            LogHandler.LogFormat(LogType.Warning, null, msg, new string[0]);
+            Logger.LogFormat(LogType.Warning, null, msg);
         }
 
         public static void LogWarning(string msg, UnityEngine.Object context)
         {
-            LogHandler.LogFormat(LogType.Warning, context, msg, new string[0]);
+            Logger.LogFormat(LogType.Warning, context, msg);
         }
 
         public static void LogError(string msg)
         {
-            LogHandler.LogFormat(LogType.Error, null, msg, new string[0]);
+            Logger.LogFormat(LogType.Error, null, msg);
         }
 
         public static void LogError(string msg, UnityEngine.Object context)
         {
-            LogHandler.LogFormat(LogType.Error, context, msg, new string[0]);
+            Logger.LogFormat(LogType.Error, context, msg);
         }
 
-        public static void LogVerbose(string msg)
+        public static void LogVerbose(string msg, LogType logType = LogType.Log, UnityEngine.Object context = null)
         {
-            LogHandler.LogFormat(LogType.Warning, null, msg, new string[0]);
+            VerboseLogger.LogFormat(logType, context, msg);
         }
     }
 }

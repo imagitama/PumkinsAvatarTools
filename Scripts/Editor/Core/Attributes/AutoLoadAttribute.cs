@@ -27,7 +27,7 @@ namespace Pumkin.Core
         }
 
         /// <summary>
-        /// The iD of the parent module, used to organize the UI
+        /// The ID of the parent module, used to organize the UI
         /// </summary>
         public string ParentModuleID
         {

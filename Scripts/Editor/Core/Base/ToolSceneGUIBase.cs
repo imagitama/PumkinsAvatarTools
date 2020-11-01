@@ -118,7 +118,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(callback == null)
             {
-                PumkinTools.Log($"Setting up Update callback for {Name}");
+                PumkinTools.LogVerbose($"Setting up Update callback for {Name}");
                 callback = new EditorApplication.CallbackFunction(Update);
             }
 
@@ -199,7 +199,7 @@ namespace Pumkin.AvatarTools.Base
             Status = ToolStatus.InProgress;
             if(!target)
             {
-                Debug.LogError("No avatar selected");
+                PumkinTools.LogError("No avatar selected");
                 return false;
             }
 
@@ -241,14 +241,14 @@ namespace Pumkin.AvatarTools.Base
             if(success)
             {
                 Status = ToolStatus.CompletedOK;
-                PumkinTools.Log($"{Name} completed successfully");
+                PumkinTools.Log($"<b>{Name}</b> completed successfully");
             }
             else
             {
                 if(Status == ToolStatus.Canceled)
-                    PumkinTools.Log($"{Name} was cancelled");
+                    PumkinTools.Log($"<b>{Name}</b> was cancelled");
                 else
-                    PumkinTools.Log($"{Name} failed");
+                    PumkinTools.LogWarning($"<b>{Name}</b> failed");
             }
         }
 
