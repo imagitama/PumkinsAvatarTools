@@ -17,7 +17,7 @@ using VRC.SDKBase;
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_editScale", "vrchat", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
-    [UIDefinition("Edit Scale")]
+    [UIDefinition("[VRC] Edit Scale")]
     class EditScale_VRChat : ToolSceneGUIBase
     {
         SerializedObject serialDesc = null;

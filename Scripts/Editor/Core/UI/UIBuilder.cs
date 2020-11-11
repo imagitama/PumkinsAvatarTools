@@ -13,101 +13,63 @@ namespace Pumkin.AvatarTools.UI
 {
     static class UIBuilder
     {
-        static List<Type> typeCache;
-        static List<Type> subItemTypeCache;
-        static List<Type> moduleTypeCache;
+        static Dictionary<Type, AutoLoadAttribute> typeCache;
+        static Dictionary<Type, AutoLoadAttribute> subItemTypeCache;
+        static Dictionary<Type, AutoLoadAttribute> moduleTypeCache;
 
         public static MainUI BuildUI()
         {
-            MainUI UI = new MainUI();
-            ModuleIDManager.ClearCache();
-
+            MainUI ui = new MainUI();
+            IDManager.ClearCache();
             RefreshCachedTypes(ConfigurationManager.CurrentConfigurationString);
 
-            //Build modules from typeCache
-            foreach(var t in moduleTypeCache)
+            try
             {
-                IUIModule mod = null;
-                try
+                var modules = new List<IUIModule>();
+
+                foreach(var kv in moduleTypeCache)
                 {
-                    mod = BuildModule(t);
-                }
-                catch(Exception e)
-                {
-                    Debug.LogError($"{(t?.Name ?? "Unknown module")} threw an exception: {e.Message}");
-                }
-                finally
-                {
+                    var builder = new ModuleBuilder(kv.Key, kv.Value);
+                    var mod = builder.BuildModule(subItemTypeCache);
                     if(mod != null)
-                        UI.UIModules.Add(mod);
+                        modules.Add(mod);
                 }
-            }
 
-            //Assign child modules to their parents
-            for(int i = UI.UIModules.Count - 1; i >= 0; i--)
-            {
-                var attr = UI.UIModules[i].GetType().GetCustomAttribute<AutoLoadAttribute>();
-                if(string.IsNullOrEmpty(attr?.ParentModuleID))
-                    continue;
-
-                if(AssignToParent(UI.UIModules[i]))
-                    UI.UIModules.RemoveAt(i);
-            }
-
-            //Create and assign subtools that don't belong to any modules
-            foreach(var type in subItemTypeCache)
-            {
-                var attr = type.GetCustomAttribute<AutoLoadAttribute>();
-                if(string.IsNullOrEmpty(attr.ParentModuleID))
+                //Assign child modules to their parents
+                for(int i = modules.Count - 1; i >= 0; i--)
                 {
-                    var tool = Activator.CreateInstance(type) as ITool;
-                    if(tool != null)
-                        UI.OrphanHolder.SubItems.Add(tool);
+                    var attr = modules[i].GetType().GetCustomAttribute<AutoLoadAttribute>();
+                    if(string.IsNullOrEmpty(attr?.ParentModuleID))
+                        continue;
+
+                    if(AssignToParentByID(modules[i]))
+                        modules.RemoveAt(i);
                 }
+
+                //Create and assign subtools that don't belong to any modules
+                foreach(var kv in subItemTypeCache)
+                {
+                    if(string.IsNullOrEmpty(kv.Value.ParentModuleID))
+                    {
+                        if(Activator.CreateInstance(kv.Key) is ITool tool)
+                            ui.OrphanHolder.SubItems.Add(tool);
+                    }
+                }
+
+                ui.UIModules = modules;
+                ui.OrderModules();
             }
-
-            UI.OrderModules();
-            return UI;
-        }
-
-        public static IUIModule BuildModule<T>() where T : IUIModule
-        {
-            return BuildModule(typeof(T));
-        }
-
-        public static IUIModule BuildModule(Type moduleType)
-        {
-            var items = new List<IItem>();
-            var module = Activator.CreateInstance(moduleType) as IUIModule;
-
-            var modAttr = module.GetType().GetCustomAttribute<AutoLoadAttribute>(false);
-            if(string.IsNullOrEmpty(modAttr?.ID))
+            catch(Exception e)
             {
-                Debug.LogError($"Module '{moduleType.Name}' has no or empty ModuleID attribute.");
-                return null;
+                PumkinTools.LogException(e);
             }
-
-            //Loop through items whose ParentID matches our ID and assign them to our module
-            var childItemTypes = subItemTypeCache.Where(t => t.GetCustomAttribute<AutoLoadAttribute>()?.ParentModuleID == modAttr.ID);
-            foreach(var itemType in childItemTypes)
-            {
-                var itemInst = Activator.CreateInstance(itemType) as IItem;
-                if(itemInst != null)
-                    items.Add(itemInst);
-            }
-
-            //Order subtools based on their OrderInUI
-            module.SubItems = items.OrderBy(x => x.OrderInUI).ToList();
-
-            if(ModuleIDManager.RegisterModule(module))
-                return module;
-            return null;
+            return ui;
         }
 
-        public static bool AssignToParent(IUIModule module)
+        public static bool AssignToParentByID(IUIModule module)
         {
-            var attr = module.GetType().GetCustomAttribute<AutoLoadAttribute>();
-            var parent = ModuleIDManager.GetModule(attr?.ParentModuleID);
+            var attr = moduleTypeCache[module.GetType()];
+            var parent = IDManager.GetModule(attr?.ParentModuleID);
             if(parent == null)
                 return false;
 
@@ -117,26 +79,30 @@ namespace Pumkin.AvatarTools.UI
 
         public static void RefreshCachedTypes(string configurationString)
         {
-            typeCache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>()?.ToList();
-            subItemTypeCache = TypeHelpers.GetChildTypesOf<IItem>(typeCache)?.ToList();
-            moduleTypeCache = TypeHelpers.GetChildTypesOf<IUIModule>(typeCache)?.ToList();
+            typeCache = TypeHelpers.GetTypesAndAttributesWithAttribute<AutoLoadAttribute>();
+            subItemTypeCache = TypeHelpers.GetChildTypesOfWithAttribute<IItem, AutoLoadAttribute>(typeCache.Keys);
+            moduleTypeCache = TypeHelpers.GetChildTypesOfWithAttribute<IUIModule, AutoLoadAttribute>(typeCache.Keys);
 
             if(!string.IsNullOrEmpty(configurationString))
             {
-                FilterList(ref typeCache);
-                FilterList(ref subItemTypeCache);
-                FilterList(ref moduleTypeCache);
+                FilterTypeDictionary(ref typeCache);
+                FilterTypeDictionary(ref subItemTypeCache);
+                FilterTypeDictionary(ref moduleTypeCache);
 
-                void FilterList(ref List<Type> list)
+                void FilterTypeDictionary(ref Dictionary<Type, AutoLoadAttribute> dict)
                 {
-                    list = list.Where((t) =>
+                    //Remove all types that aren't in the current or default configuration then select non default ones if available
+                    dict = dict.Where((kv) =>
                     {
-                        var attr = t.GetCustomAttribute<AutoLoadAttribute>();
-                        if(!attr)
-                            return false;
-                        return attr.ConfigurationStrings.Contains(configurationString, StringComparer.InvariantCultureIgnoreCase)
-                            || attr.ConfigurationStrings.Contains(ConfigurationManager.DEFAULT_CONFIGURATION, StringComparer.InvariantCultureIgnoreCase);
-                    }).ToList();
+                        return kv.Value.ConfigurationStrings.Contains(configurationString,
+                                   StringComparer.InvariantCultureIgnoreCase)
+                               || kv.Value.ConfigurationStrings.Contains(ConfigurationManager.DEFAULT_CONFIGURATION,
+                                   StringComparer.InvariantCultureIgnoreCase);
+                    })
+                        .OrderBy(kv => kv.Value.IsGenericItem)
+                        .GroupBy(kv => kv.Value.ID)
+                        .Select(g => g.First())
+                        .ToDictionary(k => k.Key, v => v.Value);
                 }
             }
         }

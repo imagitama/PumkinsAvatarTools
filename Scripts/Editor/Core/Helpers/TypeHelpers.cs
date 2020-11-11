@@ -59,6 +59,18 @@ namespace Pumkin.Core.Helpers
             return types?.Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract) ?? null;
         }
 
+        public static Dictionary<Type, TAttribute> GetChildTypesOfWithAttribute<TParent, TAttribute>(
+            IEnumerable<Type> types) where TAttribute : Attribute
+        {
+            Dictionary<Type, TAttribute> dict = new Dictionary<Type, TAttribute>();
+
+            var tp = types?.Where(x => typeof(TParent).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract) ?? null;
+            foreach(var t in tp)
+                dict[t] = t.GetCustomAttribute<TAttribute>();
+
+            return dict;
+        }
+
         /// <summary>
         /// Gets all instantiatable types that derive from <paramref name="type"/>, from all assemblies
         /// </summary>
@@ -110,6 +122,29 @@ namespace Pumkin.Core.Helpers
         public static IEnumerable<Type> GetTypesWithAttribute<T>() where T : Attribute
         {
             return GetTypesWithAttribute<T>(AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()));
+        }
+
+        public static Dictionary<Type, T> GetTypesAndAttributesWithAttribute<T>() where T : Attribute
+        {
+            return GetTypesAndAttributesWithAttribute<T>(AppDomain.CurrentDomain.GetAssemblies());
+        }
+
+        public static Dictionary<Type, T> GetTypesAndAttributesWithAttribute<T>(params Assembly[] assemblies) where T : Attribute
+        {
+            var types = assemblies.SelectMany(x => x.GetTypes())
+                .Where(x => x.IsDefined(typeof(T)) && !x.IsInterface && !x.IsAbstract) ?? null;
+            return GetTypesAndAttributesWithAttribute<T>(types);
+        }
+
+        public static Dictionary<Type, T> GetTypesAndAttributesWithAttribute<T>(IEnumerable<Type> types) where T : Attribute
+        {
+            var dict = new Dictionary<Type, T>();
+            var ts = types?.Where(x => x.IsDefined(typeof(T)) && !x.IsInterface && !x.IsAbstract) ?? null;
+
+            foreach(var t in ts)
+                dict[t] = t.GetCustomAttribute<T>();
+
+            return dict;
         }
 
         /// <summary>

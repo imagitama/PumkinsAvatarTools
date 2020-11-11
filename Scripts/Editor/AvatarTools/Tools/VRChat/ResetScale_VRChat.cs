@@ -11,8 +11,8 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tool_resetScale", "vrchat", ParentModuleID = "tools_fixAvatar", CanReplaceGenericItem = true)]
-    [UIDefinition("Reset Scale", Description = "Resets your selected object's scale to prefab and moves the viewpoint")]
+    [AutoLoad("tool_resetScale", "vrchat", ParentModuleID = "tools_fixAvatar")]
+    [UIDefinition("[VRC] Reset Scale", Description = "Resets your selected object's scale to prefab and moves the viewpoint")]
     class ResetScale_VRChat : ToolBase
     {
         protected override bool Prepare(GameObject target)

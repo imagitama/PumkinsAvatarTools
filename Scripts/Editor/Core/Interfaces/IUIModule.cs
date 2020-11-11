@@ -19,7 +19,10 @@ namespace Pumkin.AvatarTools.Interfaces
         void DrawUI();
 
         void OrderChildren();
+
         void Start();
+
+        bool ReplaceSubItem(IItem newItem, IItem oldItem);
     }
 }
 #endif

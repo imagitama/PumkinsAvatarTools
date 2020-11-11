@@ -162,6 +162,18 @@ namespace Pumkin.AvatarTools.Base
             ChildModules.ForEach(x => x.OrderChildren());
         }
 
+        public bool ReplaceSubItem(IItem oldItem, IItem newItem)
+        {
+            int index = SubItems.IndexOf(oldItem);
+            if(index == -1)
+                return false;
+
+            SubItems[index] = newItem;
+
+            PumkinTools.LogVerbose($"Replaced {oldItem.Name} with {newItem.Name}");
+            return true;
+        }
+
         public static implicit operator bool(UIModuleBase module)
         {
             return !ReferenceEquals(module, null);

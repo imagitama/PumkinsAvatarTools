@@ -118,7 +118,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(callback == null)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for {Name}");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
                 callback = new EditorApplication.CallbackFunction(Update);
             }
 
@@ -132,7 +132,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(add)
             {
-                PumkinTools.Log($"Setting up Update callback for {Name}");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
                 SceneView.onSceneGUIDelegate += OnSceneGUI;
             }
             else

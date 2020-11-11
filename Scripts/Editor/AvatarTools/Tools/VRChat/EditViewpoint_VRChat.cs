@@ -16,7 +16,7 @@ namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_editViewpoint", "vrchat", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
     [UIDefinition("Edit Viewpoint")]
-    class EditViewpoint : ToolSceneGUIBase
+    class EditViewpoint_VRChat : ToolSceneGUIBase
     {
         Vector3 startViewpoint;
         Vector3 tempViewpoint;
@@ -26,7 +26,7 @@ namespace Pumkin.AvatarTools.Tools
 
         bool avatarIsHumanoid = false;
 
-        public EditViewpoint()
+        public EditViewpoint_VRChat()
         {
             WindowSize = new Vector2(200, 70);
         }

@@ -22,7 +22,7 @@ namespace Pumkin.AvatarTools
 
         static PumkinTools()
         {
-
+            VerboseLogger.logEnabled = true;
         }
 
         public static GameObject SelectedAvatar
@@ -79,6 +79,11 @@ namespace Pumkin.AvatarTools
         public static void LogVerbose(string msg, LogType logType = LogType.Log, UnityEngine.Object context = null)
         {
             VerboseLogger.LogFormat(logType, context, msg);
+        }
+
+        public static void LogException(Exception e)
+        {
+            Logger.LogException(e);
         }
     }
 }

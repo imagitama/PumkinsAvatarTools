@@ -2,6 +2,7 @@
 using Pumkin.AvatarTools;
 using Pumkin.Core.Extensions;
 using System;
+using System.Linq;
 
 namespace Pumkin.Core
 {
@@ -26,6 +27,9 @@ namespace Pumkin.Core
             }
         }
 
+        public bool IsGenericItem
+            => configurationStrings.Length == 1 && configurationStrings.Contains(ConfigurationManager.DEFAULT_CONFIGURATION);
+
         /// <summary>
         /// The ID of the parent module, used to organize the UI
         /// </summary>
@@ -42,14 +46,6 @@ namespace Pumkin.Core
         {
             get => configurationStrings;
             set => configurationStrings = value.IsNullOrEmpty() ? new string[] { ConfigurationManager.DEFAULT_CONFIGURATION } : value;
-        }
-
-        /// <summary>
-        /// Whether or not this can replace a generic item with the same ID
-        /// </summary>
-        public bool CanReplaceGenericItem
-        {
-            get; set;
         }
 
         public AutoLoadAttribute(string id, params string[] configurationStrings)
