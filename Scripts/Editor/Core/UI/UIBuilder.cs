@@ -23,30 +23,63 @@ namespace Pumkin.AvatarTools.UI
             IDManager.ClearCache();
             RefreshCachedTypes(ConfigurationManager.CurrentConfigurationString);
 
+            var builders = new List<ModuleBuilder>();
+            var modules = new List<IUIModule>();
+
+
+            //Create all builders and their modules
             try
             {
-                var modules = new List<IUIModule>();
-
                 foreach(var kv in moduleTypeCache)
                 {
                     var builder = new ModuleBuilder(kv.Key, kv.Value);
-                    var mod = builder.BuildModule(subItemTypeCache);
-                    if(mod != null)
-                        modules.Add(mod);
+                    if(builder.BuildModule())
+                        builders.Add(builder);
                 }
+            }
+            catch(Exception e)
+            {
+                PumkinTools.LogException(e);
+            }
 
-                //Assign child modules to their parents
-                for(int i = modules.Count - 1; i >= 0; i--)
+
+            //Assign modules to their parents
+            try
+            {
+                foreach(var kv in IDManager.Modules)
                 {
-                    var attr = modules[i].GetType().GetCustomAttribute<AutoLoadAttribute>();
-                    if(string.IsNullOrEmpty(attr?.ParentModuleID))
-                        continue;
-
-                    if(AssignToParentByID(modules[i]))
-                        modules.RemoveAt(i);
+                    string id = moduleTypeCache[kv.Value.GetType()]?.ParentModuleID;
+                    if(kv.Key == id)
+                        PumkinTools.LogError($"Can't make module {id} a parent of itself.");
+                    else
+                        AssignToParentByID(kv.Value, id);
                 }
+            }
+            catch(Exception e)
+            {
+                PumkinTools.LogException(e);
+            }
 
-                //Create and assign subtools that don't belong to any modules
+
+            //Build SubTools for all modules and add to main ui modules, but only if it's a root module
+            try
+            {
+                foreach(var builder in builders)
+                {
+                    builder.BuildSubTools(subItemTypeCache);
+                    if(string.IsNullOrWhiteSpace(builder.LoadAttribute.ParentModuleID))
+                        modules.Add(builder.Module);
+                }
+            }
+            catch(Exception e)
+            {
+                PumkinTools.LogException(e);
+            }
+
+
+            //Create and assign SubTools that don't belong to any modules
+            try
+            {
                 foreach(var kv in subItemTypeCache)
                 {
                     if(string.IsNullOrEmpty(kv.Value.ParentModuleID))
@@ -55,26 +88,32 @@ namespace Pumkin.AvatarTools.UI
                             ui.OrphanHolder.SubItems.Add(tool);
                     }
                 }
-
-                ui.UIModules = modules;
-                ui.OrderModules();
             }
             catch(Exception e)
             {
                 PumkinTools.LogException(e);
             }
+
+            ui.UIModules = modules;
+            ui.OrderModules();
+
             return ui;
         }
 
-        public static bool AssignToParentByID(IUIModule module)
+        public static bool AssignToParentByID(IUIModule module, string parentID)
         {
-            var attr = moduleTypeCache[module.GetType()];
-            var parent = IDManager.GetModule(attr?.ParentModuleID);
+            var parent = IDManager.GetModule(parentID);
             if(parent == null)
                 return false;
 
             parent.ChildModules.Add(module);
             return true;
+        }
+
+        public static bool AssignToParent(IUIModule module)
+        {
+            var attr = moduleTypeCache[module.GetType()];
+            return AssignToParentByID(module, attr?.ParentModuleID);
         }
 
         public static void RefreshCachedTypes(string configurationString)

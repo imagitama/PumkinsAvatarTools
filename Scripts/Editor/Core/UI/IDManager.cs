@@ -1,7 +1,9 @@
 ﻿#if UNITY_EDITOR
+using System.Collections;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.Core;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -13,33 +15,31 @@ namespace Pumkin.AvatarTools.Modules
         static readonly Dictionary<string, IUIModule> ModuleCache = new Dictionary<string, IUIModule>();
         static readonly Dictionary<string, IItem> ItemCache = new Dictionary<string, IItem>();
 
+        public static ReadOnlyDictionary<string, IUIModule> Modules
+            => new ReadOnlyDictionary<string, IUIModule>(ModuleCache);
+
+        public static ReadOnlyDictionary<string, IItem> Items
+            => new ReadOnlyDictionary<string, IItem>(ItemCache);
+
         public static void ClearCache()
         {
             ModuleCache.Clear();
             ItemCache.Clear();
         }
 
-        static bool FindAndReplaceItem(string id, IItem newItem)
+        static bool FindAndReplaceInModule(string id, IItem newItem)
         {
             var oldItem = ItemCache[id];
             if(oldItem == null)
                 return false;
 
-            IUIModule module = default;
-
             //Find module that has oldItem
-            foreach(var kv in ModuleCache)
-            {
-                if(kv.Value.SubItems.Contains(oldItem))
-                {
-                    module = kv.Value;
-                    break;
-                }
-            }
+            IUIModule module = ModuleCache.Values
+                .FirstOrDefault(m => m.SubItems.Contains(oldItem));
 
             if(module == default)
             {
-                PumkinTools.LogVerbose($"Can't replace {newItem.Name}");
+                PumkinTools.LogVerbose($"{newItem.Name} is registered but doesn't belong to a module", LogType.Warning);
                 return false;
             }
 
@@ -80,13 +80,15 @@ namespace Pumkin.AvatarTools.Modules
                 Debug.LogWarning($"Trying to register item without AutoLoad attribute. Aborting");
                 return false;
             }
-            if(ItemCache.TryGetValue(attr.ID.ToUpperInvariant(), out _))
+            if(ItemCache.TryGetValue(attr.ID.ToUpperInvariant(), out var oldItem))
             {
-                if(!attr.IsGenericItem && FindAndReplaceItem(attr.ID, item))
+                var oldAttr = oldItem.GetType().GetCustomAttribute<AutoLoadAttribute>();
+                if(attr.IsGenericItem && !oldAttr.IsGenericItem) //Should only replace generic items
                 {
                     Debug.LogWarning($"Item with ID '{attr.ID}' has already been created");
                     return false;
                 }
+                FindAndReplaceInModule(attr.ID, item);
             }
 
             ItemCache[attr.ID.ToUpper()] = item;

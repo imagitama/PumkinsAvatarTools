@@ -42,8 +42,7 @@ namespace Pumkin.AvatarTools
 
         void OnEnable()
         {
-            if(!UI)
-                UI = UIBuilder.BuildUI();
+            //UI build gets called by configuration being loaded
             guiSkin = Resources.Load<GUISkin>("UI/PumkinToolsGUISkin");
             OnWindowEnabled?.Invoke();
         }
