@@ -27,7 +27,7 @@ namespace Pumkin.Core.Extensions
             return path;
         }
 
-        public static Transform FindOrCreate(this Transform transform, string transformPath, bool createIfMissing = false, Transform reference = null)
+        public static Transform FindOrCreate(this Transform transform, string transformPath, bool createIfMissing = false, Transform rootReference = null)
         {
             var t = transform.Find(transformPath);
 
@@ -58,7 +58,7 @@ namespace Pumkin.Core.Extensions
                             tNew = new GameObject(arr[i]).transform;
                             tNew.parent = parent;
 
-                            var trans = reference.root.Find(s + arr[i]);
+                            var trans = rootReference.Find(s + arr[i]);
                             if(trans)
                             {
                                 tNew.localScale = Vector3.one;

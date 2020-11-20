@@ -5,10 +5,10 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_lights", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad("copier_light", ParentModuleID = DefaultModuleIDs.COPIER)]
     [UIDefinition("Lights", OrderInUI = 1)]
     class LightCopier : ComponentCopierBase
     {
-        public override string ComponentTypeNameFull { get => typeof(Light).FullName; }
+        public override string ComponentTypeNameFull => typeof(Light).FullName;
     }
 }

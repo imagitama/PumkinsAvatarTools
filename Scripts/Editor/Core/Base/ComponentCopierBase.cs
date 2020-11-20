@@ -9,6 +9,7 @@ using UnityEngine;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.Modules;
 using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Base
@@ -129,7 +130,7 @@ namespace Pumkin.AvatarTools.Base
                 return false;
             if(ComponentType == null)
             {
-                PumkinTools.Log($"{Name}: Couldn't find component type");
+                PumkinTools.Log($"{ComponentTypeNameFull}: Couldn't find component type");
                 return false;
             }
 
@@ -149,9 +150,13 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual void Finish(GameObject objFrom, GameObject objTo)
         {
-            PumkinTools.Log($"{ComponentTypeNameFull} copier completed successfully.");
+            PumkinTools.Log($"<b>{Name}</b> copier completed successfully.");
         }
 
+        protected virtual bool ShouldIgnoreObject(GameObject obj)
+        {
+            return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
+        }
 
         protected virtual bool DoCopy(GameObject objFrom, GameObject objTo)
         {
@@ -159,8 +164,11 @@ namespace Pumkin.AvatarTools.Base
 
             foreach(var coFrom in compsFrom)
             {
+                if(!coFrom || ShouldIgnoreObject(coFrom.gameObject))
+                    continue;
+
                 var transPath = coFrom.transform.GetPathInHierarchy();
-                var trans = objTo.transform.Find(transPath);
+                var trans = objTo.transform.FindOrCreate(transPath, settings.createGameObjects, objFrom.transform);
                 if(!trans)
                     continue;
 

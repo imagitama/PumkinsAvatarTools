@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_dbones", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad("copier_dbone", ParentModuleID = DefaultModuleIDs.COPIER)]
     [UIDefinition("Dynamic Bones", OrderInUI = 1)]
     class DynamicBoneCopier : ComponentCopierBase
     {
-        public override string ComponentTypeNameFull { get => "DynamicBone"; }
+        public override string ComponentTypeNameFull => "DynamicBone";
         public override ISettingsContainer Settings => settings;
 
         DynamicBoneCopier_Settings settings;

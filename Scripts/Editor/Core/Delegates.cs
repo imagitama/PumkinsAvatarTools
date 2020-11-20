@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.Core
 {
-    static class Delegates
+    public static class Delegates
     {
         public delegate void SelectedChangeHandler(GameObject newSelection);
         public delegate void StringChangeHandler(string str);

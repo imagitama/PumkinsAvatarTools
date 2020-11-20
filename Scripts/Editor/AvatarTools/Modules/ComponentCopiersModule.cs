@@ -1,8 +1,11 @@
 ﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using Pumkin.AvatarTools.Base;
+using Pumkin.AvatarTools.Core;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using UnityEditor;
 using UnityEngine;
@@ -13,14 +16,38 @@ namespace Pumkin.AvatarTools.Modules
     [UIDefinition("Component Copier", OrderInUI = 1)]
     class ComponentCopiersModule : UIModuleBase
     {
-        bool canCopy = true;
-        public static GameObject CopyFromAvatar { get; set; }
+        public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
+
+        public static IgnoreList IgnoreList { get; } = new IgnoreList(OnAvatarSelectionChanged);
+
+        static bool CanCopy { get; set; } = true;
+
+        static GameObject _copyFromAvatar;
+        public static GameObject CopyFromAvatar
+        {
+            get => _copyFromAvatar;
+
+            set
+            {
+                if(_copyFromAvatar == value)
+                    return;
+
+                _copyFromAvatar = value;
+                CopierAvatarSelectionChanged(_copyFromAvatar);
+            }
+
+        }
         GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
+
+
+        public static void CopierAvatarSelectionChanged(GameObject newSelection)
+        {
+            OnAvatarSelectionChanged?.Invoke(newSelection);
+        }
 
         public override void DrawContent()
         {
-            EditorGUILayout.Space();
-            EditorGUILayout.Space();
+            GUILayout.Space(16);
 
             if(!string.IsNullOrEmpty(Description))
                 EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
@@ -31,13 +58,12 @@ namespace Pumkin.AvatarTools.Modules
                 CopyFromAvatar = Selection.activeGameObject ?? CopyFromAvatar;
 
 #if PUMKIN_DEV
-            if(GUILayout.Button("Autoselect"))
+            if(GUILayout.Button("Auto Select"))
             {
-                CopyFromAvatar = GameObject.Find("copyFrom");
-                PumkinTools.SelectedAvatar = GameObject.Find("copyTo");
+                CopyFromAvatar = GameObject.Find("copyFrom") ?? GameObject.Find("Copy From") ?? GameObject.Find("from");
+                PumkinTools.SelectedAvatar = GameObject.Find("copyTo") ?? GameObject.Find("Copy To") ?? GameObject.Find("to");
             }
 #endif
-
 
             UIHelpers.DrawGUILine();
 
@@ -55,7 +81,7 @@ namespace Pumkin.AvatarTools.Modules
 
             UIHelpers.DrawGUILine();
 
-            EditorGUI.BeginDisabledGroup(!canCopy);
+            EditorGUI.BeginDisabledGroup(!CanCopy);
             {
                 if(GUILayout.Button("Copy Selected", Styles.CopierCopyButton))
                 {
