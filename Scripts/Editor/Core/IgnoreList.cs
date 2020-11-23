@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
+using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
+using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Pumkin.AvatarTools.Core
 {
@@ -16,14 +22,25 @@ namespace Pumkin.AvatarTools.Core
         List<Transform> ignoredTransforms = new List<Transform>();
         List<string> ignoredTransformPaths = new List<string>();
 
-        bool Enabled { get; set; } = true;
+        public bool enabled = true;
+        public bool includeChildren = true;
+        bool expanded = false;
 
-        public bool IncludeChildren { get; set; } = true;
+        Vector2 scrollPos = Vector2.zero;
+        static float minHeight = 30f;
+        static float maxHeight = 100f;
+        static string label = "Ignore objects";
+        static string childrenLabel = "Include children";
+
+        SerializedObject serializedIgnoreList;
 
         public IgnoreList(Delegates.SelectedChangeHandler selectionChangeHandler)
         {
             this.selectionChangeHandler = selectionChangeHandler;
             selectionChangeHandler += SelectionChanged;
+
+            if(ignoredTransforms.Count == 0)
+                ignoredTransforms.ResizeWithDefaults(1);
         }
 
         void SelectionChanged(GameObject selection)
@@ -31,49 +48,48 @@ namespace Pumkin.AvatarTools.Core
             if(selection)
                 PathsToTransformList(selection);
             else
-                TransformListToPaths(selection);
-        }
-
-        void TransformListToPaths(GameObject obj)
-        {
-            ignoredTransformPaths.Clear();
-            foreach(var t in ignoredTransforms)
-            {
-                if(!t)
-                    continue;
-                ignoredTransformPaths.Add(t.GetHierarchyPath(t));
-            }
+                TransformListToPaths();
         }
 
         void PathsToTransformList(GameObject obj)
         {
             ignoredTransforms.Clear();
-            foreach(var tPath in ignoredTransformPaths)
+            foreach(var path in ignoredTransformPaths)
             {
-                var t = obj.transform.Find(tPath);
+                var t = obj.transform.Find(path);
                 if(t)
                     ignoredTransforms.Add(t);
             }
         }
 
+        void TransformListToPaths()
+        {
+            ignoredTransformPaths.Clear();
+            foreach(var trans in ignoredTransforms)
+                ignoredTransformPaths.Add(trans.GetPathInHierarchy());
+        }
+
         public bool ShouldIgnoreTransform(Transform trans)
         {
-            if(!Enabled || (!trans || ignoredTransforms == null) || trans == trans.root)
+            if(!enabled || ignoredTransforms.Count == 0 || (!trans || ignoredTransforms == null) || trans == trans.root)
                 return false;
 
-            if(ignoredTransforms.Count > 0 && IncludeChildren)
+            var t = trans;
+            string path = t.GetPathInHierarchy();
+            if(ignoredTransforms.Count > 0 && includeChildren)
             {
-                var t = trans;
                 do
                 {
-                    if(ignoredTransforms.Contains(t))
+                    if(ignoredTransformPaths.Contains(path, StringComparer.InvariantCultureIgnoreCase))
                         return true;
                     t = t.parent;
-                } while(t != null && t != t.root);
+                    path = t.GetPathInHierarchy();
+                }
+                while(t != null);
                 return false;
             }
 
-            if(ignoredTransforms.Contains(trans))
+            if(ignoredTransformPaths.Contains(path, StringComparer.InvariantCultureIgnoreCase))
                 return true;
             return false;
         }
@@ -81,6 +97,28 @@ namespace Pumkin.AvatarTools.Core
         public void Dispose()
         {
             selectionChangeHandler -= SelectionChanged;
+        }
+
+        public void DrawUI()
+        {
+            UIHelpers.VerticalBox(() =>
+            {
+                EditorGUILayout.BeginHorizontal();
+                enabled = EditorGUILayout.ToggleLeft(label, enabled);
+                expanded = GUILayout.Toggle(expanded, Icons.Options, Styles.Icon);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUI.BeginDisabledGroup(!enabled);
+                if(expanded)
+                {
+                    UIHelpers.DrawGUILine();
+                    if(UIHelpers.DrawListWithAddButtons(ignoredTransforms))
+                        TransformListToPaths();
+                    includeChildren = GUILayout.Toggle(includeChildren, childrenLabel);
+                }
+                EditorGUI.EndDisabledGroup();
+                EditorGUILayout.Space();
+            }, Styles.CopierBox);
         }
     }
 }

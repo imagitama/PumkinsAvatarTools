@@ -52,7 +52,7 @@ namespace Pumkin.AvatarTools.Base
 
         public void Finish(GameObject target)
         {
-            PumkinTools.Log($"Successfully removed all {_componentType?.Name ?? "Unknown Type"} from {target.name}");
+            PumkinTools.Log($"Successfully removed all <b>{_componentType?.Name ?? "Unknown Type"}</b> from <b>{target.name}</b>");
         }
 
         public bool Prepare(GameObject target)

@@ -27,6 +27,14 @@ namespace Pumkin.Core.Extensions
             return path;
         }
 
+        /// <summary>
+        /// Finds or creates a child transform
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="transformPath">Child transform path</param>
+        /// <param name="createIfMissing">Whether we're alowed to create</param>
+        /// <param name="rootReference">Reference root transform to copy values from</param>
+        /// <returns>Transform if found or created, or null if not allowed to create</returns>
         public static Transform FindOrCreate(this Transform transform, string transformPath, bool createIfMissing = false, Transform rootReference = null)
         {
             var t = transform.Find(transformPath);

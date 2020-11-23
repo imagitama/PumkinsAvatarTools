@@ -81,6 +81,10 @@ namespace Pumkin.AvatarTools.Modules
 
             UIHelpers.DrawGUILine();
 
+            IgnoreList?.DrawUI();
+
+            UIHelpers.DrawGUILine();
+
             EditorGUI.BeginDisabledGroup(!CanCopy);
             {
                 if(GUILayout.Button("Copy Selected", Styles.CopierCopyButton))

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
 
@@ -95,6 +96,93 @@ namespace Pumkin.Core.Helpers
                 if(beganHorizontal)
                     EditorGUILayout.EndHorizontal();
             }
+        }
+
+        public static void DrawFoldoutListScrolling<T>(List<T> list, ref bool expanded, ref Vector2 scroll,
+            string label) where T : class
+        {
+            expanded = EditorGUILayout.Foldout(expanded, label);
+            EditorGUILayout.BeginScrollView(scroll);
+            if(expanded)
+                DrawList(list);
+            EditorGUILayout.EndScrollView();
+        }
+
+        public static void DrawFoldoutList<T>(List<T> list, ref bool expanded, string label) where T : class
+        {
+            expanded = EditorGUILayout.Foldout(expanded, label);
+            if(expanded)
+                DrawList(list);
+        }
+
+        /// <summary>
+        /// Draws list as object fields with size field
+        /// </summary>
+        /// <typeparam name="T">Type of object in object field</typeparam>
+        /// <param name="list">List of elements</param>
+        /// <returns>True if list was changed</returns>
+        public static bool DrawList<T>(List<T> list) where T : class
+        {
+            bool changed = false;
+            EditorGUILayout.Space();
+
+            int size = list.Count;
+            EditorGUI.BeginChangeCheck();
+            size = EditorGUILayout.IntField("Size", size);
+            if(EditorGUI.EndChangeCheck())
+            {
+                changed = true;
+                list.ResizeWithDefaults(size);
+            }
+
+            return DrawListElements(list) || changed;
+        }
+
+        /// <summary>
+        /// Draws a list of elements as object fields with Add, Remove and Clear buttons
+        /// </summary>
+        /// <typeparam name="T">Type of object in object field</typeparam>
+        /// <param name="list">List of elements</param>
+        /// <returns>True if list was changed</returns>
+        public static bool DrawListWithAddButtons<T>(List<T> list) where T : class
+        {
+            bool changed = DrawListElements(list);
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.Space();
+                if(GUILayout.Button(Icons.RemoveAll, Styles.IconButton))
+                    list.Clear();
+                if(GUILayout.Button(Icons.Remove, Styles.IconButton))
+                    list.ResizeWithDefaults(list.Count - 1);
+                if(GUILayout.Button(Icons.Add, Styles.IconButton))
+                    list.ResizeWithDefaults(list.Count + 1);
+            }
+            EditorGUILayout.EndHorizontal();
+            return changed;
+        }
+
+        /// <summary>
+        /// Draws a list of elements as object fields
+        /// </summary>
+        /// <typeparam name="T">Type of object in object field</typeparam>
+        /// <param name="list">List of elements</param>
+        /// <returns>True if list was changed</returns>
+        static bool DrawListElements<T>(List<T> list) where T : class
+        {
+            bool changed = false;
+            for(int i = 0; i < list.Count; i++)
+            {
+                EditorGUI.BeginChangeCheck();
+                var obj = EditorGUILayout.ObjectField($"Element {i}", list[i] as UnityEngine.Object, typeof(T), true);
+                if(EditorGUI.EndChangeCheck())
+                {
+                    list[i] = obj as T;
+                    changed = true;
+                }
+            }
+
+            return changed;
         }
     }
 }

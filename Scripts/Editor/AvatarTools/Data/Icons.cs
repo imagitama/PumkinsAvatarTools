@@ -13,12 +13,20 @@ namespace Pumkin.AvatarTools.UI
         public static GUIContent Default { get; private set; }
         public static GUIContent DynamicBone { get; private set; }
         public static GUIContent DynamicBoneCollider { get; private set; }
+        public static GUIContent Add { get; private set; }
+        public static GUIContent Remove { get; private set; }
+        public static GUIContent RemoveAll { get; private set; }
+
 
         static Icons()
         {
             Default = EditorGUIUtility.IconContent("DefaultAsset Icon");
             Settings = EditorGUIUtility.IconContent("Settings");
             Options = EditorGUIUtility.IconContent("LookDevPaneOption", "Options");
+
+            Add = EditorGUIUtility.IconContent("Toolbar Plus");
+            Remove = EditorGUIUtility.IconContent("Toolbar Minus");
+            RemoveAll = EditorGUIUtility.IconContent("vcs_delete");
 
             DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
             DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;

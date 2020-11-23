@@ -33,11 +33,11 @@ namespace Pumkin.AvatarTools.Base
             set => _content = value;
         }
         public abstract string ComponentTypeNameFull { get; }
-        public virtual ISettingsContainer Settings => settings;
+        public virtual ISettingsContainer Settings => _baseSettings;
         public bool ExpandSettings { get; private set; }
         public bool Active { get; set; }
 
-        CopierSettingsContainerBase settings;
+        CopierSettingsContainerBase _baseSettings;
 
         public Type ComponentType
         {
@@ -80,7 +80,7 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual void SetupSettings()
         {
-            settings = ScriptableObject.CreateInstance<CopierSettingsContainerBase>();
+            _baseSettings = ScriptableObject.CreateInstance<CopierSettingsContainerBase>();
         }
 
         public virtual void DrawUI(params GUILayoutOption[] options)
@@ -135,7 +135,7 @@ namespace Pumkin.AvatarTools.Base
             }
 
             //TODO: Register copier and destroyer in some kind of manager
-            //if(settings.removeAllBeforeCopying)
+            //if(Settings.removeAllBeforeCopying)
             //{
             //    var desType = TypeHelpers.GetType($"{ComponentType.Name}Destroyer");
             //    if(desType != null)
@@ -148,11 +148,6 @@ namespace Pumkin.AvatarTools.Base
             return true;
         }
 
-        protected virtual void Finish(GameObject objFrom, GameObject objTo)
-        {
-            PumkinTools.Log($"<b>{Name}</b> copier completed successfully.");
-        }
-
         protected virtual bool ShouldIgnoreObject(GameObject obj)
         {
             return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
@@ -162,13 +157,18 @@ namespace Pumkin.AvatarTools.Base
         {
             var compsFrom = objFrom.GetComponentsInChildren(ComponentType, true);
 
+            var set = Settings as CopierSettingsContainerBase;
+            bool createGameObjects = set != null && set.createGameObjects;
             foreach(var coFrom in compsFrom)
             {
                 if(!coFrom || ShouldIgnoreObject(coFrom.gameObject))
+                {
+                    PumkinTools.LogVerbose($"<b>{Name}</b> copier: Ignoring {coFrom.gameObject.name}");
                     continue;
+                }
 
                 var transPath = coFrom.transform.GetPathInHierarchy();
-                var trans = objTo.transform.FindOrCreate(transPath, settings.createGameObjects, objFrom.transform);
+                var trans = objTo.transform.FindOrCreate(transPath, createGameObjects, objFrom.transform);
                 if(!trans)
                     continue;
 
@@ -210,6 +210,11 @@ namespace Pumkin.AvatarTools.Base
             });
 
             serialComp.ApplyModifiedProperties();
+        }
+
+        protected virtual void Finish(GameObject objFrom, GameObject objTo)
+        {
+            PumkinTools.Log($"<b>{Name}</b> copier completed successfully.");
         }
     }
 }

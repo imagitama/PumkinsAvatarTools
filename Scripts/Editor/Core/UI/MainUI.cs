@@ -82,16 +82,16 @@ namespace Pumkin.AvatarTools.UI
                 foreach(var mod in UIModules)
                 {
                     if(mod != null)
-                    {
-                        try
-                        {
+                    {//TODO: Restore try catch
+                        //try
+                        //{
                             if(!mod.IsHidden)
                                 mod.DrawUI();
-                        }
-                        catch(Exception e)
-                        {
-                            Debug.LogException(e);
-                        }
+                        //}
+                        //catch(Exception e)
+                        //{
+                        //    Debug.LogException(e);
+                        //}
                     }
                     else
                     {
