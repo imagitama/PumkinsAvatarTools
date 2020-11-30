@@ -16,6 +16,7 @@ namespace Pumkin.AvatarTools.UI
         public static GUIContent Add { get; private set; }
         public static GUIContent Remove { get; private set; }
         public static GUIContent RemoveAll { get; private set; }
+        public static GUIContent AvatarDescriptor { get; private set; }
 
 
         static Icons()
@@ -30,8 +31,10 @@ namespace Pumkin.AvatarTools.UI
 
             DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
             DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;
+            AvatarDescriptor = new GUIContent(Resources.Load<Texture>("Icons/AvatarDescriptor-Icon")) ?? Default;
         }
 
+        //TODO: Add a function that would pick best out of these
         /// <summary>
         /// Loads icon texture from unity resources if type name matches texture name (ex: GameObject or GameObject-icon)
         /// </summary>
@@ -52,9 +55,19 @@ namespace Pumkin.AvatarTools.UI
         /// <returns></returns>
         public static Texture GetTypeIconFromResources<T>()
         {
-            var tex = Resources.Load<Texture>(typeof(T).Name + "-Icon");
+            return GetTypeIconFromResources(typeof(T));
+        }
+
+        /// <summary>
+        /// Loads icon texture from unity resources if type name matches texture name (ex: GameObject or GameObject-icon)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Texture GetTypeIconFromResources(Type type)
+        {
+            var tex = Resources.Load<Texture>(type.Name + "-Icon");
             if(tex == null)
-                tex = Resources.Load<Texture>(typeof(T).Name);
+                tex = Resources.Load<Texture>(type.Name);
             return tex;
         }
 

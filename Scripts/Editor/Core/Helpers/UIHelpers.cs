@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
+using Pumkin.AvatarTools;
 using UnityEditor;
 using UnityEngine;
 
@@ -138,6 +139,32 @@ namespace Pumkin.Core.Helpers
             return DrawListElements(list) || changed;
         }
 
+        public static bool DrawListWithAddButtonsScrolling<T>(List<T> list, ref Vector2 scroll, float minHeight, float maxHeight) where T : class
+        {
+            bool changed = false;
+            EditorGUILayout.BeginHorizontal();
+            {
+                changed = DrawListElementsScrolling(list, ref scroll, minHeight, maxHeight, false);
+                DrawAddButtons(list);
+            }
+            EditorGUILayout.EndHorizontal();
+            return changed;
+        }
+
+        static void DrawAddButtons<T>(List<T> list) where T : class
+        {
+            EditorGUILayout.BeginVertical(GUILayout.MaxWidth(Styles.IconButton.fixedWidth));
+            {
+                if(GUILayout.Button(Icons.Add, Styles.IconButton))
+                    list.ResizeWithDefaults(list.Count + 1);
+                if(GUILayout.Button(Icons.Remove, Styles.IconButton))
+                    list.ResizeWithDefaults(list.Count - 1);
+                if(GUILayout.Button(Icons.RemoveAll, Styles.IconButton))
+                    list.Clear();
+            }
+            EditorGUILayout.EndVertical();
+        }
+
         /// <summary>
         /// Draws a list of elements as object fields with Add, Remove and Clear buttons
         /// </summary>
@@ -146,17 +173,11 @@ namespace Pumkin.Core.Helpers
         /// <returns>True if list was changed</returns>
         public static bool DrawListWithAddButtons<T>(List<T> list) where T : class
         {
-            bool changed = DrawListElements(list);
-
+            bool changed = false;
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.Space();
-                if(GUILayout.Button(Icons.RemoveAll, Styles.IconButton))
-                    list.Clear();
-                if(GUILayout.Button(Icons.Remove, Styles.IconButton))
-                    list.ResizeWithDefaults(list.Count - 1);
-                if(GUILayout.Button(Icons.Add, Styles.IconButton))
-                    list.ResizeWithDefaults(list.Count + 1);
+                changed = DrawListElements(list);
+                DrawAddButtons(list);
             }
             EditorGUILayout.EndHorizontal();
             return changed;
@@ -168,20 +189,41 @@ namespace Pumkin.Core.Helpers
         /// <typeparam name="T">Type of object in object field</typeparam>
         /// <param name="list">List of elements</param>
         /// <returns>True if list was changed</returns>
-        static bool DrawListElements<T>(List<T> list) where T : class
+        static bool DrawListElements<T>(List<T> list, bool drawLabels = true) where T : class
         {
+            EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
             bool changed = false;
+            GUIContent gc = GUIContent.none;
             for(int i = 0; i < list.Count; i++)
             {
-                EditorGUI.BeginChangeCheck();
-                var obj = EditorGUILayout.ObjectField($"Element {i}", list[i] as UnityEngine.Object, typeof(T), true);
-                if(EditorGUI.EndChangeCheck())
+                if(drawLabels)
+                    gc = new GUIContent($"Element {i}");
+                try
                 {
-                    list[i] = obj as T;
-                    changed = true;
+                    EditorGUI.BeginChangeCheck();
+                    var obj = EditorGUILayout.ObjectField(gc, list[i] as UnityEngine.Object, typeof(T),
+                        true, GUILayout.ExpandWidth(true));
+                    if(EditorGUI.EndChangeCheck())
+                    {
+                        list[i] = obj as T;
+                        changed = true;
+                    }
+                }
+                catch(Exception e)
+                {
+                    PumkinTools.LogException(e);
                 }
             }
+            EditorGUILayout.EndVertical();
 
+            return changed;
+        }
+
+        static bool DrawListElementsScrolling<T>(List<T> list, ref Vector2 scroll, float minHeight, float maxHeight, bool drawLabels = true) where T : class
+        {
+            scroll = EditorGUILayout.BeginScrollView(scroll);
+            bool changed = DrawListElements(list, drawLabels);
+            EditorGUILayout.EndScrollView();
             return changed;
         }
     }

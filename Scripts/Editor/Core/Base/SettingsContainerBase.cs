@@ -1,8 +1,10 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Interfaces;
 using System;
+using Pumkin.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace Pumkin.AvatarTools.Base
 {
@@ -18,6 +20,11 @@ namespace Pumkin.AvatarTools.Base
                     editor = Editor.CreateEditor(this);
                 return editor;
             }
+        }
+
+        public void Awake()
+        {
+            Editor.OnInspectorGUINoScriptField();   //Try to draw to initialize it so it opens instantly later
         }
 
         public bool SaveToConfigFile(string filePath)

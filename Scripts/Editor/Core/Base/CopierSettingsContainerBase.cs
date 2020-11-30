@@ -9,7 +9,7 @@ namespace Pumkin.AvatarTools.Base
 {
     [Serializable]
     public class CopierSettingsContainerBase : SettingsContainerBase
-    {
+    {//TODO: Figure out a way to hide these
         [DrawToggleLeft]
         public bool removeAllBeforeCopying = false;
         [DrawToggleLeft]

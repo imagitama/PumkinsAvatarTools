@@ -94,11 +94,6 @@ namespace Pumkin.AvatarTools.Core
             return false;
         }
 
-        public void Dispose()
-        {
-            selectionChangeHandler -= SelectionChanged;
-        }
-
         public void DrawUI()
         {
             UIHelpers.VerticalBox(() =>
@@ -112,13 +107,20 @@ namespace Pumkin.AvatarTools.Core
                 if(expanded)
                 {
                     UIHelpers.DrawGUILine();
-                    if(UIHelpers.DrawListWithAddButtons(ignoredTransforms))
+                    if(UIHelpers.DrawListWithAddButtonsScrolling(ignoredTransforms, ref scrollPos, minHeight, maxHeight))
                         TransformListToPaths();
+
+                    UIHelpers.DrawGUILine();
                     includeChildren = GUILayout.Toggle(includeChildren, childrenLabel);
                 }
                 EditorGUI.EndDisabledGroup();
                 EditorGUILayout.Space();
             }, Styles.CopierBox);
+        }
+
+        public void Dispose()
+        {
+            selectionChangeHandler -= SelectionChanged;
         }
     }
 }
