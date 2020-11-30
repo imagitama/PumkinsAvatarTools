@@ -4,7 +4,6 @@ using System;
 using Pumkin.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
-using VRC.SDKBase;
 
 namespace Pumkin.AvatarTools.Base
 {

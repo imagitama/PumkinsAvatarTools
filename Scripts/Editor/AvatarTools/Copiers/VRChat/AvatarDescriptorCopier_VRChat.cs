@@ -8,7 +8,6 @@ using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using UnityEngine;
-using VRC.SDKBase;
 
 namespace Pumkin.AvatarTools.Copiers
 {

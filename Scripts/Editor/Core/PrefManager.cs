@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-using Amazon.Runtime.Internal;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;

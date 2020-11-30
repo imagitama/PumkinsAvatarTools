@@ -29,33 +29,46 @@ namespace Pumkin.AvatarTools.UI
             Remove = EditorGUIUtility.IconContent("Toolbar Minus");
             RemoveAll = EditorGUIUtility.IconContent("vcs_delete");
 
-            DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
-            DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;
-            AvatarDescriptor = new GUIContent(Resources.Load<Texture>("Icons/AvatarDescriptor-Icon")) ?? Default;
+            //DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
+            //DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;
+            
+            //TODO: Sort out automatic icon loading
+            DynamicBone = new GUIContent(GetTypeIconTextureFromResources("DynamicBone")) ?? Default;
+            DynamicBoneCollider = new GUIContent(GetTypeIconTextureFromResources("DynamicBoneColider")) ?? Default;
+            AvatarDescriptor = new GUIContent(GetTypeIconTextureFromResources("AvatarDescriptor")) ?? Default;
         }
 
-        //TODO: Add a function that would pick best out of these
         /// <summary>
         /// Loads icon texture from unity resources if type name matches texture name (ex: GameObject or GameObject-icon)
         /// </summary>
         /// <param name="typeNameFull">Must be full type name path here, but texture name only needs the type name</param>
         /// <returns></returns>
-        public static Texture GetTypeIconFromResources(string typeNameFull)
+        public static Texture GetTypeIconTextureFromResources(string typeNameFull)
         {
             Type type = TypeHelpers.GetType(typeNameFull);
-            var tex = Resources.Load<Texture>(type.Name + "-Icon");
-            if(tex == null)
-                tex = Resources.Load<Texture>(type.Name);
+            Texture tex = null;
+            if (type != null)            
+                tex = GetTexOrAppendIcon("Icons/" + type.Name);            
+            else            
+                tex = GetTexOrAppendIcon("Icons/" + typeNameFull);            
             return tex;
+
+            Texture GetTexOrAppendIcon(string name)
+            {
+                var tx = Resources.Load<Texture>(name + "-Icon");
+                if (tx == null)
+                    tx = Resources.Load<Texture>(name);
+                return tx;
+            }
         }
 
         /// <summary>
         /// Loads icon texture from unity resources if type name matches texture name (ex: GameObject or GameObject-icon)
         /// </summary>
         /// <returns></returns>
-        public static Texture GetTypeIconFromResources<T>()
+        public static Texture GetTypeIconTextureFromResources<T>()
         {
-            return GetTypeIconFromResources(typeof(T));
+            return GetTypeIconTextureFromResources(typeof(T));
         }
 
         /// <summary>
@@ -63,7 +76,7 @@ namespace Pumkin.AvatarTools.UI
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Texture GetTypeIconFromResources(Type type)
+        public static Texture GetTypeIconTextureFromResources(Type type)
         {
             var tex = Resources.Load<Texture>(type.Name + "-Icon");
             if(tex == null)
@@ -88,6 +101,9 @@ namespace Pumkin.AvatarTools.UI
         /// <returns></returns>
         public static Texture GetIconTextureFromType(Type type)
         {
+            if (type == null)
+                return null;
+
             var prop = typeof(Icons).GetProperty(type.Name);
             if(prop != null)
             {

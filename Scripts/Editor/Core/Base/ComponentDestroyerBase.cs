@@ -5,7 +5,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Base
+namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists before trying to instantiate this
 {
     public abstract class ComponentDestroyerBase : IComponentDestroyer, IItem
     {
@@ -47,7 +47,7 @@ namespace Pumkin.AvatarTools.Base
             else
                 throw new ArgumentNullException(ComponentTypeNameFull, $"{ComponentTypeNameFull} is invalid");
 
-            Name = _componentType.Name;
+            Name = _componentType?.Name ?? "Invalid Destroyer";
         }
 
         public void Finish(GameObject target)

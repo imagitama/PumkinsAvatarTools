@@ -14,7 +14,7 @@ using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Base
 {
-    public abstract class ComponentCopierBase : IComponentCopier
+    public abstract class ComponentCopierBase : IComponentCopier //TODO: Check if component type exists before trying to instantiate this
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -71,7 +71,7 @@ namespace Pumkin.AvatarTools.Base
             }
             Content = CreateGUIContent();
             SetupSettings();
-        }
+        }//
 
         protected virtual GUIContent CreateGUIContent()
         {
