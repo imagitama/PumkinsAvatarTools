@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Interfaces
 {
-    public interface IComponentCopier : IItem
+    public interface IComponentCopier : IItem, IComponentActor
     {
-        string ComponentTypeNameFull { get; }
         bool TryCopyComponents(GameObject objFrom, GameObject objTo);
 
         bool Active { get; set; }

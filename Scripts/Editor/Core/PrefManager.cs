@@ -11,11 +11,12 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Core
 {
     /// <summary>
-    /// Gets and sets preferences on a per project basis
+    /// Gets and sets preferences on a per project basis.
+    /// For global preferences use UnityEngine.EditorPrefs
     /// </summary>
     public static class PrefManager
     {
-        static readonly string prefString = $"Pumkin.AvatarTools-{Application.productName}";
+        static readonly string prefString = $"Pumkin.AvatarTools-{Application.productName}";    //productName returns the name of the project
 
         public static void SetBool(string name, bool value) =>
             EditorPrefs.SetBool($"{prefString}.{name}", value);

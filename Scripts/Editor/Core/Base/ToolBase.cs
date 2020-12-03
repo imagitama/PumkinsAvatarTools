@@ -4,6 +4,7 @@ using Pumkin.AvatarTools.Tools;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -17,8 +18,6 @@ namespace Pumkin.AvatarTools.Base
     /// </summary>
     public abstract class ToolBase : ITool, IDisposable
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
         public string GameConfigurationString { get; set; }
         public bool CanUpdate
         {
@@ -38,7 +37,6 @@ namespace Pumkin.AvatarTools.Base
                     SetupUpdateCallback(ref updateCallback, false);
             }
         }
-        public int OrderInUI { get; set; }
         public virtual GUIContent Content
         {
             get
@@ -51,12 +49,11 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual GUIContent CreateGUIContent()
         {
-            return new GUIContent(Name, Description);
+            return new GUIContent(UIDefs.Name, UIDefs.Description);
         }
 
         public virtual ISettingsContainer Settings { get => null; }
-        public bool ExpandSettings { get; protected set; }
-        public bool EnabledInUI { get; set; } = true;
+        public virtual UIDefinition UIDefs { get; set; }
 
         bool _allowUpdate;
         GUIContent _content;
@@ -67,19 +64,8 @@ namespace Pumkin.AvatarTools.Base
 
         public ToolBase()
         {
-            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
-            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
-            {
-                Name = uiDefAttr.FriendlyName;
-                Description = uiDefAttr.Description;
-                OrderInUI = uiDefAttr.OrderInUI;
-            }
-            else
-            {
-                Name = GetType().Name;
-                Description = "Base Tool description";
-                OrderInUI = 0;
-            }
+            if(UIDefs == null)
+                UIDefs = new UIDefinition(GetType().Name);
             SetupSettings();
         }
 
@@ -87,7 +73,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(callback == null)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{UIDefs.Name}</b>");
                 callback = new EditorApplication.CallbackFunction(Update);
             }
 
@@ -106,12 +92,12 @@ namespace Pumkin.AvatarTools.Base
                 if(GUILayout.Button(Content, Styles.SubToolButton, options))
                     TryExecute(PumkinTools.SelectedAvatar);
                 if(Settings != null)
-                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.MediumIconButton);
+                    UIDefs.ExpandSettings = GUILayout.Toggle(UIDefs.ExpandSettings, Icons.Options, Styles.MediumIconButton);
             }
             EditorGUILayout.EndHorizontal();
 
             //Draw settings here
-            if(Settings != null && ExpandSettings)
+            if(Settings != null && UIDefs.ExpandSettings)
             {
                 UIHelpers.VerticalBox(() =>
                 {
@@ -157,9 +143,9 @@ namespace Pumkin.AvatarTools.Base
         protected virtual void Finish(GameObject target, bool success)
         {
             if(success)
-                PumkinTools.Log($"<b>{Name}</b> completed successfully");
+                PumkinTools.Log($"<b>{UIDefs.Name}</b> completed successfully");
             else
-                PumkinTools.LogWarning($"<b>{Name}</b> failed");
+                PumkinTools.LogWarning($"<b>{UIDefs.Name}</b> failed");
         }
 
         public virtual void Update()

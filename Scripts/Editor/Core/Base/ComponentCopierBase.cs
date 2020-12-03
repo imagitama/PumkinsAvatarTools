@@ -11,17 +11,15 @@ using Pumkin.Core.Helpers;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.Core;
+using System.Collections.Generic;
+using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Base
 {
-    public abstract class ComponentCopierBase : IComponentCopier //TODO: Check if component type exists before trying to instantiate this
+    public abstract class ComponentCopierBase : IComponentCopier
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
         public string GameConfigurationString { get; set; }
-        public int OrderInUI { get; set; }
 
-        protected bool fixReferences = false;
         public virtual GUIContent Content
         {
             get
@@ -32,12 +30,12 @@ namespace Pumkin.AvatarTools.Base
             }
             set => _content = value;
         }
-        public abstract string ComponentTypeNameFull { get; }
-        public virtual ISettingsContainer Settings => _baseSettings;
-        public bool ExpandSettings { get; private set; }
-        public bool Active { get; set; }
 
-        CopierSettingsContainerBase _baseSettings;
+        public abstract string ComponentTypeNameFull { get; }
+
+        public bool ExpandSettings { get; private set; }
+
+        public bool Active { get; set; }
 
         public Type ComponentType
         {
@@ -49,33 +47,26 @@ namespace Pumkin.AvatarTools.Base
             }
         }
 
-        public bool EnabledInUI { get; set; } = true;
+        public virtual UIDefinition UIDefs { get; set; }
+
+        public virtual ISettingsContainer Settings => _baseSettings;
+
+        protected bool shouldFixReferences = false;
 
         GUIContent _content;
         Type _componentType;
+        CopierSettingsContainerBase _baseSettings;
 
         public ComponentCopierBase()
         {
-            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
-            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
-            {
-                Name = uiDefAttr.FriendlyName;
-                Description = uiDefAttr.Description;
-                OrderInUI = uiDefAttr.OrderInUI;
-            }
-            else
-            {
-                Name = GetType().Name;
-                Description = "Base Copier description";
-                OrderInUI = 0;
-            }
-            Content = CreateGUIContent();
+            if(UIDefs == null)
+                UIDefs = new UIDefinition(GetType().Name);
             SetupSettings();
-        }//
+        }
 
         protected virtual GUIContent CreateGUIContent()
         {
-            return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
+            return new GUIContent(UIDefs.Name, Icons.GetIconTextureFromType(ComponentType));
         }
 
         protected virtual void SetupSettings()
@@ -128,23 +119,12 @@ namespace Pumkin.AvatarTools.Base
         {
             if((!objFrom || !objTo) || (objFrom == objTo))
                 return false;
+
             if(ComponentType == null)
             {
                 PumkinTools.Log($"{ComponentTypeNameFull}: Couldn't find component type");
                 return false;
             }
-
-            //TODO: Register copier and destroyer in some kind of manager
-            //if(Settings.removeAllBeforeCopying)
-            //{
-            //    var desType = TypeHelpers.GetType($"{ComponentType.Name}Destroyer");
-            //    if(desType != null)
-            //    {
-            //        var des = Activator.CreateInstance(desType) as IComponentDestroyer;
-            //        des?.TryDestroyComponents(objTo);
-            //    }
-            //}
-
             return true;
         }
 
@@ -159,11 +139,13 @@ namespace Pumkin.AvatarTools.Base
 
             var set = Settings as CopierSettingsContainerBase;
             bool createGameObjects = set != null && set.createGameObjects;
+            string[] propNames = set.PropertyNames;
+
             foreach(var coFrom in compsFrom)
             {
                 if(!coFrom || ShouldIgnoreObject(coFrom.gameObject))
                 {
-                    PumkinTools.LogVerbose($"<b>{Name}</b> copier: Ignoring {coFrom.gameObject.name}");
+                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {coFrom.gameObject.name}");
                     continue;
                 }
 
@@ -172,18 +154,51 @@ namespace Pumkin.AvatarTools.Base
                 if(!trans)
                     continue;
 
-                var existComps = trans.gameObject.GetComponents(ComponentType);
 
-                ComponentUtility.CopyComponent(coFrom);
-                ComponentUtility.PasteComponentAsNew(trans.gameObject);
-
-                var addedComp = trans.gameObject.GetComponents(ComponentType)
-                    .Except(existComps)
-                    .FirstOrDefault();
+                Component addedComp;
+                if(propNames.IsNullOrEmpty())
+                    addedComp = CopyEverything(coFrom, trans);
+                else
+                    addedComp = CopyProperties(coFrom, trans, propNames);
 
                 FixReferences(addedComp, objTo.transform);
             }
             return true;
+        }
+
+        Component CopyEverything(Component coFrom, Transform transTo)
+        {
+            var existComps = transTo.gameObject.GetComponents(ComponentType);
+
+            ComponentUtility.CopyComponent(coFrom);
+            ComponentUtility.PasteComponentAsNew(transTo.gameObject);
+
+            return transTo.gameObject.GetComponents(ComponentType)
+                .Except(existComps)
+                .FirstOrDefault();
+        }
+
+        Component CopyProperties(Component compFrom, Transform transTo, params string[] propertyNames)
+        {
+            var compTo = transTo.gameObject.AddComponent(compFrom.GetType());
+            var serialCompFrom = new SerializedObject(compFrom);
+            var serialCompTo = new SerializedObject(compTo);
+
+            foreach(var name in propertyNames)
+            {
+                if(string.IsNullOrWhiteSpace(name))
+                    continue;
+
+                var prop = serialCompFrom.FindProperty(name);
+                if(prop == null)
+                {
+                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> Copier: Can't find property with name {name} on {compFrom}. Skipping");
+                    continue;
+                }
+                serialCompTo.CopyFromSerializedProperty(prop);
+            }
+            serialCompTo.ApplyModifiedProperties();
+            return compTo;
         }
 
         protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot)
@@ -214,7 +229,7 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual void Finish(GameObject objFrom, GameObject objTo)
         {
-            PumkinTools.Log($"<b>{Name}</b> copier completed successfully.");
+            PumkinTools.Log($"<b>{UIDefs.Name}</b> copier completed successfully.");
         }
     }
 }

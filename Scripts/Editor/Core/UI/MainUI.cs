@@ -85,7 +85,7 @@ namespace Pumkin.AvatarTools.UI
                     {
                         try
                         {
-                            if (!mod.IsHidden)
+                            if (!mod.UIDefs.IsHidden)
                                 mod.DrawUI();
                         }
                         catch (Exception e)
@@ -103,7 +103,7 @@ namespace Pumkin.AvatarTools.UI
                 try
                 {
                     if(OrphanHolder != null)
-                        if(!OrphanHolder.IsHidden)
+                        if(!OrphanHolder.UIDefs.IsHidden)
                             OrphanHolder.DrawUI();
                 }
                 catch(Exception e)
@@ -117,7 +117,7 @@ namespace Pumkin.AvatarTools.UI
 
         public IUIModule FindModule(string name)
         {
-            return UIModules.FirstOrDefault(s => string.Equals(name, s.Name, StringComparison.InvariantCultureIgnoreCase));
+            return UIModules.FirstOrDefault(s => string.Equals(name, s.UIDefs.Name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public bool HasModule(IUIModule module)
@@ -138,7 +138,7 @@ namespace Pumkin.AvatarTools.UI
 
         public int RemoveModule(string name)
         {
-            return UIModules.RemoveAll(m => string.Equals(m.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            return UIModules.RemoveAll(m => string.Equals(m.UIDefs.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Pumkin.AvatarTools.UI
         /// </summary>
         public void OrderModules()
         {
-            UIModules = UIModules.OrderBy(m => m.OrderInUI).ToList();
+            UIModules = UIModules.OrderBy(m => m.UIDefs.OrderInUI).ToList();
             UIModules.ForEach(x => x.OrderChildren());
             OrphanHolder.OrderChildren();
         }

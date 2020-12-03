@@ -2,11 +2,8 @@
 
 namespace Pumkin.AvatarTools.Interfaces
 {
-    public interface IComponentDestroyer
+    public interface IComponentDestroyer : IComponentActor, IItem
     {
-        string ComponentTypeNameFull { get; }
-        bool Prepare(GameObject target);
         bool TryDestroyComponents(GameObject target);
-        void Finish(GameObject target);
     }
 }

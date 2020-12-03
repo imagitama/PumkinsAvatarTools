@@ -1,31 +1,28 @@
-﻿using NUnit.Framework.Internal;
-using Pumkin.AvatarTools.Base;
+﻿using Pumkin.AvatarTools.Base;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.Types;
-using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_editScale", "vrchat", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
-    [UIDefinition("[VRC] Edit Scale")]
     class EditScale_VRChat : ToolSceneGUIBase
     {
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("[VRC] Edit Scale");
+
         SerializedObject serialDesc = null;
 
         bool moveViewpoint = true;
 
         Vector3 startView;
         Vector3 startPosition;
-        Vector3 tempView;
 
         Vector3 startScale;
         float tempScale = 0;
@@ -41,14 +38,13 @@ namespace Pumkin.AvatarTools.Tools
             {
                 if(VRChatTypes.VRC_AvatarDescriptor == null)
                 {
-                    PumkinTools.LogError("Couldn't find VRC_AvatarDescriptor type in project. Is the VRCSDK Imported?");
+                    PumkinTools.LogWarning("Couldn't find VRC_AvatarDescriptor type in project. Is the VRCSDK Imported?");
                     return false;
                 }
 
                 startScale = target.transform.localScale;
                 startPosition = target.transform.position;
 
-                tempView = startView;
                 tempScale = startScale.y;
 
                 return true;

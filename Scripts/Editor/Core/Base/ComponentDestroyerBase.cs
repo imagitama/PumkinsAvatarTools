@@ -1,19 +1,20 @@
 ﻿using Pumkin.AvatarTools.Interfaces;
+using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists before trying to instantiate this
+namespace Pumkin.AvatarTools.Base
 {
     public abstract class ComponentDestroyerBase : IComponentDestroyer, IItem
     {
         public abstract string ComponentTypeNameFull { get; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+
         public string GameConfigurationString { get; set; }
-        public int OrderInUI { get; set; }
+
         public virtual GUIContent Content
         {
             get
@@ -23,6 +24,7 @@ namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists befor
                 return _content;
             }
         }
+
         public Type ComponentType
         {
             get
@@ -35,7 +37,7 @@ namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists befor
 
         public virtual ISettingsContainer Settings => null;
 
-        public bool EnabledInUI { get; set; } = true;
+        public virtual UIDefinition UIDefs { get; set; }
 
         Type _componentType;
         GUIContent _content;
@@ -47,7 +49,8 @@ namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists befor
             else
                 throw new ArgumentNullException(ComponentTypeNameFull, $"{ComponentTypeNameFull} is invalid");
 
-            Name = _componentType?.Name ?? "Invalid Destroyer";
+            if(!UIDefs)
+                UIDefs =  new UIDefinition(_componentType?.Name ?? "Invalid Destroyer");
         }
 
         public void Finish(GameObject target)
@@ -91,6 +94,9 @@ namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists befor
         {
             foreach(var co in target.GetComponentsInChildren(_componentType, true))
             {
+                if(ShouldIgnoreObject(co.gameObject))
+                    continue;
+
                 try
                 {
                     UnityObjectHelpers.DestroyAppropriate(co);
@@ -105,7 +111,12 @@ namespace Pumkin.AvatarTools.Base   //TODO: Check if component type exists befor
 
         protected virtual GUIContent CreateGUIContent()
         {
-            return new GUIContent(Name, Icons.GetIconTextureFromType(ComponentType));
+            return new GUIContent(UIDefs.Name, Icons.GetIconTextureFromType(ComponentType));
+        }
+
+        protected virtual bool ShouldIgnoreObject(GameObject obj)
+        {
+            return RemoveComponentsModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
         }
 
         public void DrawUI(params GUILayoutOption[] options)

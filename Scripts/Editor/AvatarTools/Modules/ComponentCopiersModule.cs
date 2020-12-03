@@ -7,13 +7,13 @@ using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Modules
 {
     [AutoLoad(DefaultModuleIDs.COPIER)]
-    [UIDefinition("Component Copier", OrderInUI = 1)]
     class ComponentCopiersModule : UIModuleBase
     {
         public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
@@ -22,7 +22,6 @@ namespace Pumkin.AvatarTools.Modules
 
         static bool CanCopy { get; set; } = true;
 
-        static GameObject _copyFromAvatar;
         public static GameObject CopyFromAvatar
         {
             get => _copyFromAvatar;
@@ -37,8 +36,12 @@ namespace Pumkin.AvatarTools.Modules
             }
 
         }
+
         GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
 
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
+
+        static GameObject _copyFromAvatar;
 
         public static void CopierAvatarSelectionChanged(GameObject newSelection)
         {
@@ -49,8 +52,8 @@ namespace Pumkin.AvatarTools.Modules
         {
             GUILayout.Space(16);
 
-            if(!string.IsNullOrEmpty(Description))
-                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
+            if(!string.IsNullOrEmpty(UIDefs.Description))
+                EditorGUILayout.HelpBox($"{UIDefs.Description}", MessageType.Info);
 
             CopyFromAvatar = EditorGUILayout.ObjectField(AvatarSelectorContent, CopyFromAvatar, typeof(GameObject), true) as GameObject;
 
@@ -87,7 +90,7 @@ namespace Pumkin.AvatarTools.Modules
 
             EditorGUI.BeginDisabledGroup(!CanCopy);
             {
-                if(GUILayout.Button("Copy Selected", Styles.CopierCopyButton))
+                if(GUILayout.Button("Transfer Selected", Styles.CopierCopyButton))
                 {
                     foreach(var copier in SubItems)
                     {

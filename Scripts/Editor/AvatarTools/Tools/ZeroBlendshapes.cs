@@ -1,15 +1,18 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Zero Blendshapes", Description = "Resets all Blendshapes on all SkinnedMeshRenderers to 0")]
     class ZeroBlendshapes : ToolBase
     {
+        public override UIDefinition UIDefs { get; set; } =
+            new UIDefinition("Zero Blendshapes", "Resets all Blendshapes on all SkinnedMeshRenderers to 0");
+
         SkinnedMeshRenderer[] renders;
 
         protected override bool Prepare(GameObject target)
@@ -23,7 +26,7 @@ namespace Pumkin.AvatarTools.Tools
 
         protected override bool DoAction(GameObject target)
         {
-            SerializedObject serialRenders = new SerializedObject(renders);
+            var serialRenders = new SerializedObject(renders);
             SerializedProperty prop;
 
             if((prop = serialRenders.FindProperty("m_BlendShapeWeights")) == null)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.Core;
+using Pumkin.Core.Helpers;
 
 namespace Pumkin.AvatarTools.UI
 {
@@ -36,13 +37,22 @@ namespace Pumkin.AvatarTools.UI
                 .Where(kv => kv.Value?.ParentModuleID == LoadAttribute.ID)
                 .ToDictionary(x => x.Key, x => x.Value);
 
+            Type iActor = typeof(IComponentActor);
             //Loop through and assign children to our module
             foreach(var itemType in subToolTypes.Keys)
             {
                 try
                 {
-                    if(Activator.CreateInstance(itemType) is IItem itemInst)
-                        if(IDManager.Register(itemInst))
+                    var itemInst = Activator.CreateInstance(itemType) as IItem;
+                    //Check if item is a copier or destroyer then check if their targetted type is valid in project
+                    if(itemInst is IComponentActor actor)
+                    {
+                        Type targetType = TypeHelpers.GetType(actor.ComponentTypeNameFull);
+                        if(targetType == null)
+                            continue;
+                    }
+
+                    if(IDManager.Register(itemInst))
                             items.Add(itemInst);
                 }
                 catch(Exception e)
@@ -52,7 +62,7 @@ namespace Pumkin.AvatarTools.UI
             }
 
             //Order SubTools based on their OrderInUI
-            Module.SubItems = items.OrderBy(x => x.OrderInUI).ToList();
+            Module.SubItems = items.OrderBy(x => x?.UIDefs?.OrderInUI)?.ToList() ?? Module.SubItems;
         }
 
         public bool BuildModule()
@@ -69,7 +79,7 @@ namespace Pumkin.AvatarTools.UI
                 if(oldMod != null)
                 {
                     PumkinTools.LogWarning(
-                        $"Can't create module type '{ModuleType.Name}' with ID '{LoadAttribute.ID}' as '{oldMod.Name}' already registered that ID");
+                        $"Can't create module type '{ModuleType.Name}' with ID '{LoadAttribute.ID}' as '{oldMod.UIDefs.Name}' already registered that ID");
                     return false;
                 }
             }

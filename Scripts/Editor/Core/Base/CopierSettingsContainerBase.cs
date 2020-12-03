@@ -4,15 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEditor;
+using UnityEngine;
 
 namespace Pumkin.AvatarTools.Base
 {
     [Serializable]
     public class CopierSettingsContainerBase : SettingsContainerBase
-    {//TODO: Figure out a way to hide these
-        [DrawToggleLeft]
-        public bool removeAllBeforeCopying = false;
-        [DrawToggleLeft]
-        public bool createGameObjects = false;
+    {
+        protected bool ShowRemoveAll = false;
+        protected bool ShowCreateGameObjects = false;
+
+        //TODO: Figure out what to do with these
+        //[ConditionalHide("ShowRemoveAll", HideInInspector = true)]
+        [DrawToggleLeft] public bool removeAllBeforeCopying = false;
+
+        //[ConditionalHide(nameof(ShowCreateGameObjects), HideInInspector = true)]
+        [DrawToggleLeft] public bool createGameObjects = false;
+
+        public virtual string[] PropertyNames => null;
     }
 }

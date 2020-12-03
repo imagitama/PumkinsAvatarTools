@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 using Pumkin.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
+using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_editScale", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
-    [UIDefinition("Edit Scale")]
     class EditScale : ToolSceneGUIBase
     {
         Vector3 startScale;
@@ -25,6 +25,9 @@ namespace Pumkin.AvatarTools.Tools
 
         private SerializedProperty scaleProp;
         private SerializedObject serialTransform;
+
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Edit Scale");
 
         public EditScale()
         {

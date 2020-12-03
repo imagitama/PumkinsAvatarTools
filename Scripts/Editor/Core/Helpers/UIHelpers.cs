@@ -219,9 +219,9 @@ namespace Pumkin.Core.Helpers
             return changed;
         }
 
-        static bool DrawListElementsScrolling<T>(List<T> list, ref Vector2 scroll, float minHeight, float maxHeight, bool drawLabels = true) where T : class
+        static bool DrawListElementsScrolling<T>(List<T> list, ref Vector2 scroll, float minHeight = 30f, float maxHeight = 100f, bool drawLabels = true) where T : class
         {
-            scroll = EditorGUILayout.BeginScrollView(scroll);
+            scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.MinHeight(minHeight), GUILayout.MaxHeight(maxHeight));
             bool changed = DrawListElements(list, drawLabels);
             EditorGUILayout.EndScrollView();
             return changed;

@@ -1,21 +1,12 @@
 ﻿#if UNITY_EDITOR
 
+using Pumkin.Core.UI;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Interfaces
 {
     public interface IItem
     {
-        /// <summary>
-        /// The name of the tool. Used in the UI. Can be overriden by adding the [UIDefinition] attribute to the class
-        /// </summary>
-        string Name { get; set; }
-
-        /// <summary>
-        /// The name of the tool. Used in the UI. Can be overriden by adding the [UIDefinition] attribute to the class
-        /// </summary>
-        string Description { get; set; }
-
         /// <summary>
         /// Name of the game configuration to look for. Must match a value in AvatarTools.GameConfiguration enum.
         /// For example: "VRChat" will only work in vrchat, "All" or "Generic" will work everywhere
@@ -24,9 +15,9 @@ namespace Pumkin.AvatarTools.Interfaces
         string GameConfigurationString { get; set; }
 
         /// <summary>
-        /// The order of which this will tool will be drawn in the UI. Can be overriden by adding the [UIDefinition] attribute to the class
+        /// Label content
         /// </summary>
-        int OrderInUI { get; set; }
+        GUIContent Content { get; }
 
         /// <summary>
         /// Draws the UI
@@ -34,13 +25,9 @@ namespace Pumkin.AvatarTools.Interfaces
         /// <param name="options"></param>
         void DrawUI(params GUILayoutOption[] options);
 
-        /// <summary>
-        /// Label content
-        /// </summary>
-        GUIContent Content { get; }
         ISettingsContainer Settings { get; }
 
-        bool EnabledInUI { get; set; }
+        UIDefinition UIDefs { get; set; }
     }
 }
 #endif

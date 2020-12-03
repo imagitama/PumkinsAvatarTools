@@ -4,6 +4,7 @@ using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.Settings;
 using Pumkin.Core;
+using Pumkin.Core.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -11,9 +12,11 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_setRenderAnchors", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
-    [UIDefinition("Set Renderer Anchors", Description = "Sets up anchors overrides on your renderers")]
     class SetRendererAnchors : ToolBase
     {
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Set Renderer Anchors", "Sets up anchors overrides on your renderers");
+
         public override ISettingsContainer Settings { get => settings; }
 
         SetRendererAnchors_Settings settings;

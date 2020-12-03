@@ -9,36 +9,32 @@ using UnityEngine;
 using System.Reflection;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.AvatarTools.Modules;
+using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Base
 {
     [Serializable]
     public abstract class UIModuleBase : IUIModule
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
         public string GameConfigurationString { get; set; }
-        public bool IsExpanded { get; set; }
         public List<IUIModule> ChildModules { get; set; }
         public List<IItem> SubItems { get; set; }
-        public virtual bool IsHidden { get; set; }
-        public int OrderInUI { get; set; }
         public virtual GUIContent GUIContent
         {
             get
             {
-                return _content ?? (_content = new GUIContent(Name, Description));
+                return _content ?? (_content = new GUIContent(UIDefs.Name, UIDefs.Description));
             }
             set
             {
                 _content = value;
             }
         }
+        bool IsMainMenuModule { get; set; }
+        public abstract UIDefinition UIDefs { get; set; }
 
         [SerializeField] protected GUIContent _content;
-
-        UIDefinitionAttribute uiDefinition;
-
 
         bool firstDraw = true;
 
@@ -49,30 +45,20 @@ namespace Pumkin.AvatarTools.Base
 
         public UIModuleBase()
         {
-            uiDefinition = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
-            if(uiDefinition != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
-            {
-                Name = uiDefinition.FriendlyName;
-                Description = uiDefinition.Description;
-                OrderInUI = uiDefinition.OrderInUI;
+            var autoLoad = GetType().GetCustomAttribute<AutoLoadAttribute>(false);
 
-                shouldDrawHeader = !uiDefinition.HasStyle(UIModuleStyles.NoHeader);
-                shouldDrawBorder = !uiDefinition.HasStyle(UIModuleStyles.NoBorder);
-
-                shouldDrawDescriptionBox = uiDefinition.HasStyle(UIModuleStyles.DrawDescriptionBox);
-                shouldDrawChildrenInHorizontalPairs = uiDefinition.HasStyle(UIModuleStyles.DrawChildrenInHorizontalPairs);
-            }
-            else
-            {
-                Name = "Generic Module";
-                Description = "A generic module";
-                GameConfigurationString = "generic";
-            }
-
-            IsExpanded = false;
+            if(autoLoad)
+                IsMainMenuModule = !autoLoad.HasParent;
 
             SubItems = new List<IItem>();
             ChildModules = new List<IUIModule>();
+            if(!UIDefs)
+                UIDefs = new UIDefinition("Generic Module", "A generic Module");
+
+            shouldDrawHeader = !UIDefs.HasStyle(UIModuleStyles.NoHeader);
+            shouldDrawBorder = !UIDefs.HasStyle(UIModuleStyles.NoBorder);
+            shouldDrawDescriptionBox = UIDefs.HasStyle(UIModuleStyles.DrawDescriptionBox);
+            shouldDrawChildrenInHorizontalPairs = UIDefs.HasStyle(UIModuleStyles.DrawChildrenInHorizontalPairs);
         }
 
         public virtual void Start() { }
@@ -93,7 +79,7 @@ namespace Pumkin.AvatarTools.Base
                 DrawContent();
             };
 
-            if(IsExpanded || !shouldDrawHeader)
+            if(UIDefs.IsExpanded || !shouldDrawHeader)
             {
                 if(shouldDrawBorder)
                 {
@@ -111,7 +97,8 @@ namespace Pumkin.AvatarTools.Base
 
         public virtual void DrawHeader()
         {
-            IsExpanded = UIHelpers.DrawFoldout(IsExpanded, GUIContent, true, Styles.MenuFoldout);
+            var style = IsMainMenuModule ? Styles.MenuFoldout : Styles.SubMenuFoldout;
+            UIDefs.IsExpanded = UIHelpers.DrawFoldout(UIDefs.IsExpanded, GUIContent, true, style);
         }
 
         public virtual void DrawContent()
@@ -119,8 +106,8 @@ namespace Pumkin.AvatarTools.Base
             if(SubItems.Count > 0)
                 EditorGUILayout.Space();
 
-            if(shouldDrawDescriptionBox && !string.IsNullOrEmpty(Description))
-                EditorGUILayout.HelpBox($"{Description}", MessageType.Info);
+            if(shouldDrawDescriptionBox && !string.IsNullOrEmpty(UIDefs.Description))
+                EditorGUILayout.HelpBox($"{UIDefs.Description}", MessageType.Info);
 
             DrawChildren();
         }
@@ -135,7 +122,7 @@ namespace Pumkin.AvatarTools.Base
                 {
                     if(sub == null)
                         continue;
-                    EditorGUI.BeginDisabledGroup(!sub.EnabledInUI);
+                    EditorGUI.BeginDisabledGroup(!sub.UIDefs.EnabledInUI);
                     sub.DrawUI();
                     EditorGUI.EndDisabledGroup();
                 }
@@ -152,13 +139,13 @@ namespace Pumkin.AvatarTools.Base
             if(SubItems?.Count == 0 && ChildModules?.Count == 0)
                 return;
 
-            SubItems = SubItems.OrderBy(t => t.OrderInUI).ToList();
+            SubItems = SubItems?.OrderBy(t => t?.UIDefs?.OrderInUI)?.ToList() ?? SubItems;
 
             //Try to order by whether or not item has a settings button so stuff pairs up nicer
             if(shouldDrawChildrenInHorizontalPairs)
-                SubItems = SubItems.OrderBy(t => t.Settings != null).ToList();
+                SubItems = SubItems?.OrderBy(t => t?.Settings != null).ToList() ?? SubItems;
 
-            ChildModules = ChildModules.OrderBy(t => t.OrderInUI).ToList();
+            ChildModules = ChildModules.OrderBy(t => t.UIDefs.OrderInUI).ToList();
             ChildModules.ForEach(x => x.OrderChildren());
         }
 
@@ -170,7 +157,7 @@ namespace Pumkin.AvatarTools.Base
 
             SubItems[index] = newItem;
 
-            PumkinTools.LogVerbose($"Replaced {oldItem.Name} with {newItem.Name}");
+            PumkinTools.LogVerbose($"Replaced {oldItem.UIDefs.Name} with {newItem.UIDefs.Name}");
             return true;
         }
 

@@ -1,15 +1,18 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_removeMissingScripts", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Remove Missing Scripts")]
     class RemoveMissingScripts : ToolBase
     {
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Remove Missing Scripts");
+
         protected override bool DoAction(GameObject target)
         {
             var components = target.GetComponents<Component>();

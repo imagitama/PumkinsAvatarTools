@@ -3,6 +3,7 @@ using Pumkin.AvatarTools.Base;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Modules
@@ -10,19 +11,16 @@ namespace Pumkin.AvatarTools.Modules
     [AutoLoad(DefaultModuleIDs.DEBUG, "debug")]
     class DevModule : UIModuleBase
     {
-        public DevModule()
-        {
-            Name = "Debug";
-            Description = "Debug and test stuff";
-            OrderInUI = 100;
-        }
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Debug", "Debug and test stuff", 100);
 
         public override void DrawContent()
         {
             base.DrawContent();
 
             if(GUILayout.Button("Remove reset transforms from tools"))
-                PumkinToolsWindow.UI.FindModule("tools")?.SubItems.RemoveAll(s => string.Equals(s.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
+                PumkinToolsWindow.UI.FindModule("tools")?.SubItems.RemoveAll(s =>
+                string.Equals(s.UIDefs.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
 
             if(GUILayout.Button("Remove tools module"))
                 PumkinToolsWindow.UI.RemoveModule("tools");

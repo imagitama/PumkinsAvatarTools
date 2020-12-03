@@ -45,6 +45,8 @@ namespace Pumkin.AvatarTools.Core
 
         void SelectionChanged(GameObject selection)
         {
+            PumkinTools.LogVerbose($"IgnoreList selection changed to {selection}");
+
             if(selection)
                 PathsToTransformList(selection);
             else
@@ -71,7 +73,7 @@ namespace Pumkin.AvatarTools.Core
 
         public bool ShouldIgnoreTransform(Transform trans)
         {
-            if(!enabled || ignoredTransforms.Count == 0 || (!trans || ignoredTransforms == null) || trans == trans.root)
+            if(!enabled || ignoredTransforms.Count == 0 || (!trans || ignoredTransforms == null))
                 return false;
 
             var t = trans;

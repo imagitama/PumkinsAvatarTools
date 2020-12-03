@@ -1,15 +1,17 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Base;
+using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Modules
 {
     class OrphanHolderModule : UIModuleBase
     {
-        public override bool IsHidden { get => SubItems.Count == 0 && ChildModules.Count == 0; }
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Uncategorized", "Orphan tools go here");
+
         public OrphanHolderModule()
         {
-            Name = "Uncategorized";
-            Description = "Orphan tools go here";
+            UIDefs.IsHidden = SubItems.Count == 0 && ChildModules.Count == 0;
         }
     }
 }

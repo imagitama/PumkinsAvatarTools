@@ -39,7 +39,7 @@ namespace Pumkin.AvatarTools.Modules
 
             if(module == default)
             {
-                PumkinTools.LogVerbose($"{newItem.Name} is registered but doesn't belong to a module", LogType.Warning);
+                PumkinTools.LogVerbose($"{newItem.UIDefs.Name} is registered but doesn't belong to a module", LogType.Warning);
                 return false;
             }
 

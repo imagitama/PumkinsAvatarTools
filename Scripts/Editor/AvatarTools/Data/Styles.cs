@@ -12,6 +12,7 @@ namespace Pumkin.AvatarTools.UI
     static class Styles
     {
         public static GUIStyle MenuFoldout { get; private set; }
+        public static GUIStyle SubMenuFoldout { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
         public static GUIStyle EditorLine { get; private set; }
         public static GUIStyle Box { get; private set; }
@@ -34,26 +35,34 @@ namespace Pumkin.AvatarTools.UI
             MenuFoldout = new GUIStyle("OffsetDropDown")
             {
                 fontSize = 14,
-                fixedHeight = 30,
-                fontStyle = FontStyle.Bold,
+                fixedHeight = 28,
+                fontStyle = FontStyle.Normal,
                 contentOffset = new Vector2(8, -1),
                 padding = new RectOffset(4, 4, 4, 4),
                 stretchWidth = true,
             };
             {
-                var module = Resources.Load<Texture2D>("UI/module_pulldown");
-                var moduleAct = Resources.Load<Texture2D>("UI/module_pulldown act");
-                var moduleFocus = Resources.Load<Texture2D>("UI/module_pulldown focus");
+                //var module = Resources.Load<Texture2D>("UI/module_pulldown");
+                //var moduleAct = Resources.Load<Texture2D>("UI/module_pulldown act");
+                //var moduleFocus = Resources.Load<Texture2D>("UI/module_pulldown focus");
 
-                if(module)
-                    MenuFoldout.normal.background = module;
-                if(moduleAct)
-                    MenuFoldout.active.background = moduleAct;
-                if(moduleFocus)
-                    MenuFoldout.focused.background = moduleFocus;
+                //if(module)
+                //    MenuFoldout.normal.background = module;
+                //if(moduleAct)
+                //    MenuFoldout.active.background = moduleAct;
+                //if(moduleFocus)
+                //    MenuFoldout.focused.background = moduleFocus;
             }
 
+            SubMenuFoldout = MenuFoldout;
 
+            //SubMenuFoldout = new GUIStyle("OffsetDropDown")
+            //{
+            //    fontSize = 12,
+            //    fixedHeight = 22,
+            //    fontStyle = FontStyle.Normal,
+            //    contentOffset = new Vector2(5f, 0),
+            //};
 
             TitleLabel = new GUIStyle("label")
             {

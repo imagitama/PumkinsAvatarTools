@@ -1,7 +1,9 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools.Base;
+using Pumkin.AvatarTools.Types;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,31 +13,26 @@ using UnityEngine;
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_lipsync", "vrchat", ParentModuleID = "tools_setupAvatar")]
-    class SetupLipsync : ToolBase
+    class SetupLipsync_VRChat : ToolBase
     {
-        Type LipSyncStyleEnumType
-        {
-            get
-            {
-                return _lipSyncStyleEnumType ?? (_lipSyncStyleEnumType = TypeHelpers.GetType($"{VRCDescriptorType.FullName}+LipSyncStyle"));
-            }
-        }
-        Type VRCDescriptorType
-        {
-            get => _vrcDescriptorType ?? (_vrcDescriptorType = TypeHelpers.GetType("VRC.SDKBase.VRC_AvatarDescriptor"));
-        }
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("[VRC] Setup Lipsync", "Sets up lipsync on your avatar.");
+
+        Type lipsyncStyleEnumType = VRChatTypes.VRC_AvatarDescriptor_LipSyncStyle;
+
+        Type vrcDescType = VRChatTypes.VRC_AvatarDescriptor;
+
         List<string> RequiredVisemeNames
         {
             get
             {
                 if(_requiredVisemeNames == null)
                 {
-                    var visemeNamesType = TypeHelpers.GetType($"{VRCDescriptorType.FullName}+Viseme");
-                    if(visemeNamesType == null)
+                    if(lipsyncStyleEnumType == null)
                         return null;
 
                     //Get required viseme names from the visemes enum and remove last entry called "Count"
-                    _requiredVisemeNames = Enum.GetNames(visemeNamesType).ToList();
+                    _requiredVisemeNames = Enum.GetNames(lipsyncStyleEnumType).ToList();
                     if(_requiredVisemeNames != null)
                         _requiredVisemeNames.RemoveAt(_requiredVisemeNames.Count - 1);
                 }
@@ -44,20 +41,9 @@ namespace Pumkin.AvatarTools.Tools
         }
 
         List<string> _requiredVisemeNames;
-        Type _vrcDescriptorType;
-
-        //VRC.SDKBase.VRC_AvatarDescriptor+LipSyncStyle enum: { Default = 0, JawFlapBone = 1, JawFlapBlendShape = 2, VisemeBlendShape = 3 }
-        Type _lipSyncStyleEnumType;
-
-        public SetupLipsync()
-        {
-            Name = "Setup Lipsync";
-            Description = "Sets up lipsync on your avatar.";
-        }
 
         protected override bool DoAction(GameObject target)
         {
-            var vrcDescType = TypeHelpers.GetType("VRC.SDKBase.VRC_AvatarDescriptor");
             if(vrcDescType == null)
             {
                 Debug.LogError("VRC.SDKBase.VRC_AvatarDescriptor not found in project");
@@ -75,7 +61,7 @@ namespace Pumkin.AvatarTools.Tools
 
             if(renders.Length > 0 && SetupVisemeBlendshapes(renders, serialDesc))   //Got required visemes so VisemeBlendShape style
             {
-                lipSyncType.intValue = (int)Enum.Parse(LipSyncStyleEnumType, "VisemeBlendShape", true);
+                lipSyncType.intValue = (int)Enum.Parse(lipsyncStyleEnumType, "VisemeBlendShape", true);
             }
             else
             {
@@ -87,12 +73,12 @@ namespace Pumkin.AvatarTools.Tools
 
                 if(jaw) //Got a humanoid jaw so use that
                 {
-                    lipSyncType.intValue = (int)Enum.Parse(LipSyncStyleEnumType, "JawFlapBone", true);
+                    lipSyncType.intValue = (int)Enum.Parse(lipsyncStyleEnumType, "JawFlapBone", true);
                     serialDesc.FindProperty("lipSyncJawBone").objectReferenceValue = jaw;
                 }
                 else //Should have been set by default but set to 'default' in case they change the enum
                 {
-                    lipSyncType.intValue = (int)(Enum.Parse(LipSyncStyleEnumType, "Default", true));
+                    lipSyncType.intValue = (int)(Enum.Parse(lipsyncStyleEnumType, "Default", true));
                 }
             }   //Ignore JawFlapBlendShape because nobody uses it
 

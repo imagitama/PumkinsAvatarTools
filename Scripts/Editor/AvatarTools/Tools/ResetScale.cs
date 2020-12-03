@@ -2,15 +2,18 @@
 using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tool_resetScale", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Reset Scale", Description = "Resets your selected object's scale to prefab")]
     class ResetScale : ToolBase
     {
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Reset Scale", "Resets your selected object's scale to prefab");
+
         protected override bool Prepare(GameObject target)
         {
             if(!base.Prepare(target))

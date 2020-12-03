@@ -4,18 +4,20 @@ using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Modules;
 using Pumkin.AvatarTools.Settings;
 using Pumkin.Core;
+using Pumkin.Core.UI;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
     [AutoLoad("copier_dbone", ParentModuleID = DefaultModuleIDs.COPIER)]
-    [UIDefinition("Dynamic Bones", OrderInUI = 1)]
     class DynamicBoneCopier : ComponentCopierBase
     {
         public override string ComponentTypeNameFull => "DynamicBone";
         public override ISettingsContainer Settings => settings;
 
         DynamicBoneCopier_Settings settings;
+
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Dynamic Bone", 1);
 
         protected override bool DoCopy(GameObject objFrom, GameObject objTo)
         {

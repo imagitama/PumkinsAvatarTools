@@ -40,6 +40,12 @@ namespace Pumkin.Core
         }
 
         /// <summary>
+        /// Returns true if ParentModuleID is not null or whitespace
+        /// </summary>
+        public bool HasParent 
+            => !string.IsNullOrWhiteSpace(ParentModuleID);        
+
+        /// <summary>
         /// Configuration names, used to only load modules or tools if the selected configuration matches, ex: vrchat
         /// </summary>
         public string[] ConfigurationStrings

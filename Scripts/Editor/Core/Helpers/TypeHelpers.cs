@@ -16,6 +16,9 @@ namespace Pumkin.Core.Helpers
         /// <returns>Type or null</returns>
         public static Type GetType(string typeName)
         {
+            if(string.IsNullOrWhiteSpace(typeName))
+                return null;
+
             var type = Type.GetType(typeName);
             if(type != null)
                 return type;

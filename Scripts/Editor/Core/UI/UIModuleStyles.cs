@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.AvatarTools.UI
+namespace Pumkin.Core.UI
 {
-    enum UIModuleStyles
+    public enum UIModuleStyles
     {
         NoHeader,
         NoBorder,

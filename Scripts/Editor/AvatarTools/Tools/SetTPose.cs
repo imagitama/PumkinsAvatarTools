@@ -4,17 +4,20 @@ using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Settings;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
     [AutoLoad("tools_tpose", ParentModuleID = "tools_fixAvatar")]
-    [UIDefinition("Set T-Pose", Description = "Sets your humanoid avatar into a T-Pose or A-Pose")]
     class SetTPose : ToolBase
     {
+        public override UIDefinition UIDefs { get; set; }
+            = new UIDefinition("Set T-Pose", "Sets your humanoid avatar into a T-Pose or A-Pose");
+
         float[] TPOSE_MUSCLES =
-{
+        {
             -6.403302E-07f , 1.28066E-07f , -8.537736E-08f , -1.908333E-15f , 4.268868E-08f , -1.28066E-07f , 0f , 0f , 0f , 4.268868E-08f , 6.361108E-16f , -4.268868E-08f , 3.415095E-07f , 0f ,
             0f , 0f , 0f , 0f , 0f , 0f , 0f , 0.5994843f , 0.004883454f , 0.001518556f , 0.9990439f , -0.02189369f , -3.493093E-05f ,
             -0.001662011f , -4.098113E-07f , 0.5994844f , 0.004883243f , 0.001518792f , 0.9990438f , -0.02189348f , -3.622868E-05f , -0.001662011f , -3.415094E-08f , -1.353976E-06f , 1.298447E-07f , 0.3844599f ,

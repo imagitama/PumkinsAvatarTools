@@ -4,6 +4,7 @@ using Pumkin.AvatarTools.Tools;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -21,7 +22,6 @@ namespace Pumkin.AvatarTools.Base
 {
     public abstract class ToolSceneGUIBase : ITool
     {
-        bool _allowSceneGUI;
         public bool CanDrawSceneGUI
         {
             get
@@ -40,15 +40,14 @@ namespace Pumkin.AvatarTools.Base
                     SetupOnSceneGUIDelegate(false);
             }
         }
-        protected Vector2 WindowSize { get; set; } = new Vector2(200, 50);
+
+        protected virtual Vector2 WindowSize { get; set; } = new Vector2(200, 50);
+
         float Padding { get; set; } = 10;
-        public string Name { get; set; }
-        public string Description { get; set; }
+
         public string GameConfigurationString { get; set; }
-        public int OrderInUI { get; set; }
+
         public virtual ISettingsContainer Settings { get => null; }
-        public bool ExpandSettings { get; protected set; }
-        public bool EnabledInUI { get; set; } = true;
 
         public bool CanUpdate
         {
@@ -81,6 +80,9 @@ namespace Pumkin.AvatarTools.Base
             }
         }
 
+        public virtual UIDefinition UIDefs { get; set; }
+
+        bool _allowSceneGUI;
         bool _allowUpdate;
         GUIContent _content;
         Tool editorToolOld;
@@ -91,19 +93,8 @@ namespace Pumkin.AvatarTools.Base
 
         public ToolSceneGUIBase()
         {
-            var uiDefAttr = GetType().GetCustomAttribute<UIDefinitionAttribute>(false);
-            if(uiDefAttr != null)   //Don't want default values if attribute missing, so not using uiDefAttr?.Description ?? "whatever"
-            {
-                Name = uiDefAttr.FriendlyName;
-                Description = uiDefAttr.Description;
-                OrderInUI = uiDefAttr.OrderInUI;
-            }
-            else
-            {
-                Name = GetType().Name;
-                Description = "Base Tool description";
-                OrderInUI = 0;
-            }
+            if(UIDefs == null)
+                UIDefs = new UIDefinition(GetType().Name);
             SetupSettings();
         }
 
@@ -111,14 +102,14 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual GUIContent CreateGUIContent()
         {
-            return new GUIContent(Name, Description);
+            return new GUIContent(UIDefs.Name, UIDefs.Description);
         }
 
         void SetupUpdateCallback(ref EditorApplication.CallbackFunction callback, bool add)
         {
             if(callback == null)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{UIDefs.Name}</b>");
                 callback = new EditorApplication.CallbackFunction(Update);
             }
 
@@ -132,7 +123,7 @@ namespace Pumkin.AvatarTools.Base
         {
             if(add)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for <b>{Name}</b>");
+                PumkinTools.LogVerbose($"Setting up Update callback for <b>{UIDefs.Name}</b>");
                 SceneView.onSceneGUIDelegate += OnSceneGUI;
             }
             else
@@ -154,7 +145,7 @@ namespace Pumkin.AvatarTools.Base
             {
                 GUILayout.BeginArea(rect, Styles.Box);
                 {
-                    GUILayout.Label(Name);
+                    GUILayout.Label(UIDefs.Name);
 
                     if(CanDrawSceneGUI)
                     {
@@ -216,7 +207,7 @@ namespace Pumkin.AvatarTools.Base
                     editorToolOld = UnityEditor.Tools.current;
                     UnityEditor.Tools.current = Tool.None;
                     CanDrawSceneGUI = true;
-                    EnabledInUI = false;
+                    UIDefs.EnabledInUI = false;
                 }
                 else
                 {
@@ -234,21 +225,21 @@ namespace Pumkin.AvatarTools.Base
         protected virtual void Finish(GameObject target, bool success)
         {
             CanDrawSceneGUI = false;
-            EnabledInUI = true;
+            UIDefs.EnabledInUI = true;
 
             UnityEditor.Tools.current = editorToolOld;
 
             if(success)
             {
                 Status = ToolStatus.CompletedOK;
-                PumkinTools.Log($"<b>{Name}</b> completed successfully");
+                PumkinTools.Log($"<b>{UIDefs.Name}</b> completed successfully");
             }
             else
             {
                 if(Status == ToolStatus.Canceled)
-                    PumkinTools.Log($"<b>{Name}</b> was cancelled");
+                    PumkinTools.Log($"<b>{UIDefs.Name}</b> was cancelled");
                 else
-                    PumkinTools.LogWarning($"<b>{Name}</b> failed");
+                    PumkinTools.LogWarning($"<b>{UIDefs.Name}</b> failed");
             }
         }
 
@@ -290,12 +281,12 @@ namespace Pumkin.AvatarTools.Base
                 if(GUILayout.Button(Content, Styles.SubToolButton, options))
                     TryExecute(PumkinTools.SelectedAvatar);
                 if(Settings != null)
-                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.MediumIconButton);
+                    UIDefs.ExpandSettings = GUILayout.Toggle(UIDefs.ExpandSettings, Icons.Options, Styles.MediumIconButton);
             }
             EditorGUILayout.EndHorizontal();
 
             //Draw settings here
-            if(Settings != null && ExpandSettings)
+            if(Settings != null && UIDefs.ExpandSettings)
             {
                 UIHelpers.VerticalBox(() =>
                 {
