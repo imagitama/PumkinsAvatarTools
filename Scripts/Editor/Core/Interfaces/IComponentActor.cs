@@ -4,6 +4,6 @@ namespace Pumkin.AvatarTools.Interfaces
 {
     public interface IComponentActor
     {
-        string ComponentTypeNameFull { get; }
+        string ComponentTypeFullName { get; }
     }
 }

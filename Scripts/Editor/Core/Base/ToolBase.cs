@@ -3,6 +3,7 @@ using Pumkin.AvatarTools.Interfaces;
 using Pumkin.AvatarTools.Tools;
 using Pumkin.AvatarTools.UI;
 using Pumkin.Core;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using System;
@@ -52,7 +53,7 @@ namespace Pumkin.AvatarTools.Base
             return new GUIContent(UIDefs.Name, UIDefs.Description);
         }
 
-        public virtual ISettingsContainer Settings { get => null; }
+        public virtual ISettingsContainer Settings => null;
         public virtual UIDefinition UIDefs { get; set; }
 
         bool _allowUpdate;
@@ -102,7 +103,7 @@ namespace Pumkin.AvatarTools.Base
                 UIHelpers.VerticalBox(() =>
                 {
                     EditorGUILayout.Space();
-                    Settings?.Editor?.OnInspectorGUI();
+                    Settings?.Editor?.OnInspectorGUINoScriptField();
                 });
             }
         }

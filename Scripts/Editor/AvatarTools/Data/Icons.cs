@@ -8,14 +8,16 @@ namespace Pumkin.AvatarTools.UI
 {
     static class Icons
     {
+        const string RESOURCE_FOLDER_PREFIX = "Icons/";
+
         public static GUIContent Settings { get; private set; }
         public static GUIContent Options { get; private set; }
         public static GUIContent Default { get; private set; }
-        public static GUIContent DynamicBone { get; private set; }
-        public static GUIContent DynamicBoneCollider { get; private set; }
         public static GUIContent Add { get; private set; }
         public static GUIContent Remove { get; private set; }
         public static GUIContent RemoveAll { get; private set; }
+
+        //Types
         public static GUIContent AvatarDescriptor { get; private set; }
 
 
@@ -29,12 +31,6 @@ namespace Pumkin.AvatarTools.UI
             Remove = EditorGUIUtility.IconContent("Toolbar Minus");
             RemoveAll = EditorGUIUtility.IconContent("vcs_delete");
 
-            //DynamicBone = new GUIContent(Resources.Load<Texture>("Icons/DynamicBone-Icon")) ?? Default;
-            //DynamicBoneCollider = new GUIContent(Resources.Load<Texture>("Icons/DynamicBoneCollider-Icon")) ?? Default;
-            
-            //TODO: Sort out automatic icon loading
-            DynamicBone = new GUIContent(GetTypeIconTextureFromResources("DynamicBone")) ?? Default;
-            DynamicBoneCollider = new GUIContent(GetTypeIconTextureFromResources("DynamicBoneColider")) ?? Default;
             AvatarDescriptor = new GUIContent(GetTypeIconTextureFromResources("AvatarDescriptor")) ?? Default;
         }
 
@@ -47,19 +43,11 @@ namespace Pumkin.AvatarTools.UI
         {
             Type type = TypeHelpers.GetType(typeNameFull);
             Texture tex = null;
-            if (type != null)            
-                tex = GetTexOrAppendIcon("Icons/" + type.Name);            
-            else            
-                tex = GetTexOrAppendIcon("Icons/" + typeNameFull);            
+            if (type != null)
+                tex = GetIconTexureFromReources(type.Name);
+            else
+                tex = GetIconTexureFromReources(typeNameFull);
             return tex;
-
-            Texture GetTexOrAppendIcon(string name)
-            {
-                var tx = Resources.Load<Texture>(name + "-Icon");
-                if (tx == null)
-                    tx = Resources.Load<Texture>(name);
-                return tx;
-            }
         }
 
         /// <summary>
@@ -78,10 +66,7 @@ namespace Pumkin.AvatarTools.UI
         /// <returns></returns>
         public static Texture GetTypeIconTextureFromResources(Type type)
         {
-            var tex = Resources.Load<Texture>(type.Name + "-Icon");
-            if(tex == null)
-                tex = Resources.Load<Texture>(type.Name);
-            return tex;
+            return GetIconTexureFromReources(type.Name);
         }
 
         /// <summary>
@@ -104,18 +89,37 @@ namespace Pumkin.AvatarTools.UI
             if (type == null)
                 return null;
 
+            Texture tex = null;
+
+            //Check properties of this class for GUIContent with the same name as our type
             var prop = typeof(Icons).GetProperty(type.Name);
-            if(prop != null)
+            if(prop != null && prop != default)
             {
                 var cont = prop.GetValue(typeof(Icons)) as GUIContent;
                 if(cont != null && cont.image != null)
-                    return cont.image;
+                    tex = cont.image;
             }
 
+            //If not found try getting it from resources
+            if(!tex)
+                tex = GetTypeIconTextureFromResources(type);
+
+            if(tex)
+                return tex;
+
+            //If not found try getting it from default unity icons. Disable logger as it always throws errors when done at initialization
             return FuncHelpers.InvokeWithoutUnityLogger(() =>
             {
                 return EditorGUIUtility.IconContent($"{type.Name} Icon")?.image ?? Default.image;
             });
+        }
+
+        static Texture GetIconTexureFromReources(string name)
+        {
+            var tx = Resources.Load<Texture>(RESOURCE_FOLDER_PREFIX + name + "-Icon");
+            if(tx == null)
+                tx = Resources.Load<Texture>(RESOURCE_FOLDER_PREFIX + name);
+            return tx;
         }
     }
 }

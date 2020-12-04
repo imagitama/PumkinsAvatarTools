@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools.Copiers
     [AutoLoad("copier_dbone", ParentModuleID = DefaultModuleIDs.COPIER)]
     class DynamicBoneCopier : ComponentCopierBase
     {
-        public override string ComponentTypeNameFull => "DynamicBone";
+        public override string ComponentTypeFullName => "DynamicBone";
         public override ISettingsContainer Settings => settings;
 
         DynamicBoneCopier_Settings settings;

@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Pumkin.AvatarTools.Base
 {
-    //class MultiComponentCopierBase : IComponentCopier
+    //TODO: Implement this
+    //class MultiComponentCopierBase : ComponentCopierBase
     //{
     //}
 }

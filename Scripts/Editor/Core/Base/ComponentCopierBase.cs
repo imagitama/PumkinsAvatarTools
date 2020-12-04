@@ -31,7 +31,7 @@ namespace Pumkin.AvatarTools.Base
             set => _content = value;
         }
 
-        public abstract string ComponentTypeNameFull { get; }
+        public abstract string ComponentTypeFullName { get; }
 
         public bool ExpandSettings { get; private set; }
 
@@ -42,7 +42,7 @@ namespace Pumkin.AvatarTools.Base
             get
             {
                 if(_componentType == null)
-                    _componentType = TypeHelpers.GetType(ComponentTypeNameFull);
+                    _componentType = TypeHelpers.GetType(ComponentTypeFullName);
                 return _componentType;
             }
         }
@@ -122,7 +122,7 @@ namespace Pumkin.AvatarTools.Base
 
             if(ComponentType == null)
             {
-                PumkinTools.Log($"{ComponentTypeNameFull}: Couldn't find component type");
+                PumkinTools.Log($"{ComponentTypeFullName}: Couldn't find component type");
                 return false;
             }
             return true;

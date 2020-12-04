@@ -23,7 +23,7 @@ namespace Pumkin.AvatarTools.Copiers
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("Avatar Descriptor");
 
-        public override string ComponentTypeNameFull
+        public override string ComponentTypeFullName
             => VRChatTypes.VRC_AvatarDescriptor?.FullName;
 
         protected override GUIContent CreateGUIContent() =>

@@ -8,6 +8,6 @@ namespace Pumkin.AvatarTools.Destroyers
     [AutoLoad("destroyers_dynamicBone", ParentModuleID = DefaultModuleIDs.DESTROYER)]
     class DynamicBoneDestroyer : ComponentDestroyerBase
     {
-        public override string ComponentTypeNameFull => "DynamicBone";
+         public override string ComponentTypeFullName => "DynamicBone";
     }
 }
