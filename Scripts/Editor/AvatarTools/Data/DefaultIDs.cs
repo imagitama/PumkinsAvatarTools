@@ -35,6 +35,12 @@
             public const string SkinnedMeshRenderer = "copier_skinnedMeshRenderer";
             public const string Collider = "copier_collider";
             public const string AvatarDescriptor = "copier_avatarDescriptor";
+            public const string ParentConstraint = "copier_parentConstraint";
+            public const string ScaleConstraint = "copier_scaleConstraint";
+            public const string RotationConstraint = "copier_rotationConstraint";
+            public const string PositionConstraint = "copier_positionConstraint";
+            public const string AimConstraint = "copier_aimConstraint";
+            public const string LookAtConstraint = "copier_lookAtConstraint";
         }
 
         public static class Destroyers
@@ -44,6 +50,7 @@
             public const string Light = "destroyer_light";
             public const string ParticleSystem = "destroyer_particleSystem";
             public const string Collider = "destroyer_collider";
+            public const string Constraint = "destroyer_constraint";
         }
     }
 }

@@ -121,7 +121,10 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual bool ShouldIgnoreObject(GameObject obj)
         {
-            return RemoveComponentsModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
+            bool ignore = RemoveComponentsModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
+            if(ignore)
+                PumkinTools.Log($"Ignoring {obj.name} because it's in the ignore list.");
+            return ignore;
         }
 
         public virtual void DrawUI(params GUILayoutOption[] options)

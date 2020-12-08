@@ -17,11 +17,11 @@ namespace Pumkin.AvatarTools.Base
 
         public abstract string[] ComponentTypeFullNamesAll { get; }
 
-        protected Dictionary<Type, bool> componentTypesAndEnabled = new Dictionary<Type, bool>();
+        protected Dictionary<Type, bool> ComponentTypesAndEnabled { get; set; } = new Dictionary<Type, bool>();
 
         public MultiComponentDestroyerBase()
         {
-            componentTypesAndEnabled = new Dictionary<Type, bool>(ComponentTypeFullNamesAll.Length);
+            ComponentTypesAndEnabled = new Dictionary<Type, bool>(ComponentTypeFullNamesAll.Length);
 
             for(int i = 0; i < ComponentTypeFullNamesAll.Length; i++)
             {
@@ -31,14 +31,14 @@ namespace Pumkin.AvatarTools.Base
                 {
                     var type = TypeHelpers.GetType(tName);
                     if(type != null)
-                        componentTypesAndEnabled[type] = true;
+                        ComponentTypesAndEnabled[type] = true;
                 }
                 else
                     PumkinTools.LogVerbose($"{tName} is invalid");
             }
 
             if(!UIDefs)
-                UIDefs = new UIDefinition(componentTypesAndEnabled.First().Key.Name ?? "Invalid Destroyer");
+                UIDefs = new UIDefinition(ComponentTypesAndEnabled.First().Key.Name ?? "Invalid Destroyer");
         }
 
         protected virtual bool DoDestroyByType(GameObject target, Type componentType)
@@ -63,7 +63,7 @@ namespace Pumkin.AvatarTools.Base
         protected override void Finish(GameObject target)
         {
             var sb = new StringBuilder();
-            foreach(var kv in componentTypesAndEnabled)
+            foreach(var kv in ComponentTypesAndEnabled)
                 if(kv.Value)
                     sb.Append($"{kv.Key.Name}s, ");
 
@@ -79,7 +79,7 @@ namespace Pumkin.AvatarTools.Base
 
         protected override bool DoDestroyComponents(GameObject target)
         {
-            foreach(var comp in componentTypesAndEnabled)
+            foreach(var comp in ComponentTypesAndEnabled)
                 if(comp.Value)
                     DoDestroyByType(target, comp.Key);
             return true;

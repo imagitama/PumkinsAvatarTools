@@ -31,10 +31,10 @@ namespace Pumkin.AvatarTools.Destroyers
 
         protected override bool Prepare(GameObject target)
         {
-            componentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
-            componentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
-            componentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
-            componentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
+            ComponentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
+            ComponentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
+            ComponentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
+            ComponentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
 
             return base.Prepare(target);
         }

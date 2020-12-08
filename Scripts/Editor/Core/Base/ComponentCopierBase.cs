@@ -60,7 +60,7 @@ namespace Pumkin.AvatarTools.Base
         public ComponentCopierBase()
         {
             if(UIDefs == null)
-                UIDefs = new UIDefinition(GetType().Name);
+                UIDefs = new UIDefinition(ComponentType?.Name ?? GetType().Name);
             SetupSettings();
         }
 
@@ -161,7 +161,7 @@ namespace Pumkin.AvatarTools.Base
                 else
                     addedComp = CopyProperties(coFrom, trans, propNames);
 
-                FixReferences(addedComp, objTo.transform);
+                FixReferences(addedComp, objTo.transform, createGameObjects);
             }
             return true;
         }
@@ -173,9 +173,11 @@ namespace Pumkin.AvatarTools.Base
             ComponentUtility.CopyComponent(coFrom);
             ComponentUtility.PasteComponentAsNew(transTo.gameObject);
 
-            return transTo.gameObject.GetComponents(ComponentType)
-                .Except(existComps)
+            var newComps = transTo.gameObject.GetComponents(ComponentType);
+
+            return newComps.Except(existComps)
                 .FirstOrDefault();
+
         }
 
         protected Component CopyProperties(Component compFrom, Transform transTo, params string[] propertyNames)
@@ -201,7 +203,7 @@ namespace Pumkin.AvatarTools.Base
             return compTo;
         }
 
-        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot)
+        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot, bool createGameObjects)
         {
             if(!comp)
                 return;
@@ -218,7 +220,7 @@ namespace Pumkin.AvatarTools.Base
                 if(trans != null)
                 {
                     var tPath = trans.GetPathInHierarchy();
-                    var transTarget = targetHierarchyRoot.Find(tPath);
+                    var transTarget = targetHierarchyRoot.FindOrCreate(tPath, createGameObjects, trans);
                     if(transTarget != null)
                         x.objectReferenceValue = transTarget;
                 }
