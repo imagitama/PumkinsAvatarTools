@@ -15,12 +15,12 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Destroyers
 {
-    [AutoLoad("destroyer_avatarDescriptor", "vrchat", ParentModuleID = DefaultModuleIDs.DESTROYER)]
+    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "vrchat", ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class AvatarDescriptorDestroyer_VRChat : MultiComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Avatar Descriptor");
 
-        public override string[] ComponentTypeFullNamesAll { get; set; } = new string[]
+        public override string[] ComponentTypeFullNamesAll { get; } = new string[]
         {
             VRChatTypes.VRC_AvatarDescriptor?.FullName,
             VRChatTypes.PipelineManager?.FullName

@@ -17,7 +17,7 @@ using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tools_editScale", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
+    [AutoLoad(DefaultIDs.Tools.EditScale, ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class EditScale : ToolSceneGUIBase
     {
         Vector3 startScale;

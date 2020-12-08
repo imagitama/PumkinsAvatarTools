@@ -5,7 +5,7 @@ using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Destroyers
 {
-    [AutoLoad("destroyers_dynamicBone", ParentModuleID = DefaultModuleIDs.DESTROYER)]
+    [AutoLoad(DefaultIDs.Destroyers.DynamicBone, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class DynamicBoneDestroyer : ComponentDestroyerBase
     {
          public override string ComponentTypeFullName => "DynamicBone";

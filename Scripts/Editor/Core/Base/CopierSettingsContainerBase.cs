@@ -24,4 +24,17 @@ namespace Pumkin.AvatarTools.Base
 
         public virtual string[] PropertyNames => null;
     }
+
+    //TODO: Figure this out
+    //[Serializable]
+    //public class MultiCopierSettingsContainerBase : SettingsContainerBase
+    //{
+    //    protected bool ShowRemoveAll = false;
+    //    protected bool ShowCreateGameObjects = false;
+
+    //    [DrawToggleLeft] public bool removeAllBeforeCopying = false;
+    //    [DrawToggleLeft] public bool createGameObjects = false;
+
+    //    public virtual string[] PropertyNames => null;
+    //}
 }

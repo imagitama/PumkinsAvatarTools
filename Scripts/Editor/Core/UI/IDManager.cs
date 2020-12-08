@@ -8,9 +8,9 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools
 {
-    static class IDManager
+    public static class IDManager
     {
         static readonly Dictionary<string, IUIModule> ModuleCache = new Dictionary<string, IUIModule>();
         static readonly Dictionary<string, IItem> ItemCache = new Dictionary<string, IItem>();

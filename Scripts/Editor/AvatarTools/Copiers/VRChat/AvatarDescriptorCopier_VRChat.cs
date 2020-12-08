@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_avatarDescriptor", "vrchat", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "vrchat", ParentModuleID = DefaultIDs.Modules.Copier)]
     class AvatarDescriptorCopier_VRChat : ComponentCopierBase
     {
         public override UIDefinition UIDefs { get; set; }

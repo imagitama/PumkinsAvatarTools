@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Modules
 {
-    [AutoLoad(DefaultModuleIDs.DEBUG, "debug")]
+    [AutoLoad(DefaultIDs.Modules.Debug, "debug")]
     class DevModule : UIModuleBase
     {
         public override UIDefinition UIDefs { get; set; }

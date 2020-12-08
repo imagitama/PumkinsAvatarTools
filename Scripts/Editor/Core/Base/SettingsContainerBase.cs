@@ -23,7 +23,7 @@ namespace Pumkin.AvatarTools.Base
 
         public void Awake()
         {
-            Editor.OnInspectorGUINoScriptField();   //Try to draw to initialize it so it opens instantly later
+            Editor.OnInspectorGUINoScriptField();   //Try to draw so it initializes and opens instantly later
         }
 
         public bool SaveToConfigFile(string filePath)

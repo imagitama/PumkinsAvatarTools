@@ -58,12 +58,12 @@ namespace Pumkin.AvatarTools.Base
 
         protected virtual void SetupSettings() { }
 
-        public virtual void Finish(GameObject target)
+        protected virtual void Finish(GameObject target)
         {
             PumkinTools.Log($"Successfully removed all <b>{_componentType?.Name ?? "Unknown Type"}</b> from <b>{target.name}</b>");
         }
 
-        public virtual bool Prepare(GameObject target)
+        protected virtual bool Prepare(GameObject target)
         {
             if(_componentType == null)
             {

@@ -7,7 +7,7 @@ using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Modules
 {
-    [AutoLoad(DefaultModuleIDs.DESTROYER)]
+    [AutoLoad(DefaultIDs.Modules.Destroyer)]
     class RemoveComponentsModule : UIModuleBase
     {
         public static IgnoreList IgnoreList { get; } = new IgnoreList(PumkinTools.AvatarSelectionChanged);

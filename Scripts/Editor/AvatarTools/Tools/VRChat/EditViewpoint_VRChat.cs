@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tools_editViewpoint", "vrchat", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
+    [AutoLoad(DefaultIDs.Tools.EditViewpoint, "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class EditViewpoint_VRChat : ToolSceneGUIBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Edit Viewpoint");

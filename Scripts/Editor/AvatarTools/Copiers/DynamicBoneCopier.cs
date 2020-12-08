@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_dbone", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad(DefaultIDs.Copiers.DynamicBone, ParentModuleID = DefaultIDs.Modules.Copier)]
     class DynamicBoneCopier : ComponentCopierBase
     {
         public override string ComponentTypeFullName => "DynamicBone";
@@ -19,7 +19,7 @@ namespace Pumkin.AvatarTools.Copiers
 
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Dynamic Bone", 1);
 
-        protected override bool DoCopy(GameObject objFrom, GameObject objTo)
+        protected override bool DoCopyComponents(GameObject objFrom, GameObject objTo)
         {
             if(settings.removeAllBeforeCopying)
             {
@@ -30,7 +30,7 @@ namespace Pumkin.AvatarTools.Copiers
                     return false;
                 }
             }
-            return base.DoCopy(objFrom, objTo);
+            return base.DoCopyComponents(objFrom, objTo);
         }
 
         protected override void SetupSettings()

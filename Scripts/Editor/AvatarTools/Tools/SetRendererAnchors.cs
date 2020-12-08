@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Tools
 {
-    [AutoLoad("tools_setRenderAnchors", ParentModuleID = DefaultModuleIDs.TOOLS_SETUP_AVATAR)]
+    [AutoLoad(DefaultIDs.Tools.SetRendererAchors, ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class SetRendererAnchors : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

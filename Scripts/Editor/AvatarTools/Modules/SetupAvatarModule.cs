@@ -6,7 +6,7 @@ using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools.Modules
 {
-    [AutoLoad(DefaultModuleIDs.TOOLS_SETUP_AVATAR, ParentModuleID = DefaultModuleIDs.TOOLS)]
+    [AutoLoad(DefaultIDs.Modules.Tools_SetupAvatar, ParentModuleID = DefaultIDs.Modules.Tools)]
     class SetupAvatarModule : UIModuleBase
     {
         public override UIDefinition UIDefs { get; set; }

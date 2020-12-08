@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Modules
 {
-    [AutoLoad(DefaultModuleIDs.COPIER)]
+    [AutoLoad(DefaultIDs.Modules.Copier)]
     class ComponentCopiersModule : UIModuleBase
     {
         public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_skinnedMeshRenderer", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad(DefaultIDs.Copiers.SkinnedMeshRenderer, ParentModuleID = DefaultIDs.Modules.Copier)]
     class SkinnedMeshRendererCopier : ComponentCopierBase
     {
         public override string ComponentTypeFullName => typeof(SkinnedMeshRenderer).FullName;

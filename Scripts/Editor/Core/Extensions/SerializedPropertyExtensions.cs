@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
+using UnityEngine;
 
 namespace Pumkin.Core.Extensions
 {
@@ -56,6 +57,36 @@ namespace Pumkin.Core.Extensions
 				list[i].Key.SetValue(list[i].Value, value);
 				// New 'val' object will be parent of current 'val' object
 				value = list[i].Value;
+			}
+		}
+
+		/// <summary>
+		/// Removes all null elements from array and resizes it to fit elements
+		/// </summary>
+		/// <param name="property"></param>
+		public static void RemoveNullReferencesFromArray(this SerializedProperty property)
+		{
+			var arr = property.FindPropertyRelative("Array");
+			if(!property.isArray)
+				throw new ArgumentException($"{property} is not an array.");
+
+			var newList = new List<UnityEngine.Object>();
+
+			for(int i = 0; i < arr.arraySize; i++)
+			{
+				var d = arr.GetArrayElementAtIndex(i);
+				if(d?.objectReferenceValue)
+					newList.Add(d.objectReferenceValue);
+			}
+
+			if(newList.Count == arr.arraySize)
+				return;
+
+			arr.ClearArray();
+			for(int i = 0; i < newList.Count; i++)
+			{
+				arr.InsertArrayElementAtIndex(i);
+				arr.GetArrayElementAtIndex(i).objectReferenceValue = newList[i];
 			}
 		}
 	}

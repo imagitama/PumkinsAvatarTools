@@ -102,7 +102,7 @@ namespace Pumkin.AvatarTools.Base
         {
             try
             {
-                if(Prepare(objFrom, objTo) && DoCopy(objFrom, objTo))
+                if(Prepare(objFrom, objTo) && DoCopyComponents(objFrom, objTo))
                 {
                     Finish(objFrom, objTo);
                     return true;
@@ -133,7 +133,7 @@ namespace Pumkin.AvatarTools.Base
             return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
         }
 
-        protected virtual bool DoCopy(GameObject objFrom, GameObject objTo)
+        protected virtual bool DoCopyComponents(GameObject objFrom, GameObject objTo)
         {
             var compsFrom = objFrom.GetComponentsInChildren(ComponentType, true);
 
@@ -166,7 +166,7 @@ namespace Pumkin.AvatarTools.Base
             return true;
         }
 
-        Component CopyEverything(Component coFrom, Transform transTo)
+        protected Component CopyEverything(Component coFrom, Transform transTo)
         {
             var existComps = transTo.gameObject.GetComponents(ComponentType);
 
@@ -178,7 +178,7 @@ namespace Pumkin.AvatarTools.Base
                 .FirstOrDefault();
         }
 
-        Component CopyProperties(Component compFrom, Transform transTo, params string[] propertyNames)
+        protected Component CopyProperties(Component compFrom, Transform transTo, params string[] propertyNames)
         {
             var compTo = transTo.gameObject.AddComponent(compFrom.GetType());
             var serialCompFrom = new SerializedObject(compFrom);

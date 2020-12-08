@@ -4,7 +4,7 @@ using Pumkin.Core;
 
 namespace Pumkin.AvatarTools.Destroyers
 {
-    [AutoLoad("destroyers_light", ParentModuleID = DefaultModuleIDs.DESTROYER)]
+    [AutoLoad(DefaultIDs.Destroyers.Light, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class LightDestroyer : ComponentDestroyerBase
     {
         public override string ComponentTypeFullName => typeof(UnityEngine.Light).FullName;

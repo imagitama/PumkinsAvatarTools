@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools.Copiers
 {
-    [AutoLoad("copier_light", ParentModuleID = DefaultModuleIDs.COPIER)]
+    [AutoLoad(DefaultIDs.Copiers.Light, ParentModuleID = DefaultIDs.Modules.Copier)]
     class LightCopier : ComponentCopierBase
     {
         public override string ComponentTypeFullName => typeof(Light).FullName;
