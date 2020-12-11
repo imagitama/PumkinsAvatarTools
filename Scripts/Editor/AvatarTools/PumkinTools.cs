@@ -46,10 +46,11 @@ namespace Pumkin.AvatarTools2
             OnAvatarSelectionChanged?.Invoke(newSelection);
         }
 
+        public static Version version { get; } = new Version(2, 0, 0);
 
         //Logger stuff
-        static PumkinLogger Logger { get; } = new PumkinLogger("blue", "Pumkin Tools");
-        static PumkinLogger VerboseLogger { get; } = new PumkinLogger("red", "Pumkin Tools Verbose");
+        public static PumkinLogger Logger { get; } = new PumkinLogger("blue", "Pumkin Tools");
+        public static PumkinLogger VerboseLogger { get; } = new PumkinLogger("red", "Pumkin Tools Verbose");
 
         public static void Log(string msg, UnityEngine.Object context)
         {

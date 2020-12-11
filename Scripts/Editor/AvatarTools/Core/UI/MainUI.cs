@@ -22,6 +22,8 @@ namespace Pumkin.AvatarTools2.UI
 
         Vector2 scroll = Vector2.zero;
 
+        GUIContent versionLabel = new GUIContent($"Version {PumkinTools.version.ToString()}");
+
         public IUIModule OrphanHolder
         {
             get => _orphanHolder ?? (_orphanHolder = new OrphanHolderModule());
@@ -51,66 +53,80 @@ namespace Pumkin.AvatarTools2.UI
                     drawSettings = !drawSettings;
             }
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.LabelField(versionLabel);
 
-            GUILayout.Space(20f);
+            UIHelpers.DrawGUILine();
 
             if(drawSettings)
             {
-                EditorGUI.BeginChangeCheck();
-                {
-                    selectedConfigIndex = EditorGUILayout.Popup("Configuration", selectedConfigIndex, ConfigurationManager.Configurations);
-                }
-                if(EditorGUI.EndChangeCheck())
-                {
-                    ConfigurationManager.CurrentConfigurationString = ConfigurationManager.Configurations[selectedConfigIndex];
-                }
+                DrawSettings();
+                return;
             }
-            else
+
+            PumkinTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
+
+            if(GUILayout.Button("Select from Scene"))
+                PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
+            UIHelpers.DrawGUILine();
+
+            scroll = EditorGUILayout.BeginScrollView(scroll);
+
+            //Draw modules
+            foreach(var mod in UIModules)
             {
-                PumkinTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
-
-                if(GUILayout.Button("Select from Scene"))
-                    PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
-
-                UIHelpers.DrawGUILine();
-
-                scroll = EditorGUILayout.BeginScrollView(scroll);
-
-                //Draw modules
-                foreach(var mod in UIModules)
+                if(mod != null)
                 {
-                    if(mod != null)
+                    try
                     {
-                        try
-                        {
-                            if (!mod.UIDefs.IsHidden)
-                                mod.DrawUI();
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.LogException(e);
-                        }
+                        if(!mod.UIDefs.IsHidden)
+                            mod.DrawUI();
                     }
-                    else
+                    catch(Exception e)
                     {
-                        PumkinTools.Log($"'{mod}' is null");
+                        Debug.LogException(e);
                     }
                 }
-
-                //Draw Orphan Holder module
-                try
+                else
                 {
-                    if(OrphanHolder != null)
-                        if(!OrphanHolder.UIDefs.IsHidden)
-                            OrphanHolder.DrawUI();
+                    PumkinTools.Log($"'{mod}' is null");
                 }
-                catch(Exception e)
-                {
-                    Debug.LogException(e);
-                }
-
-                EditorGUILayout.EndScrollView();
             }
+
+            //Draw Orphan Holder module
+            try
+            {
+                if(OrphanHolder != null)
+                    if(!OrphanHolder.UIDefs.IsHidden)
+                        OrphanHolder.DrawUI();
+            }
+            catch(Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            EditorGUILayout.EndScrollView();
+
+        }
+
+        private void DrawSettings()
+        {
+            EditorGUI.BeginChangeCheck();
+            {
+                selectedConfigIndex = EditorGUILayout.Popup("Configuration", selectedConfigIndex, ConfigurationManager.Configurations);
+            }
+            if(EditorGUI.EndChangeCheck())
+            {
+                ConfigurationManager.CurrentConfigurationString = ConfigurationManager.Configurations[selectedConfigIndex];
+            }
+
+            EditorGUILayout.Space();
+
+            bool logVerbose = PumkinTools.VerboseLogger.logEnabled;
+            EditorGUI.BeginChangeCheck();
+            logVerbose = EditorGUILayout.ToggleLeft("Enable Verbose logging", logVerbose);
+
+            if(EditorGUI.EndChangeCheck())
+                PumkinTools.VerboseLogger.logEnabled = logVerbose;
         }
 
         public IUIModule FindModule(string name)

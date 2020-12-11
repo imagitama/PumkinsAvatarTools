@@ -21,92 +21,109 @@ namespace Pumkin.Core.Logger
 
         public PumkinLogger(Color color, string tag)
         {
-            logHandler = new TaggedLogHandler(color, tag);
+            if(logEnabled)
+                logHandler = new TaggedLogHandler(color, tag);
         }
-
-        public PumkinLogger(string colorHexOrName, string tag)
-        {
-            logHandler = new TaggedLogHandler(colorHexOrName, tag);
-        }
-
         public bool IsLogTypeAllowed(LogType logType)
         {
             return Debug.unityLogger.IsLogTypeAllowed(logType);
         }
 
+        public PumkinLogger(string colorHexOrName, string tag)
+        {
+            if(logEnabled)
+                logHandler = new TaggedLogHandler(colorHexOrName, tag);
+        }
+
+
         public void Log(LogType logType, object message)
         {
-            logHandler.LogFormat(logType, null, message as string, null);
+            if(logEnabled)
+                logHandler.LogFormat(logType, null, message as string, null);
         }
 
         public void Log(LogType logType, object message, Object context)
         {
-            logHandler.LogFormat(logType, context, message as string, null);
+            if(logEnabled)
+                logHandler.LogFormat(logType, context, message as string, null);
         }
 
         public void Log(LogType logType, string tag, object message)
         {
-            Debug.unityLogger.Log(logType, tag, message);
+            if(logEnabled)
+                Debug.unityLogger.Log(logType, tag, message);
         }
 
         public void Log(LogType logType, string tag, object message, Object context)
         {
-            Debug.unityLogger.Log(logType, tag, message, context);
+            if(logEnabled)
+                Debug.unityLogger.Log(logType, tag, message, context);
         }
 
         public void Log(object message)
         {
-            logHandler.LogFormat(LogType.Log, null, message as string, null);
+            if(logEnabled)
+                logHandler.LogFormat(LogType.Log, null, message as string, null);
         }
 
         public void Log(string tag, object message)
         {
-            Debug.unityLogger.Log(LogType.Log, tag, message);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Log, tag, message);
         }
 
         public void Log(string tag, object message, Object context)
         {
-            Debug.unityLogger.Log(LogType.Log, tag, message, context);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Log, tag, message, context);
         }
 
         public void LogWarning(string tag, object message)
         {
-            Debug.unityLogger.Log(LogType.Warning, tag, message);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Warning, tag, message);
         }
 
         public void LogWarning(string tag, object message, Object context)
         {
-            Debug.unityLogger.Log(LogType.Warning, tag, message, context);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Warning, tag, message, context);
         }
 
         public void LogError(string tag, object message)
         {
-            Debug.unityLogger.Log(LogType.Error, tag, message);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Error, tag, message);
         }
 
         public void LogError(string tag, object message, Object context)
         {
-            Debug.unityLogger.Log(LogType.Error, tag, message, context);
+            if(logEnabled)
+                Debug.unityLogger.Log(LogType.Error, tag, message, context);
         }
 
         public void LogFormat(LogType logType, string format, params object[] args)
         {
-            logHandler.LogFormat(logType, null, format, args);
+            if(logEnabled)
+                logHandler.LogFormat(logType, null, format, args);
         }
 
         public void LogException(Exception exception)
         {
-            logHandler.LogException(exception, null);
+            if(logEnabled)
+                logHandler.LogException(exception, null);
         }
 
         public void LogFormat(LogType logType, Object context, string format, params object[] args)
         {
-            logHandler.LogFormat(logType, context, format, args);
+            if(logEnabled)
+                logHandler.LogFormat(logType, context, format, args);
         }
 
         public void LogException(Exception exception, Object context)
         {
-            logHandler.LogException(exception, context);
+            if(logEnabled)
+                logHandler.LogException(exception, context);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools2.Tools;
 using Pumkin.AvatarTools2.Types;
 using Pumkin.Core;
 using Pumkin.Core.UI;
@@ -8,10 +9,10 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Tools
+namespace Pumkin.AvatarTools2.VRChat.Tools
 {
     [AutoLoad("tools_lipsync", "vrchat", ParentModuleID = "tools_setupAvatar")]
-    class SetupLipsync_VRChat : ToolBase
+    class SetupLipsync : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("[VRC] Setup Lipsync", "Sets up lipsync on your avatar.");

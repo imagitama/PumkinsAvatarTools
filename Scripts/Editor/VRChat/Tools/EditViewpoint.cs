@@ -1,4 +1,5 @@
 ﻿using Pumkin.AvatarTools.VRChat;
+using Pumkin.AvatarTools2.Tools;
 using Pumkin.AvatarTools2.Types;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
@@ -6,10 +7,10 @@ using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Tools
+namespace Pumkin.AvatarTools2.VRChat.Tools
 {
     [AutoLoad(DefaultIDs.Tools.EditViewpoint, "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
-    class EditViewpoint_VRChat : ToolSceneGUIBase
+    class EditViewpoint : ToolSceneGUIBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Edit Viewpoint");
         protected override Vector2 WindowSize { get; set; } = new Vector2(200, 70);

@@ -152,9 +152,7 @@ namespace Pumkin.AvatarTools2.Modules
                 DrawHeader();
 
             Action drawContent = () =>
-            {
                 DrawContent();
-            };
 
             if(UIDefs.IsExpanded || !shouldDrawHeader)
             {
@@ -227,8 +225,8 @@ namespace Pumkin.AvatarTools2.Modules
             SubItems = SubItems?.OrderBy(t => t?.UIDefs?.OrderInUI)?.ToList() ?? SubItems;
 
             //Try to order by whether or not item has a settings button so stuff pairs up nicer
-            if(shouldDrawChildrenInHorizontalPairs)
-                SubItems = SubItems?.OrderBy(t => t?.Settings != null).ToList() ?? SubItems;
+            if(shouldDrawChildrenInHorizontalPairs) //TODO: Figure out the draw alone thing
+                SubItems = SubItems?.OrderBy(t => t?.Settings != null || t.UIDefs.DrawAlone).ToList() ?? SubItems;
 
             ChildModules = ChildModules.OrderBy(t => t.UIDefs.OrderInUI).ToList();
             ChildModules.ForEach(x => x.OrderChildren());

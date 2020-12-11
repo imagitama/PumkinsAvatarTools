@@ -74,6 +74,11 @@ namespace Pumkin.Core.UI
         public UIDefinition(string name, params UIModuleStyles[] moduleStyles)
             : this(name, null, 0, moduleStyles) { }
 
+        /// <summary>
+        /// Forces IItem to draw alone even when DrawChildrenInHorizontalPairs is defined in module. Only works for IItem
+        /// </summary>
+        public bool DrawAlone { get; set; }
+
         public bool HasStyle(UIModuleStyles style) =>
             ModuleStyles.Exists(t => t == style);
 

@@ -1,10 +1,11 @@
-﻿using Pumkin.Core;
+﻿using Pumkin.AvatarTools2.Settings;
+using Pumkin.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Settings
+namespace Pumkin.AvatarTools2.VRChat.Settings
 {
-    class AvatarDescriptorCopier_VRChat_Settings : CopierSettingsContainerBase
+    class AvatarDescriptorCopier_Settings : CopierSettingsContainerBase
     {
         [Space]
         [DrawToggleLeft] public bool settings = false;
