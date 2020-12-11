@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.UI
+namespace Pumkin.AvatarTools2.UI
 {
     static class Styles
     {
+        const string RESOURCE_FOLDER_PREFIX = "Pumkin/UI/";
+
         public static GUIStyle MenuFoldout { get; private set; }
         public static GUIStyle SubMenuFoldout { get; private set; }
         public static GUIStyle TitleLabel { get; private set; }
@@ -42,9 +44,9 @@ namespace Pumkin.AvatarTools.UI
                 stretchWidth = true,
             };
             {
-                //var module = Resources.Load<Texture2D>("UI/module_pulldown");
-                //var moduleAct = Resources.Load<Texture2D>("UI/module_pulldown act");
-                //var moduleFocus = Resources.Load<Texture2D>("UI/module_pulldown focus");
+                //var module = Resources.Load<Texture2D>(RESOURCE_FOLDER_PREFIX +"module_pulldown");
+                //var moduleAct = Resources.Load<Texture2D>(RESOURCE_FOLDER_PREFIX +"module_pulldown act");
+                //var moduleFocus = Resources.Load<Texture2D>(RESOURCE_FOLDER_PREFIX + "module_pulldown focus");
 
                 //if(module)
                 //    MenuFoldout.normal.background = module;

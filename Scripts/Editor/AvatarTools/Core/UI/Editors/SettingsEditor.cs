@@ -1,0 +1,33 @@
+﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools2.Settings;
+using UnityEditor;
+
+namespace Pumkin.AvatarTools2.UI.Editors
+{
+    /// <summary>
+    /// Base editor that should be inherited when creating an editor for settings
+    /// Draws default editor but without the script field by default
+    /// </summary>
+    [CustomEditor(typeof(SettingsContainerBase))]
+    public abstract class SettingsEditor : Editor
+    {
+        protected bool hideScriptField = true;
+
+        public override void OnInspectorGUI()
+        {
+            if(hideScriptField)
+            {
+                serializedObject.Update();
+                EditorGUI.BeginChangeCheck();
+                DrawPropertiesExcluding(serializedObject, "m_Script");
+                if(EditorGUI.EndChangeCheck())
+                    serializedObject.ApplyModifiedProperties();
+            }
+            else
+            {
+                base.OnInspectorGUI();
+            }
+        }
+    }
+}
+#endif

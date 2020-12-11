@@ -1,4 +1,4 @@
-﻿namespace Pumkin.AvatarTools
+﻿namespace Pumkin.AvatarTools2
 {
     public static class DefaultIDs
     {

@@ -1,4 +1,4 @@
-﻿using Pumkin.AvatarTools.Core;
+﻿using Pumkin.AvatarTools2.Core;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System;
@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.AvatarTools
+namespace Pumkin.AvatarTools2
 {
     static class ConfigurationManager
     {

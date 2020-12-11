@@ -4,11 +4,11 @@ using System;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.UI
+namespace Pumkin.AvatarTools2.UI
 {
-    static class Icons
+    public static class Icons
     {
-        const string RESOURCE_FOLDER_PREFIX = "Icons/";
+        const string RESOURCE_FOLDER_PREFIX = "Pumkin/Icons/";
 
         public static GUIContent Settings { get; private set; }
         public static GUIContent Options { get; private set; }

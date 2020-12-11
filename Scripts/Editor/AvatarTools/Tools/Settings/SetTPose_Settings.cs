@@ -1,7 +1,6 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 
-namespace Pumkin.AvatarTools.Settings
+namespace Pumkin.AvatarTools2.Settings
 {
     class SetTPose_Settings : SettingsContainerBase
     {

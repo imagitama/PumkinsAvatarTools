@@ -1,9 +1,6 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Modules;
-using Pumkin.Core;
-using Pumkin.Core.UI;
+﻿using Pumkin.Core;
 
-namespace Pumkin.AvatarTools.Destroyers
+namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.DynamicBone, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class DynamicBoneDestroyer : ComponentDestroyerBase

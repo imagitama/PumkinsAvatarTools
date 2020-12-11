@@ -1,13 +1,7 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pumkin.Core;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Settings
+namespace Pumkin.AvatarTools2.Settings
 {
     class ConstraintDestroyer_Settings : SettingsContainerBase
     {

@@ -1,11 +1,10 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Tools
+namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
     class ZeroBlendshapes : ToolBase

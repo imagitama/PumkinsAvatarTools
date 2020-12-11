@@ -1,8 +1,7 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using UnityEngine.Animations;
 
-namespace Pumkin.AvatarTools.Copiers
+namespace Pumkin.AvatarTools2.Copiers
 {
     [AutoLoad(DefaultIDs.Copiers.ScaleConstraint, ParentModuleID = DefaultIDs.Modules.Copier)]
     class ScaleConstraintCopier : ComponentCopierBase

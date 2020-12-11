@@ -1,12 +1,11 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Tools
+namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad("tool_resetScale", ParentModuleID = "tools_fixAvatar")]
     class ResetScale : ToolBase

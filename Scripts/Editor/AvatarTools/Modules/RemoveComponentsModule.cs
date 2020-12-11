@@ -1,11 +1,9 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Core;
-using Pumkin.AvatarTools.UI;
+using Pumkin.AvatarTools2.Core;
 using Pumkin.Core;
 using Pumkin.Core.UI;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools2.Modules
 {
     [AutoLoad(DefaultIDs.Modules.Destroyer)]
     class RemoveComponentsModule : UIModuleBase

@@ -1,8 +1,7 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core.UI;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools2.Modules
 {
     class OrphanHolderModule : UIModuleBase
     {

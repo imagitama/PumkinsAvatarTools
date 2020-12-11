@@ -1,8 +1,7 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Destroyers
+namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.ParticleSystem, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class ParticleSystemDestroyer : MultiComponentDestroyerBase

@@ -1,9 +1,8 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Settings
+namespace Pumkin.AvatarTools2.Settings
 {
     internal class SetRendererAnchors_Settings : SettingsContainerBase
     {

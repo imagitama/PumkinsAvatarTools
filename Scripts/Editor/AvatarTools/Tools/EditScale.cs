@@ -1,21 +1,10 @@
-﻿using NUnit.Framework.Internal;
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Modules;
-using Pumkin.AvatarTools.Types;
-using Pumkin.AvatarTools.UI;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using Pumkin.Core.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pumkin.Core.Extensions;
 using UnityEditor;
 using UnityEngine;
 using Pumkin.Core.UI;
 
-namespace Pumkin.AvatarTools.Tools
+namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad(DefaultIDs.Tools.EditScale, ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class EditScale : ToolSceneGUIBase

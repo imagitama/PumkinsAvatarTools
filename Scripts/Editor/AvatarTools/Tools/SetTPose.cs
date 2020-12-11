@@ -1,14 +1,12 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.Settings;
+using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
-using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Tools
+namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad("tools_tpose", ParentModuleID = "tools_fixAvatar")]
     class SetTPose : ToolBase

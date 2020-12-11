@@ -1,13 +1,11 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Destroyers;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.Modules;
-using Pumkin.AvatarTools.Settings;
+﻿using Pumkin.AvatarTools2.Destroyers;
+using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
 using Pumkin.Core.UI;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Copiers
+namespace Pumkin.AvatarTools2.Copiers
 {
     [AutoLoad(DefaultIDs.Copiers.DynamicBone, ParentModuleID = DefaultIDs.Modules.Copier)]
     class DynamicBoneCopier : ComponentCopierBase

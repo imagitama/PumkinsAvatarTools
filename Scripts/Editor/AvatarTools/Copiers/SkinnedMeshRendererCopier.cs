@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Modules;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using Pumkin.Core.UI;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Copiers
+namespace Pumkin.AvatarTools2.Copiers
 {
     [AutoLoad(DefaultIDs.Copiers.SkinnedMeshRenderer, ParentModuleID = DefaultIDs.Modules.Copier)]
     class SkinnedMeshRendererCopier : ComponentCopierBase

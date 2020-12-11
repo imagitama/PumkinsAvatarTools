@@ -1,17 +1,11 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.Settings;
+﻿using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
 using Pumkin.Core.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Animations;
 
-namespace Pumkin.AvatarTools.Destroyers
+namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.Constraint, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     public class ConstraintDestroyer : MultiComponentDestroyerBase

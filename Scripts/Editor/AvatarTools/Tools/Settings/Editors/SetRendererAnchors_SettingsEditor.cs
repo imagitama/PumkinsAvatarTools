@@ -1,9 +1,9 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Settings;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core.Helpers;
 using UnityEditor;
 
-namespace Pumkin.AvatarTools.UI.Editors
+namespace Pumkin.AvatarTools2.UI.Editors
 {
     [CustomEditor(typeof(SetRendererAnchors_Settings))]
     internal class SetRendererAnchors_SettingsEditor : SettingsEditor

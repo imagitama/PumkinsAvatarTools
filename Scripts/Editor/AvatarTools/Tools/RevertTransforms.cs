@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
@@ -8,7 +7,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Tools
+namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad("tools_reverTransforms", ParentModuleID = "tools_fixAvatar")]
     class RevertTransforms : ToolBase

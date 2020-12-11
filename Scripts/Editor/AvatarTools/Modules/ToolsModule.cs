@@ -1,12 +1,9 @@
 ﻿#if UNITY_EDITOR
 
-using Pumkin.AvatarTools.Base;
 using Pumkin.Core;
 using Pumkin.Core.UI;
-using System;
-using UnityEngine;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools2.Modules
 {
     [AutoLoad(DefaultIDs.Modules.Tools)]
     class ToolsModule : UIModuleBase

@@ -1,12 +1,10 @@
-﻿using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.Settings;
+﻿using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
 using Pumkin.Core.UI;
-using System;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Destroyers
+namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.Collider, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class ColliderDestroyer : MultiComponentDestroyerBase

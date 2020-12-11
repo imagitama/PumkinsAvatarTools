@@ -1,17 +1,14 @@
 ﻿#if UNITY_EDITOR
-using System.Collections.Generic;
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.Core;
-using Pumkin.AvatarTools.Interfaces;
-using Pumkin.AvatarTools.UI;
+using Pumkin.AvatarTools2.Core;
+using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
-using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools2.Modules
 {
     [AutoLoad(DefaultIDs.Modules.Copier)]
     class ComponentCopiersModule : UIModuleBase

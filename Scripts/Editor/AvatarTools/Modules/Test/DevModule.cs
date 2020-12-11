@@ -1,12 +1,11 @@
 ﻿#if UNITY_EDITOR && PUMKIN_DEV
-using Pumkin.AvatarTools.Base;
-using Pumkin.AvatarTools.UI;
+using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.Modules
+namespace Pumkin.AvatarTools2.Modules
 {
     [AutoLoad(DefaultIDs.Modules.Debug, "debug")]
     class DevModule : UIModuleBase
