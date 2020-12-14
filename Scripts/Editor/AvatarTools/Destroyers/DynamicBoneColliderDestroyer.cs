@@ -1,5 +1,4 @@
-﻿using Pumkin.AvatarTools2.Types;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using UnityEditor;
 using UnityEngine;
 using Pumkin.Core.Extensions;
@@ -9,7 +8,7 @@ namespace Pumkin.AvatarTools2.Destroyers
     [AutoLoad(DefaultIDs.Destroyers.DynamicBoneCollider, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class DynamicBoneColliderDestroyer : ComponentDestroyerBase
     {
-        public override string ComponentTypeFullName => "DynamicBoneCollider";
+        public override string ComponentTypeFullName => GenericTypes.DynamicBoneCollider?.FullName;
 
         protected override void Finish(GameObject target)
         {

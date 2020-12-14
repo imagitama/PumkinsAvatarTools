@@ -10,6 +10,9 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Destroyers
 {
+    /// <summary>
+    /// Base class that destroys all components of type by it's fullname
+    /// </summary>
     public abstract class ComponentDestroyerBase : IComponentDestroyer, IItem
     {
         public abstract string ComponentTypeFullName { get; }

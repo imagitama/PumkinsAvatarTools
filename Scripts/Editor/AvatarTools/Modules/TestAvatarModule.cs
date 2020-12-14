@@ -106,9 +106,12 @@ namespace Pumkin.AvatarTools2.Modules
         {
             Avatar = avatar;
             Animator = Avatar.GetComponent<Animator>();
-            OldRuntimeController = Animator?.runtimeAnimatorController ?? null;
-            Head = Animator?.GetBoneTransform(HumanBodyBones.Head) ?? null;
 
+            if(Animator)
+            {
+                OldRuntimeController = Animator.runtimeAnimatorController ?? null;
+                Head = Animator.GetBoneTransform(HumanBodyBones.Head) ?? null;
+            }
         }
 
         void CleanupAvatar(GameObject avatar)
@@ -118,10 +121,12 @@ namespace Pumkin.AvatarTools2.Modules
 
             if(Animator)
                 Animator.runtimeAnimatorController = OldRuntimeController;
+            if(Head)
+                Head.transform.rotation = StartHeadRotation;
 
             Avatar = null;
             Animator = null;
-            Head.transform.rotation = StartHeadRotation;
+            Head = null;
         }
 
         public override void DrawContent()

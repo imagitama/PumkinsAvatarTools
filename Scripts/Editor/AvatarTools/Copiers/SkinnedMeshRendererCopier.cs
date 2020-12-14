@@ -8,7 +8,5 @@ namespace Pumkin.AvatarTools2.Copiers
     class SkinnedMeshRendererCopier : ComponentCopierBase
     {
         public override string ComponentTypeFullName => typeof(SkinnedMeshRenderer).FullName;
-
-        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Skinned Mesh Renderers");
     }
 }

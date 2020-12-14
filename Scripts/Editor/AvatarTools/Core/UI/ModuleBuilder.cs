@@ -51,7 +51,7 @@ namespace Pumkin.AvatarTools2.UI
                         Type targetType = TypeHelpers.GetType(actor.ComponentTypeFullName);
                         if(targetType == null)
                         {
-                            PumkinTools.LogVerbose($"Type {actor.ComponentTypeFullName} now found in project for {itemInst.GetType()}");
+                            PumkinTools.LogVerbose($"Type {actor.ComponentTypeFullName} not found in project for {itemInst.GetType()}");
                             continue;
                         }
                     }

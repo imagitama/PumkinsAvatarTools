@@ -19,6 +19,7 @@ namespace Pumkin.AvatarTools2.UI
 
         //Types
         public static GUIContent AvatarDescriptor { get; private set; }
+        public static GUIContent Bone { get; private set; }
 
 
         static Icons()
@@ -31,6 +32,7 @@ namespace Pumkin.AvatarTools2.UI
             Remove = EditorGUIUtility.IconContent("Toolbar Minus");
             RemoveAll = EditorGUIUtility.IconContent("vcs_delete");
 
+            Bone = new GUIContent(GetIconTexureFromReources("DynamicBone")) ?? Default;
             AvatarDescriptor = new GUIContent(GetTypeIconTextureFromResources("AvatarDescriptor")) ?? Default;
         }
 

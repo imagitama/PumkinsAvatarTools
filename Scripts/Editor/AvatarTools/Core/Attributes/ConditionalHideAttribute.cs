@@ -1,39 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 
 namespace Pumkin.Core
 {
-    using UnityEngine;
-    using System;
-    using System.Collections;
-
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property |
-        AttributeTargets.Class | AttributeTargets.Struct, Inherited = true)]
+    /// <summary>
+    /// Allows you to hide fields from being drawn in the inspector based on the value of a bool property indicated by PropertyName
+    /// </summary>
     public class ConditionalHideAttribute : PropertyAttribute
     {
-        /// <summary>
-        /// The name of the bool field that will be in control
-        /// </summary>
-        public string ConditionalSourceField = "";
-        
-        /// <summary>
-        /// TRUE = Hide in inspector / FALSE = Disable in inspector 
-        /// </summary>
-        public bool HideInInspector = false;
+        public string PropertyName { get; set; }
 
-        public ConditionalHideAttribute(string conditionalSourceField)
+        /// <summary>
+        /// Allows you to hide fields from being drawn in the inspector based on the value of <paramref name="boolPropertyName"/>
+        /// </summary>
+        /// <param name="boolPropertyName">Name of bool property on the same object as the object this attribute's field is on</param>
+        public ConditionalHideAttribute(string boolPropertyName)
         {
-            this.ConditionalSourceField = conditionalSourceField;
-            this.HideInInspector = false;
-        }
-
-        public ConditionalHideAttribute(string conditionalSourceField, bool hideInInspector)
-        {
-            this.ConditionalSourceField = conditionalSourceField;
-            this.HideInInspector = hideInInspector;
+            PropertyName = boolPropertyName;
         }
     }
 }
+#endif

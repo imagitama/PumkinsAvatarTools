@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    [AutoLoad("tools_tpose", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.SetTPose, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class SetTPose : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

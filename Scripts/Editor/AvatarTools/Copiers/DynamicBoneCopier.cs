@@ -2,7 +2,6 @@
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
-using Pumkin.Core.UI;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Copiers
@@ -10,13 +9,12 @@ namespace Pumkin.AvatarTools2.Copiers
     [AutoLoad(DefaultIDs.Copiers.DynamicBone, ParentModuleID = DefaultIDs.Modules.Copier)]
     class DynamicBoneCopier : ComponentCopierBase
     {
-        public override string ComponentTypeFullName => "DynamicBone";
+        public override string ComponentTypeFullName => GenericTypes.DynamicBone?.FullName;
         public override ISettingsContainer Settings => settings;
 
         DynamicBoneCopier_Settings settings;
 
-        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Dynamic Bone", 1);
-
+        //TODO: Remove this once the checkbox for removing works
         protected override bool DoCopyComponents(GameObject objFrom, GameObject objTo)
         {
             if(settings.removeAllBeforeCopying)

@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    [AutoLoad("tools_reverTransforms", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.RevertTransforms, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class RevertTransforms : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

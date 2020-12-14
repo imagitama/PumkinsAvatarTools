@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    [AutoLoad("tools_removeMissingScripts", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.RemoveMissingScripts, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class RemoveMissingScripts : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

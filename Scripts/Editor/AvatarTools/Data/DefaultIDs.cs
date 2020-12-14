@@ -25,6 +25,8 @@
             public const string SetTPose = "tools_setTPose";
             public const string ZeroBlendshapes = "tools_zeroBlendshapes";
             public const string EditViewpoint = "tools_editViewpoint";
+            public const string SetupLipsync = "tools_setupLipsync";
+            public const string RevertTransforms = "tools_revertTransforms";
         }
 
         public static class Copiers
@@ -41,6 +43,7 @@
             public const string PositionConstraint = "copier_positionConstraint";
             public const string AimConstraint = "copier_aimConstraint";
             public const string LookAtConstraint = "copier_lookAtConstraint";
+            public const string AudioSource = "copier_audioSource";
         }
 
         public static class Destroyers

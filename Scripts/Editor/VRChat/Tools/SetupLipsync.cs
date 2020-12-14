@@ -1,6 +1,5 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Tools;
-using Pumkin.AvatarTools2.Types;
 using Pumkin.Core;
 using Pumkin.Core.UI;
 using System;
@@ -11,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Tools
 {
-    [AutoLoad("tools_lipsync", "vrchat", ParentModuleID = "tools_setupAvatar")]
+    [AutoLoad(DefaultIDs.Tools.SetupLipsync, "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class SetupLipsync : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

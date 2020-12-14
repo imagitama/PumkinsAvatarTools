@@ -1,5 +1,4 @@
 ﻿using Pumkin.AvatarTools2.Destroyers;
-using Pumkin.AvatarTools2.Types;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.UI;

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    [AutoLoad("tools_zeroblendshapes", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.ZeroBlendshapes, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class ZeroBlendshapes : ToolBase
     {
         public override UIDefinition UIDefs { get; set; } =

@@ -1,6 +1,5 @@
-﻿using Pumkin.AvatarTools.VRChat;
+﻿using Pumkin.AvatarTools2.VRChat;
 using Pumkin.AvatarTools2.Tools;
-using Pumkin.AvatarTools2.Types;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;

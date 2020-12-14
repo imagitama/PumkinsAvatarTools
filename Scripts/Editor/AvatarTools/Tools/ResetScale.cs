@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    [AutoLoad("tool_resetScale", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.ResetScale, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class ResetScale : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

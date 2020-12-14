@@ -14,6 +14,9 @@ using Pumkin.AvatarTools2.Settings;
 
 namespace Pumkin.AvatarTools2.Copiers
 {
+    /// <summary>
+    /// Base copier class that copies all components of type by it's full name. Also fixes references
+    /// </summary>
     public abstract class ComponentCopierBase : IComponentCopier
     {
         public string GameConfigurationString { get; set; }
@@ -30,8 +33,6 @@ namespace Pumkin.AvatarTools2.Copiers
         }
 
         public abstract string ComponentTypeFullName { get; }
-
-        public bool ExpandSettings { get; private set; }
 
         public bool Active { get; set; }
 
@@ -50,6 +51,8 @@ namespace Pumkin.AvatarTools2.Copiers
         public virtual ISettingsContainer Settings => _baseSettings;
 
         protected bool shouldFixReferences = false;
+
+        bool drawSettings = true;
 
         GUIContent _content;
         Type _componentType;
@@ -81,12 +84,12 @@ namespace Pumkin.AvatarTools2.Copiers
             {
                 Active = EditorGUILayout.ToggleLeft(Content, Active);
                 if(Settings != null)
-                    ExpandSettings = GUILayout.Toggle(ExpandSettings, Icons.Options, Styles.Icon);
+                    UIDefs.ExpandSettings = GUILayout.Toggle(UIDefs.ExpandSettings, Icons.Options, Styles.Icon);
             }
             EditorGUILayout.EndHorizontal();
 
             //Draw settings here
-            if(Settings == null || !ExpandSettings)
+            if(Settings == null || !UIDefs.ExpandSettings)
                 return;
 
             EditorGUILayout.Space();

@@ -1,13 +1,18 @@
 ﻿using Pumkin.AvatarTools2.Settings;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Copiers
 {
+    /// <summary>
+    /// Base copier class that copies all components of multiple types by their full name. Also fixes references.
+    /// </summary>
     public abstract class MultiComponentCopierBase : ComponentCopierBase
     {
         public override string ComponentTypeFullName =>
@@ -15,68 +20,70 @@ namespace Pumkin.AvatarTools2.Copiers
 
         public abstract string[] ComponentTypeFullNamesAll { get; set; }
 
-        Type[] _componentTypes;
+        protected Type[] componentTypes;
 
         Dictionary<Type, CopierSettingsContainerBase> _dict;
 
         public MultiComponentCopierBase()
         {
-            _componentTypes = new Type[ComponentTypeFullNamesAll.Length];
+            //Get types of components and filter out nulls
+            componentTypes = ComponentTypeFullNamesAll
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Select(c => TypeHelpers.GetType(c))
+                 .ToArray();
 
             for(int i = 0; i < ComponentTypeFullNamesAll.Length; i++)
             {
                 string tName = ComponentTypeFullNamesAll[i];
 
                 if(!string.IsNullOrWhiteSpace(tName))
-                    _componentTypes[i] = TypeHelpers.GetType(tName);
+                    componentTypes[i] = TypeHelpers.GetType(tName);
                 else
                     PumkinTools.LogVerbose($"{tName} is invalid");
             }
 
             if(!UIDefs)
-                UIDefs = new UIDefinition(_componentTypes[0]?.Name ?? "Invalid Destroyer");
+                UIDefs = new UIDefinition(componentTypes[0]?.Name ?? "Invalid Destroyer");
         }
 
         protected virtual bool DoCopyByType(GameObject objFrom, GameObject objTo, Type componentType, CopierSettingsContainerBase settings = null)
         {
+            //TODO: Finish this
             var set = Settings as CopierSettingsContainerBase;
             bool createGameObjects = set != null && set.createGameObjects;
             string[] propNames = set.PropertyNames;
 
-            //foreach(var co in objFrom.GetComponentsInChildren(componentType, true))
-            //{
-            //    if(ShouldIgnoreObject(co.gameObject))
-            //        continue;
+            foreach(var comp in objFrom.GetComponentsInChildren(componentType, true))
+            {
+                if(ShouldIgnoreObject(comp.gameObject))
+                    continue;
 
-            //    foreach(var coFrom in compsFrom)
-            //    {
-            //        if(!coFrom || ShouldIgnoreObject(coFrom.gameObject))
-            //        {
-            //            PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {coFrom.gameObject.name}");
-            //            continue;
-            //        }
+                if(!comp || ShouldIgnoreObject(comp.gameObject))
+                {
+                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {comp.gameObject.name}");
+                    continue;
+                }
 
-            //        var transPath = coFrom.transform.GetPathInHierarchy();
-            //        var trans = objTo.transform.FindOrCreate(transPath, createGameObjects, objFrom.transform);
-            //        if(!trans)
-            //            continue;
+                var transPath = comp.transform.GetPathInHierarchy();
+                var trans = objTo.transform.FindOrCreate(transPath, createGameObjects, objFrom.transform);
+                if(!trans)
+                    continue;
 
 
-            //        Component addedComp;
-            //        if(propNames.IsNullOrEmpty())
-            //            addedComp = CopyEverything(coFrom, trans);
-            //        else
-            //            addedComp = CopyProperties(coFrom, trans, propNames);
+                Component addedComp;
+                if(propNames.IsNullOrEmpty())
+                    addedComp = CopyEverything(comp, trans);
+                else
+                    addedComp = CopyProperties(comp, trans, propNames);
 
-            //        FixReferences(addedComp, objTo.transform);
-
-            //    }
+                FixReferences(addedComp, objTo.transform, set.createGameObjects);
+            }
             return true;
         }
 
         protected override bool DoCopyComponents(GameObject objFrom, GameObject objTo)
         {
-            foreach(var comp in _componentTypes)
+            foreach(var comp in componentTypes)
                 DoCopyByType(objFrom, objTo, comp);
             return true;
         }
@@ -84,14 +91,14 @@ namespace Pumkin.AvatarTools2.Copiers
         protected override void Finish(GameObject objFrom, GameObject objTo)
         {
             StringBuilder sb = new StringBuilder();
-            for(int i = 0; i < ComponentTypeFullNamesAll.Length; i++)
+            for(int i = 0; i < componentTypes.Length; i++)
             {
-                sb.Append($"{_componentTypes[i].Name}");
-                if(i != _componentTypes.Length - 1)
+                sb.Append($"{componentTypes[i].Name}");
+                if(i != componentTypes.Length - 1)
                     sb.Append(", ");
             }
 
-            PumkinTools.Log($"Successfully removed all <b>{sb.ToString()}</b> from <b>{objFrom.name}</b>");
+            PumkinTools.Log($"Successfully copied all <b>{sb.ToString()}</b> from <b>{objFrom.name}</b>");
         }
 
     }

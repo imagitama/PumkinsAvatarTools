@@ -1,15 +1,11 @@
 ﻿using Pumkin.AvatarTools2;
-using Pumkin.AvatarTools2.Types;
+using Pumkin.AvatarTools2.VRChat;
 using Pumkin.Core.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools.VRChat
+namespace Pumkin.AvatarTools2.VRChat
 {
     public static class VRChatHelpers
     {

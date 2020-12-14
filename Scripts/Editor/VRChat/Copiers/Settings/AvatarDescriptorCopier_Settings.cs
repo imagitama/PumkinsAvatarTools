@@ -7,6 +7,9 @@ namespace Pumkin.AvatarTools2.VRChat.Settings
 {
     class AvatarDescriptorCopier_Settings : CopierSettingsContainerBase
     {
+        protected override bool ShowCreateGameObjects => false;
+        protected override bool ShowRemoveAll => false;
+
         [Space]
         [DrawToggleLeft] public bool settings = false;
         [DrawToggleLeft] public bool lipsync = false;
@@ -42,7 +45,6 @@ namespace Pumkin.AvatarTools2.VRChat.Settings
 
                 if(viewpoint)
                     names.Add("ViewPosition");
-
 
                 return names.ToArray();
             }
