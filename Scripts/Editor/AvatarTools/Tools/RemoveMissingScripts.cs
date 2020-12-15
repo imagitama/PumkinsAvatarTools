@@ -28,7 +28,7 @@ namespace Pumkin.AvatarTools2.Tools
                 removedCount++;
                 serializedObject.ApplyModifiedProperties();
             }
-            PumkinTools.Log($"Removed {removedCount} empty script from {target.name}", target);
+            PumkinTools.Log($"Removed <b>{removedCount}</b> empty script from <b>{target.name}</b>", target);
             return true;
         }
     }

@@ -10,30 +10,33 @@ namespace Pumkin.AvatarTools2.UI
     {
         const string RESOURCE_FOLDER_PREFIX = "Pumkin/Icons/";
 
-        public static GUIContent Settings { get; private set; }
-        public static GUIContent Options { get; private set; }
-        public static GUIContent Default { get; private set; }
-        public static GUIContent Add { get; private set; }
-        public static GUIContent Remove { get; private set; }
-        public static GUIContent RemoveAll { get; private set; }
+        public static Texture Settings { get; private set; }
+        public static Texture Options { get; private set; }
+        public static Texture Default { get; private set; }
+        public static Texture Add { get; private set; }
+        public static Texture Remove { get; private set; }
+        public static Texture RemoveAll { get; private set; }
+
 
         //Types
-        public static GUIContent AvatarDescriptor { get; private set; }
-        public static GUIContent Bone { get; private set; }
+        public static Texture AvatarDescriptor { get; private set; }
+        public static Texture Bone { get; private set; }
+        public static Texture BoneCollider { get; private set; }
 
 
         static Icons()
         {
-            Default = EditorGUIUtility.IconContent("DefaultAsset Icon");
-            Settings = EditorGUIUtility.IconContent("Settings");
-            Options = EditorGUIUtility.IconContent("LookDevPaneOption", "Options");
+            Default = EditorGUIUtility.IconContent("DefaultAsset Icon")?.image;
+            Settings = EditorGUIUtility.IconContent("Settings")?.image ?? Default;
+            Options = EditorGUIUtility.IconContent("LookDevPaneOption")?.image ?? Default;
 
-            Add = EditorGUIUtility.IconContent("Toolbar Plus");
-            Remove = EditorGUIUtility.IconContent("Toolbar Minus");
-            RemoveAll = EditorGUIUtility.IconContent("vcs_delete");
+            Add = EditorGUIUtility.IconContent("Toolbar Plus")?.image ?? Default;
+            Remove = EditorGUIUtility.IconContent("Toolbar Minus")?.image ?? Default;
+            RemoveAll = EditorGUIUtility.IconContent("vcs_delete")?.image ?? Default;
 
-            Bone = new GUIContent(GetIconTexureFromReources("DynamicBone")) ?? Default;
-            AvatarDescriptor = new GUIContent(GetTypeIconTextureFromResources("AvatarDescriptor")) ?? Default;
+            Bone = GetIconTexureFromReources("DynamicBone") ?? Default;
+            BoneCollider = GetIconTexureFromReources("DynamicBoneCollider") ?? Default;
+            AvatarDescriptor = GetTypeIconTextureFromResources("AvatarDescriptor") ?? Default;
         }
 
         /// <summary>
@@ -112,7 +115,7 @@ namespace Pumkin.AvatarTools2.UI
             //If not found try getting it from default unity icons. Disable logger as it always throws errors when done at initialization
             return FuncHelpers.InvokeWithoutUnityLogger(() =>
             {
-                return EditorGUIUtility.IconContent($"{type.Name} Icon")?.image ?? Default.image;
+                return EditorGUIUtility.IconContent($"{type.Name} Icon")?.image ?? Default;
             });
         }
 

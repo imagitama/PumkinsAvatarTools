@@ -99,7 +99,7 @@ namespace Pumkin.AvatarTools2.Tools
                 UIHelpers.VerticalBox(() =>
                 {
                     EditorGUILayout.Space();
-                    Settings?.Editor?.OnInspectorGUINoScriptField();
+                    Settings?.Editor?.OnInspectorGUI();
                 });
             }
         }

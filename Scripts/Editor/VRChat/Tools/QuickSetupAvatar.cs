@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Tools
 {
-    [AutoLoad("tools_quickSetupAvatar", "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
+    [AutoLoad("tools_quickSetupAvatar", "VRChat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     public class QuickSetupAvatar : ToolBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Quick Setup Avatar", -1);

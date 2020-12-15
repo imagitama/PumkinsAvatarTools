@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools2
 {
     static class ConfigurationManager
     {
-        public const string DEFAULT_CONFIGURATION = "generic";
+        public const string DEFAULT_CONFIGURATION = "General";
         static string[] _configurations;
         static string _configurationString;
 
@@ -32,7 +32,7 @@ namespace Pumkin.AvatarTools2
             get => _configurationString;
             set
             {
-                string newValue = string.IsNullOrWhiteSpace(value) ? "generic" : value;
+                string newValue = string.IsNullOrWhiteSpace(value) ? DEFAULT_CONFIGURATION : value;
                 if(_configurationString != newValue)
                 {
                     _configurationString = newValue;
@@ -75,8 +75,12 @@ namespace Pumkin.AvatarTools2
             var conf = new HashSet<string>();
             var cache = TypeHelpers.GetTypesWithAttribute<AutoLoadAttribute>().ToList();
 
-            var configCache = cache.SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings).ToList();
-            Configurations = new HashSet<string>(configCache).ToArray();
+            var configCache = cache
+                .SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .ToArray();
+
+            Configurations = configCache;
         }
     }
 }

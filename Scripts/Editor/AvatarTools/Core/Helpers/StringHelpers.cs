@@ -12,6 +12,9 @@ namespace Pumkin.Core.Helpers
     {
         public static string ToTitleCase(string example)
         {
+            if(string.IsNullOrWhiteSpace(example))
+                return example;
+
             var fromSnakeCase = example.Replace("_", " ");
             var lowerToUpper = Regex.Replace(fromSnakeCase, @"(\p{Ll})(\p{Lu})", "$1 $2");
             var sentenceCase = Regex.Replace(lowerToUpper, @"(\p{Lu}+)(\p{Lu}\p{Ll})", "$1 $2");

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Tools
 {
-    [AutoLoad(DefaultIDs.Tools.EditScale, "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
+    [AutoLoad(DefaultIDs.Tools.EditScale, "VRChat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class EditScale : ToolSceneGUIBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("[VRC] Edit Scale");

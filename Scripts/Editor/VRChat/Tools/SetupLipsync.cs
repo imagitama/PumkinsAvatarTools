@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Tools
 {
-    [AutoLoad(DefaultIDs.Tools.SetupLipsync, "vrchat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
+    [AutoLoad(DefaultIDs.Tools.SetupLipsync, "VRChat", ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
     class SetupLipsync : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

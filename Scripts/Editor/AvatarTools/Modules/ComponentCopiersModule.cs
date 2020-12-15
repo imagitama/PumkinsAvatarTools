@@ -13,6 +13,8 @@ namespace Pumkin.AvatarTools2.Modules
     [AutoLoad(DefaultIDs.Modules.Copier)]
     class ComponentCopiersModule : UIModuleBase
     {
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
+
         public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
 
         public static IgnoreList IgnoreList { get; } = new IgnoreList(OnAvatarSelectionChanged);
@@ -36,7 +38,6 @@ namespace Pumkin.AvatarTools2.Modules
 
         GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
 
-        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
 
         static GameObject _copyFromAvatar;
 

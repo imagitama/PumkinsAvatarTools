@@ -22,7 +22,8 @@ namespace Pumkin.AvatarTools2.UI
 
         Vector2 scroll = Vector2.zero;
 
-        GUIContent versionLabel = new GUIContent($"Version {PumkinTools.version.ToString()}");
+        GUIContent configLabel = new GUIContent(ConfigurationManager.CurrentConfigurationString);
+        GUIContent versionLabel = new GUIContent($"Version {PumkinTools.version}{PumkinTools.versionSuffix}");
 
         public IUIModule OrphanHolder
         {
@@ -53,7 +54,14 @@ namespace Pumkin.AvatarTools2.UI
                     drawSettings = !drawSettings;
             }
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.LabelField(versionLabel);
+
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.PrefixLabel(versionLabel, EditorStyles.label);
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.LabelField(configLabel, Styles.RightAlignedLabel);
+            }
+            EditorGUILayout.EndHorizontal();
 
             UIHelpers.DrawGUILine();
 

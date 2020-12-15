@@ -43,6 +43,7 @@ namespace Pumkin.AvatarTools2.Modules
                 }
             }
         }
+        bool showLookTarget = false;
 
         bool PlayAnimations
         {
@@ -153,6 +154,9 @@ namespace Pumkin.AvatarTools2.Modules
         {
             LookAtMouse = EditorGUILayout.ToggleLeft("Look at mouse", LookAtMouse);
 
+            if(LookAtMouse)
+                showLookTarget = EditorGUILayout.ToggleLeft("Show look target", showLookTarget);
+
             EditorGUILayout.Space();
 
             PlayAnimations = EditorGUILayout.ToggleLeft("Test Animations", PlayAnimations);
@@ -182,8 +186,8 @@ namespace Pumkin.AvatarTools2.Modules
         {
             if(LookAtMouse)
             {
-                //Animator.SetLookAtPosition(lookAtPosition);
-                DevHelpers.DrawDebugStar(lookAtPosition, 0.3f, 1);
+                if(showLookTarget)
+                    DevHelpers.DrawDebugStar(lookAtPosition, 0.1f, 0.5f);
                 Head.LookAt(lookAtPosition);
             }
             if(PlayAnimations)

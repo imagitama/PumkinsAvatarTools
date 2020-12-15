@@ -52,8 +52,6 @@ namespace Pumkin.AvatarTools2.Copiers
 
         protected bool shouldFixReferences = false;
 
-        bool drawSettings = true;
-
         GUIContent _content;
         Type _componentType;
         CopierSettingsContainerBase _baseSettings;

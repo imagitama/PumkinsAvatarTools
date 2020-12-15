@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Copiers
 {
-    [AutoLoad(DefaultIDs.Copiers.AudioSource, "vrchat", ParentModuleID = DefaultIDs.Modules.Copier)]
+    [AutoLoad(DefaultIDs.Copiers.AudioSource, "VRChat", ParentModuleID = DefaultIDs.Modules.Copier)]
     public class AudioSourceCopier : MultiComponentCopierBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("[VRC] Audio Source Copier");

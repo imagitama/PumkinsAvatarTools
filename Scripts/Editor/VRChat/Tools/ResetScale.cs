@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Tools
 {
-    [AutoLoad("tool_resetScale", "vrchat", ParentModuleID = "tools_fixAvatar")]
+    [AutoLoad(DefaultIDs.Tools.ResetScale, "VRChat", ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
     class ResetScale : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }

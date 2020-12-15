@@ -54,7 +54,7 @@ namespace Pumkin.AvatarTools2.Destroyers
                 throw new ArgumentNullException(ComponentTypeFullName, $"{ComponentTypeFullName} is invalid");
 
             if(!UIDefs)
-                UIDefs = new UIDefinition(_componentType?.Name ?? "Invalid Destroyer");
+                UIDefs = new UIDefinition(StringHelpers.ToTitleCase(_componentType?.Name) ?? "Invalid Destroyer");
 
             SetupSettings();
         }
@@ -126,7 +126,7 @@ namespace Pumkin.AvatarTools2.Destroyers
         {
             bool ignore = RemoveComponentsModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
             if(ignore)
-                PumkinTools.Log($"Ignoring {obj.name} because it's in the ignore list.");
+                PumkinTools.Log($"Ignoring <b>{obj.name}</b> because it's in the ignore list.");
             return ignore;
         }
 

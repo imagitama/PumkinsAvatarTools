@@ -46,7 +46,20 @@ namespace Pumkin.AvatarTools2
             OnAvatarSelectionChanged?.Invoke(newSelection);
         }
 
-        public static Version version { get; } = new Version(2, 0, 0);
+        //Version
+        public static Version version { get; } = new Version(2, 0);
+        static bool isWipVersion = true;
+
+        public static string versionSuffix
+        {
+            get
+            {
+                if(_versionSuffix == null)
+                    _versionSuffix = isWipVersion ? " - WIP" : "";
+                return _versionSuffix;
+            }
+        }
+        static string _versionSuffix = null;
 
         //Logger stuff
         public static PumkinLogger Logger { get; } = new PumkinLogger("blue", "Pumkin Tools");

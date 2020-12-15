@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Copiers
 {
-    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "vrchat", ParentModuleID = DefaultIDs.Modules.Copier)]
+    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "VRChat", ParentModuleID = DefaultIDs.Modules.Copier)]
     class AvatarDescriptorCopier : MultiComponentPropertyCopierBase
     {
         public override UIDefinition UIDefs { get; set; }
@@ -21,7 +21,7 @@ namespace Pumkin.AvatarTools2.VRChat.Copiers
         };
 
         protected override GUIContent CreateGUIContent() =>
-            new GUIContent(UIDefs.Name, Icons.AvatarDescriptor.image);
+            new GUIContent(UIDefs.Name, Icons.AvatarDescriptor);
 
         public override ISettingsContainer Settings => settings;
 

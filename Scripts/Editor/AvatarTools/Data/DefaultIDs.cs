@@ -17,16 +17,16 @@
 
         public static class Tools
         {
-            public const string EditScale = "tools_editScale";
-            public const string RemoveMissingScripts = "tools_removeMissingScripts";
-            public const string SetRendererAchors = "tools_setRendererAnchors";
-            public const string ResetScale = "tools_resetScale";
-            public const string ResetPose = "tools_resetPose";
-            public const string SetTPose = "tools_setTPose";
-            public const string ZeroBlendshapes = "tools_zeroBlendshapes";
-            public const string EditViewpoint = "tools_editViewpoint";
-            public const string SetupLipsync = "tools_setupLipsync";
-            public const string RevertTransforms = "tools_revertTransforms";
+            public const string EditScale = "tool_editScale";
+            public const string RemoveMissingScripts = "tool_removeMissingScripts";
+            public const string SetRendererAchors = "tool_setRendererAnchors";
+            public const string ResetScale = "tool_resetScale";
+            public const string ResetPose = "tool_resetPose";
+            public const string SetTPose = "tool_setTPose";
+            public const string ZeroBlendshapes = "tool_zeroBlendshapes";
+            public const string EditViewpoint = "tool_editViewpoint";
+            public const string SetupLipsync = "tool_setupLipsync";
+            public const string RevertTransforms = "tool_revertTransforms";
         }
 
         public static class Copiers

@@ -29,6 +29,7 @@ namespace Pumkin.AvatarTools2.UI
         public static GUIStyle CopierBox { get; private set; }
         public static GUIStyle SubToolButton { get; private set; }
         public static GUIStyle CopierCopyButton { get; private set; }
+        public static GUIStyle RightAlignedLabel { get; private set; }
 
         public static float CopierTabHeight { get; private set; } = 22f;
 
@@ -163,6 +164,12 @@ namespace Pumkin.AvatarTools2.UI
             BigButton = new GUIStyle("button")
             {
                 fixedHeight = 28f,
+            };
+
+            RightAlignedLabel = new GUIStyle(EditorStyles.label)
+            {
+                alignment = TextAnchor.UpperRight,
+                stretchWidth = false,
             };
 
             SubToolButton = MediumButton;

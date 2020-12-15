@@ -27,7 +27,7 @@ namespace Pumkin.AvatarTools2
             UI = UIBuilder.BuildUI();
         }
 
-        [MenuItem("Pumkin/Avatar Tools", false, 0)]
+        [MenuItem("Pumkin/Tools/Avatar Tools 2", false, 0)]
         public static void ShowWindow()
         {
             //Show existing window instance. If one doesn't exist, make one.

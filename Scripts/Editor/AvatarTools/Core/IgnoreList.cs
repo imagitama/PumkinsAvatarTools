@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Pumkin.AvatarTools2.Core
 {
@@ -27,10 +23,11 @@ namespace Pumkin.AvatarTools2.Core
         bool expanded = false;
 
         Vector2 scrollPos = Vector2.zero;
-        static float minHeight = 30f;
-        static float maxHeight = 100f;
-        static string label = "Ignore objects";
-        static string childrenLabel = "Include children";
+        static readonly float minHeight = 30f;
+        static readonly float maxHeight = 100f;
+
+        static readonly string label = "Ignore objects";
+        static readonly string childrenLabel = "Include children";
 
         SerializedObject serializedIgnoreList;
 

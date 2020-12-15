@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Destroyers
 {
-    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "vrchat", ParentModuleID = DefaultIDs.Modules.Destroyer)]
+    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "VRChat", ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class AvatarDescriptorDestroyer : MultiComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Avatar Descriptor");
@@ -19,7 +19,7 @@ namespace Pumkin.AvatarTools2.VRChat.Destroyers
 
         protected override GUIContent CreateGUIContent()
         {
-            return new GUIContent(UIDefs.Name, Icons.AvatarDescriptor.image);
+            return new GUIContent(UIDefs.Name, Icons.AvatarDescriptor);
         }
     }
 }
