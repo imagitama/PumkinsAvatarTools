@@ -30,7 +30,7 @@ namespace Pumkin.Core.Helpers
             //return EditorGUILayout.Foldout(value, content, toggleOnClick, style);
         }
 
-        public static void DrawGUILine(float height = 1f, bool spaceBefore = true, bool spaceAfter = true)
+        public static void DrawLine(float height = 1f, bool spaceBefore = true, bool spaceAfter = true)
         {
             if(spaceBefore)
                 EditorGUILayout.Space();

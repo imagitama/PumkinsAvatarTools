@@ -27,7 +27,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
         GameObject avatar = null;
 
-        MaterialCache cache = new MaterialCache(".fallback_cache");
+        MaterialCache cache = new MaterialCache();
 
         TrustRanks trustRank = TrustRanks.Friend;
 
@@ -38,11 +38,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
         protected override bool DoAction(GameObject target)
         {
-            //Get renderers and check if any material names are guids
+            //Get renderers and check if any material names are GUIDs
             var renders = target.GetComponentsInChildren<Renderer>(true);
-            var hasFallbacks = renders
-                .Select(r => GUID.TryParse(r.sharedMaterial.name, out GUID _))
-                .Any(b => b);
+            bool hasFallbacks = HasCachedMaterials(renders);
 
             //If they are, restore materials, if they aren't set fallbacks
             if(hasFallbacks)
@@ -53,6 +51,10 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             return true;
         }
 
+        /// <summary>
+        /// Assigns back the original materials to the renderers
+        /// </summary>
+        /// <param name="renders"></param>
         private void RevertFallbacks(Renderer[] renders)
         {
             foreach(var r in renders)
@@ -62,10 +64,10 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
                 for(int i = 0; i < r.sharedMaterials.Length; i++)
                 {
-                    var newMat = cache.GetOriginalFromCached(r.sharedMaterials[i]);
+                    var newMat = cache.GetOriginalMaterialFromCached(r.sharedMaterials[i]);
                     if(!newMat)
                     {
-                        PumkinTools.LogError($"Can't find original material for material in slot <b>{i}</b> on <b>{r.gameObject}</b>");
+                        PumkinTools.LogWarning($"Can't find original material for material <b>slot {i}</b> on <b>{r.gameObject.name}</b>");
                         continue;
                     }
                     var mat = materials.GetArrayElementAtIndex(i);
@@ -76,6 +78,10 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             }
         }
 
+        /// <summary>
+        /// Sets all materials on the renderers to copies using fallback shaders
+        /// </summary>
+        /// <param name="renders"></param>
         private void SetFallbacks(Renderer[] renders)
         {
             foreach(var r in renders)
@@ -85,7 +91,11 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
                 for(int i = 0; i < r.sharedMaterials.Length; i++)
                 {
-                    var newMat = cache.GetCachedCopy(r.sharedMaterials[i], out bool wasCreated);
+                    var oldMat = r.sharedMaterials[i];
+                    if(AssetDatabaseHelpers.IsBuiltInAsset(oldMat))
+                        continue;
+
+                    var newMat = cache.GetCachedCopy(oldMat, out bool wasCreated);
 
                     var mat = materials.GetArrayElementAtIndex(i);
                     mat.objectReferenceValue = newMat;
@@ -95,11 +105,17 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                 serial.ApplyModifiedProperties();
                 PumkinTools.Log($"Set fallback materials for <b>{r.gameObject.name}</b>");
             }
-
         }
 
+        /// <summary>
+        /// Sets the shader of the material to a fallback variant
+        /// </summary>
+        /// <param name="mat"></param>
         void SetFallbackShader(Material mat)
         {
+            if(!mat)
+                return;
+
             string currShaderName = mat.shader.name;
             var trustRankColor = TrustRankColors.GetColorForRank(trustRank);
 
@@ -132,9 +148,26 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
         private void OnAvatarSelectionChanged(GameObject newSelection)
         {
             if(avatar)
-                RevertFallbacks(avatar.GetComponentsInChildren<Renderer>(true));
+            {
+                var renders = avatar.GetComponentsInChildren<Renderer>(true);
+                if(HasCachedMaterials(renders))
+                    RevertFallbacks(renders);
+            }
             avatar = newSelection;
         }
+
+        /// <summary>
+        /// Returns true if any material in renderers has a GUID as it's name
+        /// </summary>
+        /// <param name="renderers"></param>
+        /// <returns></returns>
+        static bool HasCachedMaterials(Renderer[] renderers)
+        {
+            return renderers
+                .Select(r => GUID.TryParse(r.sharedMaterial.name, out GUID _))
+                .Any(b => b);
+        }
+
         public override void Dispose()
         {
             PumkinTools.OnAvatarSelectionChanged -= OnAvatarSelectionChanged;

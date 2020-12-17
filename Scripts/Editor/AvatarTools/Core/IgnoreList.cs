@@ -105,11 +105,11 @@ namespace Pumkin.AvatarTools2
                 EditorGUI.BeginDisabledGroup(!enabled);
                 if(expanded)
                 {
-                    UIHelpers.DrawGUILine();
+                    UIHelpers.DrawLine();
                     if(UIHelpers.DrawListWithAddButtonsScrolling(ignoredTransforms, ref scrollPos, minHeight, maxHeight))
                         TransformListToPaths();
 
-                    UIHelpers.DrawGUILine();
+                    UIHelpers.DrawLine();
                     includeChildren = GUILayout.Toggle(includeChildren, childrenLabel);
                 }
                 EditorGUI.EndDisabledGroup();

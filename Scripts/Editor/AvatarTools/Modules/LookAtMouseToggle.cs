@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,58 +14,49 @@ namespace Pumkin.AvatarTools2.Tools
     [AutoLoad(DefaultIDs.Tools.LookAtMouseToggle, ParentModuleID = DefaultIDs.Modules.TestAvatar)]
     public class LookAtMouseToggle : ToolUpdateToggleBase
     {
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Look at Mouse");
+        public override bool EnabledInUI => PumkinTools.SelectedAvatar != null;
         Quaternion StartHeadRotation { get; set; }
+
         Vector3 lookAtPosition;
         Transform head;
 
         bool showLookTarget = false;
         private bool _lookAtMouse;
 
-        bool ShouldLookAtMouse
+        public LookAtMouseToggle()
         {
-            get => _lookAtMouse;
-            set
-            {
-                if(value == _lookAtMouse)
-                    return;
-
-                _lookAtMouse = value;
-                if(head)
-                {
-                    if(value)
-                        StartHeadRotation = head.rotation;
-                    else
-                        head.rotation = StartHeadRotation;
-                }
-            }
+            PumkinTools.OnAvatarSelectionChanged += OnAvatarSelectionChanged;
         }
 
-        protected override void OnEnable()
+        protected override void OnDisableToggle()
         {
-            base.OnEnable();
-            ShouldLookAtMouse = true;
+            base.OnDisableToggle();
+            RestoreOldAvatar();
         }
 
-        protected override void OnDisable()
+        private void OnAvatarSelectionChanged(GameObject newSelection)
         {
-            base.OnDisable();
-            ShouldLookAtMouse = false;
+            RestoreOldAvatar();
+            SetupNewAvatar(newSelection);
         }
 
-        public override bool EnabledInUI => PumkinTools.SelectedAvatar != null;
-
-        protected override bool Prepare(GameObject target)
+        void SetupNewAvatar(GameObject newAvatar)
         {
-            if(!base.Prepare(target))
-                return false;
+            if(!newAvatar)
+                return;
 
-            var anim = target.GetComponent<Animator>();
+            var anim = newAvatar.GetComponent<Animator>();
             if(!anim)
-                return false;
+                return;
 
             head = anim.GetBoneTransform(HumanBodyBones.Head);
+        }
 
-            return true;
+        void RestoreOldAvatar()
+        {
+            if(head)
+                head.transform.rotation = StartHeadRotation;
         }
 
         protected override void OnSceneGUI(SceneView sceneView)

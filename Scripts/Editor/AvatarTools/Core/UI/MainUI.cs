@@ -63,7 +63,7 @@ namespace Pumkin.AvatarTools2.UI
             }
             EditorGUILayout.EndHorizontal();
 
-            UIHelpers.DrawGUILine();
+            UIHelpers.DrawLine();
 
             if(drawSettings)
             {
@@ -75,7 +75,7 @@ namespace Pumkin.AvatarTools2.UI
 
             if(GUILayout.Button("Select from Scene"))
                 PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
-            UIHelpers.DrawGUILine();
+            UIHelpers.DrawLine();
 
             scroll = EditorGUILayout.BeginScrollView(scroll);
 

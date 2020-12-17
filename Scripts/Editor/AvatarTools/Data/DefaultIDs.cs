@@ -30,6 +30,7 @@
             public const string SetupLipsync = "tool_setupLipsync";
             public const string RevertTransforms = "tool_revertTransforms";
             public const string LookAtMouseToggle = "tool_lookAtMouseToggle";
+            public const string TestAnimations = "tool_testAnimations";
 
         }
 

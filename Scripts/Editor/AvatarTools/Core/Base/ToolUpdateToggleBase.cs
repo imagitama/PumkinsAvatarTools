@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pumkin.Core.Helpers;
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,13 +31,13 @@ namespace Pumkin.AvatarTools2.Tools
             }
         }
 
-        protected virtual void OnEnable()
+        protected virtual void OnEnableToggle()
         {
             CanUpdate = true;
             CanDrawSceneGUI = true;
         }
 
-        protected virtual void OnDisable()
+        protected virtual void OnDisableToggle()
         {
             CanUpdate = false;
             CanDrawSceneGUI = false;
@@ -49,20 +50,22 @@ namespace Pumkin.AvatarTools2.Tools
 
         public override void DrawUI(params GUILayoutOption[] options)
         {
+            UIHelpers.DrawLine();
             EditorGUI.BeginChangeCheck();
             bool flag = EditorGUILayout.ToggleLeft(Content, CanUpdate, options);
             if(EditorGUI.EndChangeCheck())
             {
                 CallbackThenPrepare(flag, PumkinTools.SelectedAvatar);
             }
+            UIHelpers.DrawLine();
         }
 
         void CallbackThenPrepare(bool flag, GameObject target)
         {
             if(flag && Prepare(target))
-                OnEnable();
+                OnEnableToggle();
             else
-                OnDisable();
+                OnDisableToggle();
             DoAction(target);
         }
 

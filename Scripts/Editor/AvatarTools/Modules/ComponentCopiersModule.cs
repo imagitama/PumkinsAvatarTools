@@ -65,7 +65,7 @@ namespace Pumkin.AvatarTools2.Modules
             }
 #endif
 
-            UIHelpers.DrawGUILine();
+            UIHelpers.DrawLine();
 
             EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromAvatar);
             {
@@ -79,11 +79,11 @@ namespace Pumkin.AvatarTools2.Modules
             }
             EditorGUI.EndDisabledGroup();
 
-            UIHelpers.DrawGUILine();
+            UIHelpers.DrawLine();
 
             IgnoreList?.DrawUI();
 
-            UIHelpers.DrawGUILine();
+            UIHelpers.DrawLine();
 
             EditorGUI.BeginDisabledGroup(!CanCopy);
             {

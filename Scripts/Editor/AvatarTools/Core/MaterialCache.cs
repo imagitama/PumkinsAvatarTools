@@ -11,9 +11,13 @@ using UnityEngine;
 
 namespace Pumkin.Core
 {
+    /// <summary>
+    /// Creates a material cache in the Assets folder that allows you to associate a material with a cached copy of it.
+    /// The cached copy has the GUID of the original material as it's name, which allows us to find the original again.
+    /// </summary>
     public class MaterialCache
     {
-        const string DEFAULT_CACHE_PATH = "_materialcache";
+        public const string DEFAULT_CACHE_PATH = "_materialcache";
 
         string CachePath
         {
@@ -28,16 +32,28 @@ namespace Pumkin.Core
         }
         string _cachePath;
 
-        //static List<string> _materialGUIDs = new List<string>();
-        //static List<string> _fallbackGUIDs = new List<string>();
-
         Dictionary<Material, Material> cache = new Dictionary<Material, Material>();
 
         private MaterialCache() { }
 
+        /// <summary>
+        /// Creates the cache
+        /// </summary>
+        /// <param name="cachePath">Path for the cache inside the assets folder. Shouldn not start with "Assets"</param>
+        /// <param name="materials">Initial materials to cache</param>
         public MaterialCache(string cachePath = null, params Material[] materials)
         {
-            this.CachePath = cachePath;
+            var invalid = Path.GetInvalidPathChars()
+                .Union( new char[] { '.' })
+                .ToArray();
+
+            if(cachePath != null && cachePath.IndexOfAny(invalid) != -1)
+            {
+                PumkinTools.LogWarning($"Cache path <b>{cachePath}</b> contains invalid characters. Using default path");
+                CachePath = DEFAULT_CACHE_PATH;
+            }
+
+            CachePath = string.IsNullOrWhiteSpace(cachePath) ? DEFAULT_CACHE_PATH : cachePath;
             UpdateCache(materials);
         }
 
@@ -45,7 +61,7 @@ namespace Pumkin.Core
         /// Gets or creates a material in the cache folder
         /// </summary>
         /// <param name="original"></param>
-        /// <returns></returns>
+        /// <returns>Returns the new material from the cache</returns>
         public Material GetCachedCopy(Material original, out bool wasCreated)
         {
             CachePath = DEFAULT_CACHE_PATH;
@@ -89,6 +105,10 @@ namespace Pumkin.Core
             return null;
         }
 
+        /// <summary>
+        /// Caches all given materials into the cache folder
+        /// </summary>
+        /// <param name="materials"></param>
         public void UpdateCache(Material[] materials)
         {
             if(materials.IsNullOrEmpty())
@@ -108,12 +128,17 @@ namespace Pumkin.Core
             }
         }
 
-        public Material GetOriginalFromCached(Material material)
+        /// <summary>
+        /// Gets the original material from the cached material
+        /// </summary>
+        /// <param name="cachedMaterial">Material who's name is used to find the original material again</param>
+        /// <returns>The original material</returns>
+        public Material GetOriginalMaterialFromCached(Material cachedMaterial)
         {
-            if(!material)
+            if(!cachedMaterial)
                 return null;
 
-            if(!GUID.TryParse(material.name, out GUID guid))
+            if(!GUID.TryParse(cachedMaterial.name, out GUID guid))
                 return null;
 
             var path = AssetDatabase.GUIDToAssetPath(guid.ToString());
@@ -122,45 +147,5 @@ namespace Pumkin.Core
 
             return AssetDatabase.LoadAssetAtPath<Material>(path);
         }
-
-        //static void Serialize()
-        //{
-        //    _materialGUIDs = new List<string>();
-        //    _fallbackGUIDs = new List<string>();
-
-        //    foreach(var kv in cache)
-        //    {
-        //        if(kv.Key && kv.Value)
-        //        {
-        //            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(kv.Key, out string matGuid, out long _);
-        //            AssetDatabase.TryGetGUIDAndLocalFileIdentifier(kv.Key, out string fallGuid, out long _);
-
-        //            _materialGUIDs.Add(matGuid);
-        //            _fallbackGUIDs.Add(fallGuid);
-        //        }
-        //    }
-        //}
-
-        //static void Deserialize()
-        //{
-        //    cache = new Dictionary<Material, Material>();
-
-        //    for(int i = 0; i < _materialGUIDs.Count; i++)
-        //    {
-        //        var matPath = AssetDatabase.GUIDToAssetPath(_materialGUIDs[i]);
-        //        var fallPath = AssetDatabase.GUIDToAssetPath(_fallbackGUIDs[i]);
-
-        //        if(string.IsNullOrEmpty(matPath) || string.IsNullOrEmpty(fallPath))
-        //            continue;
-
-        //        var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
-        //        var fall = AssetDatabase.LoadAssetAtPath<Material>(fallPath);
-
-        //        if(!mat || !fall)
-        //            continue;
-
-        //        cache[mat] = fall;
-        //    }
-        //}
     }
 }

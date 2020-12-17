@@ -34,7 +34,14 @@ namespace Pumkin.AvatarTools2
                 {
                     if(newAvatar != null)
                         newAvatar = newAvatar.transform.root.gameObject;
-                    OnAvatarSelectionChanged?.Invoke(newAvatar);
+                    try
+                    {
+                        OnAvatarSelectionChanged?.Invoke(newAvatar);
+                    }
+                    catch(Exception e)
+                    {
+                        PumkinTools.LogException(e);
+                    }
                 }
                 _selectedAvatar = newAvatar;
             }
