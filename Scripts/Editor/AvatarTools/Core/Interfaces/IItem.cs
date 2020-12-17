@@ -27,6 +27,8 @@ namespace Pumkin.AvatarTools2.Interfaces
 
         ISettingsContainer Settings { get; }
 
+        bool EnabledInUI { get; set; }
+
         UIDefinition UIDefs { get; set; }
     }
 }

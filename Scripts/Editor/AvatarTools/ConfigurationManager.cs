@@ -1,5 +1,4 @@
-﻿using Pumkin.AvatarTools2.Core;
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using System;
 using System.Collections.Generic;

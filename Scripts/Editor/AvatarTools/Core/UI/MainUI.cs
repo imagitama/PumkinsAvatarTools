@@ -14,7 +14,7 @@ namespace Pumkin.AvatarTools2.UI
     /// <summary>
     /// Main UI class, responsible for drawing everything
     /// </summary>
-    class MainUI
+    public class MainUI
     {
         public List<IUIModule> UIModules = new List<IUIModule>();
         public List<UIModuleBase> mods = new List<UIModuleBase>();

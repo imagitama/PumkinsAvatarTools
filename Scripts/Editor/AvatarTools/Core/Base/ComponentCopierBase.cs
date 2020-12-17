@@ -50,6 +50,8 @@ namespace Pumkin.AvatarTools2.Copiers
 
         public virtual ISettingsContainer Settings => _baseSettings;
 
+        public bool EnabledInUI { get; set; }
+
         protected bool shouldFixReferences = false;
 
         GUIContent _content;

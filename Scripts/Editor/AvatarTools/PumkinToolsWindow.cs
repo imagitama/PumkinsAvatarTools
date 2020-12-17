@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools2
 {
     [ExecuteInEditMode, CanEditMultipleObjects]
-    class PumkinToolsWindow : EditorWindow
+    public class PumkinToolsWindow : EditorWindow
     {
         public static MainUI UI { get; set; }
         static Vector2 minWindowSize = new Vector2(360,580);

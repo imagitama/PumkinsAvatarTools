@@ -33,11 +33,6 @@ namespace Pumkin.Core.UI
         public List<UIModuleStyles> ModuleStyles { get; set; }
 
         /// <summary>
-        /// Whether or not this item should be enabled in the UI
-        /// </summary>
-        public bool EnabledInUI { get; set; }
-
-        /// <summary>
         /// Whether or not this item should be expanded in the UI
         /// </summary>
         public bool IsExpanded { get; set; }
@@ -59,7 +54,6 @@ namespace Pumkin.Core.UI
             OrderInUI = orderInUI;
             ModuleStyles = moduleStyles?.ToList() ?? new List<UIModuleStyles>();
 
-            EnabledInUI = true;
             IsExpanded = false;
             IsHidden = false;
             ExpandSettings = false;
@@ -77,7 +71,7 @@ namespace Pumkin.Core.UI
         /// <summary>
         /// Forces IItem to draw alone even when DrawChildrenInHorizontalPairs is defined in module. Only works for IItem
         /// </summary>
-        public bool DrawAlone { get; set; }
+        //public bool DrawAlone { get; set; }
 
         public bool HasStyle(UIModuleStyles style) =>
             ModuleStyles.Exists(t => t == style);

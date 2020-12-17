@@ -15,7 +15,10 @@ namespace Pumkin.AvatarTools2.Tools
     /// </summary>
     public abstract class ToolBase : ITool, IDisposable
     {
+        public virtual UIDefinition UIDefs { get; set; }
+
         public string GameConfigurationString { get; set; }
+
         public bool CanUpdate
         {
             get
@@ -34,6 +37,7 @@ namespace Pumkin.AvatarTools2.Tools
                     SetupUpdateCallback(ref updateCallback, false);
             }
         }
+
         public virtual GUIContent Content
         {
             get
@@ -49,12 +53,12 @@ namespace Pumkin.AvatarTools2.Tools
             return new GUIContent(UIDefs.Name, UIDefs.Description);
         }
 
+        public virtual bool EnabledInUI { get; set; } = true;
+
         public virtual ISettingsContainer Settings => null;
-        public virtual UIDefinition UIDefs { get; set; }
 
         bool _allowUpdate;
         GUIContent _content;
-
         EditorApplication.CallbackFunction updateCallback;
 
         public SerializedObject serializedObject;
@@ -62,7 +66,7 @@ namespace Pumkin.AvatarTools2.Tools
         public ToolBase()
         {
             if(UIDefs == null)
-                UIDefs = new UIDefinition(GetType().Name);
+                UIDefs = new UIDefinition(StringHelpers.ToTitleCase(GetType().Name));
             SetupSettings();
         }
 

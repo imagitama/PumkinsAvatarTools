@@ -1,8 +1,7 @@
 {
     "name": "Pumkin.AvatarTools2.VRChat",
     "references": [
-        "Pumkin.AvatarTools2",
-        "PumkinTools2.Core"
+        "Pumkin.AvatarTools2"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

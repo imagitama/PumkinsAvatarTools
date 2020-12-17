@@ -1,5 +1,4 @@
 ﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools2.Core;
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;

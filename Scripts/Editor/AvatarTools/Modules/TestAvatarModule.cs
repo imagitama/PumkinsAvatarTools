@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Modules
 {
-    [AutoLoad("Test Avatar")]
+    [AutoLoad(DefaultIDs.Modules.TestAvatar)]
     class TestAvatarModule : UIModuleBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Test Avatar", 4);
@@ -18,32 +18,6 @@ namespace Pumkin.AvatarTools2.Modules
 
         RuntimeAnimatorController OldRuntimeController { get; set; }
 
-        Transform Head { get; set; }
-
-
-        //Look At Mouse
-        Quaternion StartHeadRotation { get; set; }
-        Vector3 lookAtPosition;
-
-        bool LookAtMouse
-        {
-            get => _lookAtMouse;
-            set
-            {
-                if(value == _lookAtMouse)
-                    return;
-
-                _lookAtMouse = value;
-                if(Avatar && Head)
-                {
-                    if(value)
-                        StartHeadRotation = Head.rotation;
-                    else
-                        Head.rotation = StartHeadRotation;
-                }
-            }
-        }
-        bool showLookTarget = false;
 
         bool PlayAnimations
         {
@@ -91,7 +65,6 @@ namespace Pumkin.AvatarTools2.Modules
             if(mode == PlayModeStateChange.ExitingPlayMode)
             {
                 PlayAnimations = false;
-                LookAtMouse = false;
             }
         }
 
@@ -111,7 +84,6 @@ namespace Pumkin.AvatarTools2.Modules
             if(Animator)
             {
                 OldRuntimeController = Animator.runtimeAnimatorController ?? null;
-                Head = Animator.GetBoneTransform(HumanBodyBones.Head) ?? null;
             }
         }
 
@@ -122,74 +94,29 @@ namespace Pumkin.AvatarTools2.Modules
 
             if(Animator)
                 Animator.runtimeAnimatorController = OldRuntimeController;
-            if(Head)
-                Head.transform.rotation = StartHeadRotation;
 
             Avatar = null;
             Animator = null;
-            Head = null;
         }
 
         public override void DrawContent()
         {
-            if(!EditorApplication.isPlaying)
-            {
-                EditorGUILayout.HelpBox("Please start play mode", MessageType.Info);
-                return;
-            }
-            if(!Avatar || !Animator || !Animator.isHuman)
-            {
-                EditorGUILayout.HelpBox("Please select a humanoid avatar", MessageType.Info);
-                return;
-            }
-
             DrawControlls();
             base.DrawContent();
 
-            CanDrawSceneGUI = LookAtMouse;
-            CanUpdate = LookAtMouse || PlayAnimations;
+            CanUpdate = PlayAnimations;
         }
 
         void DrawControlls()
         {
-            LookAtMouse = EditorGUILayout.ToggleLeft("Look at mouse", LookAtMouse);
-
-            if(LookAtMouse)
-                showLookTarget = EditorGUILayout.ToggleLeft("Show look target", showLookTarget);
-
-            EditorGUILayout.Space();
-
             PlayAnimations = EditorGUILayout.ToggleLeft("Test Animations", PlayAnimations);
 
             if(PlayAnimations)
                 animation = (TestAnimation)EditorGUILayout.EnumPopup("Animation", animation);
         }
 
-        public override void OnSceneGUI(SceneView sceneView)
-        {
-            //Get mouse position in world space
-            if(LookAtMouse)
-            {
-                float lookAtDistance = (sceneView.camera.transform.position.magnitude - Head.transform.position.magnitude) * 0.5f;
-                lookAtDistance = Mathf.Clamp(lookAtDistance, 0.1f, 1);
-                Vector3 distanceFromCam = new Vector3(sceneView.camera.transform.position.x, sceneView.camera.transform.position.y, lookAtDistance);
-                Plane plane = new Plane(Vector3.forward, distanceFromCam);
-
-                Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-
-                if(plane.Raycast(ray, out float enter))
-                    lookAtPosition = ray.GetPoint(enter);
-            }
-        }
-
         public override void Update()
         {
-            if(LookAtMouse)
-            {
-                if(showLookTarget)
-                    DevHelpers.DrawDebugStar(lookAtPosition, 0.1f, 0.5f);
-                Head.LookAt(lookAtPosition);
-            }
             if(PlayAnimations)
                 Animator.SetFloat("Animation", (float)animation);
         }

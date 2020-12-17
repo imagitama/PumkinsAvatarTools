@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
+    //TODO: Redo this class. I don't like it.
     public abstract class ToolSceneGUIBase : ITool
     {
         public bool CanDrawSceneGUI
@@ -69,6 +70,7 @@ namespace Pumkin.AvatarTools2.Tools
         }
 
         public virtual UIDefinition UIDefs { get; set; }
+        public bool EnabledInUI { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         bool _allowSceneGUI;
         bool _allowUpdate;
@@ -111,7 +113,7 @@ namespace Pumkin.AvatarTools2.Tools
         {
             if(add)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for <b>{UIDefs.Name}</b>");
+                PumkinTools.LogVerbose($"Setting up OnSceneGUI callback for <b>{UIDefs.Name}</b>");
                 SceneView.onSceneGUIDelegate += OnSceneGUI;
             }
             else
@@ -195,7 +197,7 @@ namespace Pumkin.AvatarTools2.Tools
                     editorToolOld = UnityEditor.Tools.current;
                     UnityEditor.Tools.current = Tool.None;
                     CanDrawSceneGUI = true;
-                    UIDefs.EnabledInUI = false;
+                    EnabledInUI = false;
                 }
                 else
                 {
@@ -213,7 +215,7 @@ namespace Pumkin.AvatarTools2.Tools
         protected virtual void Finish(GameObject target, bool success)
         {
             CanDrawSceneGUI = false;
-            UIDefs.EnabledInUI = true;
+            EnabledInUI = true;
 
             UnityEditor.Tools.current = editorToolOld;
 

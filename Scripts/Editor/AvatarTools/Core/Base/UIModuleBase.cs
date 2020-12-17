@@ -121,7 +121,7 @@ namespace Pumkin.AvatarTools2.Modules
         {
             if(add)
             {
-                PumkinTools.LogVerbose($"Setting up Update callback for <b>{UIDefs.Name}</b>");
+                PumkinTools.LogVerbose($"Setting up OnSceneGUI callback for <b>{UIDefs.Name}</b>");
                 SceneView.onSceneGUIDelegate += CheckThenOnSceneGUI;
             }
             else
@@ -205,7 +205,7 @@ namespace Pumkin.AvatarTools2.Modules
                 {
                     if(sub == null)
                         continue;
-                    EditorGUI.BeginDisabledGroup(!sub.UIDefs.EnabledInUI);
+                    EditorGUI.BeginDisabledGroup(!sub.EnabledInUI);
                     sub.DrawUI();
                     EditorGUI.EndDisabledGroup();
                 }
@@ -225,8 +225,8 @@ namespace Pumkin.AvatarTools2.Modules
             SubItems = SubItems?.OrderBy(t => t?.UIDefs?.OrderInUI)?.ToList() ?? SubItems;
 
             //Try to order by whether or not item has a settings button so stuff pairs up nicer
-            if(shouldDrawChildrenInHorizontalPairs) //TODO: Figure out the draw alone thing
-                SubItems = SubItems?.OrderBy(t => t?.Settings != null || t.UIDefs.DrawAlone).ToList() ?? SubItems;
+            //if(shouldDrawChildrenInHorizontalPairs) //TODO: Figure out the draw alone thing
+            //    SubItems = SubItems?.OrderBy(t => t?.Settings != null || t.UIDefs.DrawAlone).ToList() ?? SubItems;
 
             ChildModules = ChildModules.OrderBy(t => t.UIDefs.OrderInUI).ToList();
             ChildModules.ForEach(x => x.OrderChildren());

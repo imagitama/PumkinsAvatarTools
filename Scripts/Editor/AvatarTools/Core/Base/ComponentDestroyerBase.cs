@@ -19,6 +19,8 @@ namespace Pumkin.AvatarTools2.Destroyers
 
         public string GameConfigurationString { get; set; }
 
+        public bool EnabledInUI { get; set; }
+
         public virtual GUIContent Content
         {
             get

@@ -9,7 +9,7 @@ using Pumkin.Core.Helpers;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Core
+namespace Pumkin.AvatarTools2
 {
     public class IgnoreList : IDisposable
     {

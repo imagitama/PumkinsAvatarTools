@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Core
+namespace Pumkin.AvatarTools2
 {
     /// <summary>
     /// Gets and sets preferences on a per project basis.

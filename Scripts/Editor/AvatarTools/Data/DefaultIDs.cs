@@ -12,6 +12,8 @@
 
             public const string Copier = "copiers";
 
+            public const string TestAvatar = "testAvatar";
+
             public const string Debug = "debug";
         }
 
@@ -27,6 +29,8 @@
             public const string EditViewpoint = "tool_editViewpoint";
             public const string SetupLipsync = "tool_setupLipsync";
             public const string RevertTransforms = "tool_revertTransforms";
+            public const string LookAtMouseToggle = "tool_lookAtMouseToggle";
+
         }
 
         public static class Copiers
