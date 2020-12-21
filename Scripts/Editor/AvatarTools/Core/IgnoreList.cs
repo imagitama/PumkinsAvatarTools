@@ -95,7 +95,7 @@ namespace Pumkin.AvatarTools2
 
         public void DrawUI()
         {
-            UIHelpers.VerticalBox(() =>
+            UIHelpers.DrawInVerticalBox(() =>
             {
                 EditorGUILayout.BeginHorizontal();
                 enabled = EditorGUILayout.ToggleLeft(label, enabled);

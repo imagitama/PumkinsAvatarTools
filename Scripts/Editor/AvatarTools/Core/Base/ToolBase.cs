@@ -100,7 +100,7 @@ namespace Pumkin.AvatarTools2.Tools
             //Draw settings here
             if(Settings != null && UIDefs.ExpandSettings)
             {
-                UIHelpers.VerticalBox(() =>
+                UIHelpers.DrawInVerticalBox(() =>
                 {
                     EditorGUILayout.Space();
                     Settings?.Editor?.OnInspectorGUI();

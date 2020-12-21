@@ -39,14 +39,14 @@ namespace Pumkin.Core.Helpers
                 EditorGUILayout.Space();
         }
 
-        public static void VerticalBox(Action action, GUIStyle style = null, params GUILayoutOption[] options)
+        public static void DrawInVerticalBox(Action action, GUIStyle style = null, params GUILayoutOption[] options)
         {
             EditorGUILayout.BeginVertical(style ?? Styles.Box, options);
             action.Invoke();
             EditorGUILayout.EndVertical();
         }
 
-        public static void HorizontalBox(Action action, GUIStyle style = null, params GUILayoutOption[] options)
+        public static void DrawInHorizontalBox(Action action, GUIStyle style = null, params GUILayoutOption[] options)
         {
             EditorGUILayout.BeginHorizontal(style ?? Styles.Box, options);
             action.Invoke();

@@ -135,6 +135,10 @@ namespace Pumkin.AvatarTools2.UI
 
             if(EditorGUI.EndChangeCheck())
                 PumkinTools.VerboseLogger.logEnabled = logVerbose;
+
+            UIHelpers.DrawLine();
+
+            Credits.DrawUI();
         }
 
         public IUIModule FindModule(string name)

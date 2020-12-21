@@ -158,7 +158,7 @@ namespace Pumkin.AvatarTools2.Modules
             {
                 if(shouldDrawBorder)
                 {
-                    UIHelpers.VerticalBox(drawContent, Styles.ModuleBox);
+                    UIHelpers.DrawInVerticalBox(drawContent, Styles.ModuleBox);
                 }
                 else
                 {

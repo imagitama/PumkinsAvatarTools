@@ -146,7 +146,7 @@ namespace Pumkin.AvatarTools2.Destroyers
             //Draw settings here
             if(Settings != null && UIDefs.ExpandSettings)
             {
-                UIHelpers.VerticalBox(() =>
+                UIHelpers.DrawInVerticalBox(() =>
                 {
                     EditorGUILayout.Space();
                     Settings?.Editor?.OnInspectorGUINoScriptField();

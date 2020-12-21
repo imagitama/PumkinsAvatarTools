@@ -71,7 +71,7 @@ namespace Pumkin.AvatarTools2.Modules
             {
                 foreach(var copier in SubItems)
                 {
-                    UIHelpers.VerticalBox(() =>
+                    UIHelpers.DrawInVerticalBox(() =>
                     {
                         copier?.DrawUI(GUILayout.MinHeight(Styles.CopierTabHeight));
                     }, Styles.CopierBox);
