@@ -15,7 +15,6 @@ namespace Pumkin.AvatarTools2.Settings
         static Type genericInspectorType;
         static Type defaultEditorType;
 
-        protected Editor editor;
         public Editor Editor
         {
             get
@@ -27,19 +26,23 @@ namespace Pumkin.AvatarTools2.Settings
                 if(defaultEditorType == null)
                     defaultEditorType = typeof(SettingsEditor);
 
-                if(!editor || (editor && editor.serializedObject == null))
+                if(!_editor || (_editor && _editor.serializedObject == null))
                 {
-                    editor = Editor.CreateEditor(this);
-                    if(editor.GetType() == genericInspectorType)
-                        editor = Editor.CreateEditor(this, defaultEditorType);
+                    _editor = Editor.CreateEditor(this);
+                    if(_editor.GetType() == genericInspectorType)
+                        _editor = Editor.CreateEditor(this, defaultEditorType);
                 }
-                return editor;
+                return _editor;
             }
         }
 
         public void Awake()
         {
             Editor.OnInspectorGUINoScriptField();   //Try to draw so it initializes and opens instantly later
+        }
+        public void DrawUI()
+        {
+            Editor.OnInspectorGUINoScriptField();
         }
 
         public bool SaveToConfigFile(string filePath)
@@ -51,6 +54,8 @@ namespace Pumkin.AvatarTools2.Settings
         {
             throw new NotImplementedException();
         }
+
+        protected Editor _editor;
     }
 }
 #endif

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 
-namespace Pumkin.AvatarTools2
+namespace Pumkin.AvatarTools2.UI
 {
     static class Credits
     {

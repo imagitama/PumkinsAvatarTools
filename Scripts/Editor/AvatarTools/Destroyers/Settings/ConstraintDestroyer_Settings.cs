@@ -1,8 +1,10 @@
-﻿using Pumkin.Core;
+﻿using Pumkin.AvatarTools2.Settings;
+using Pumkin.Core;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Settings
+namespace Pumkin.AvatarTools2.Destroyers
 {
+    [CustomSettingsContainer(typeof(ConstraintDestroyer))]
     class ConstraintDestroyer_Settings : SettingsContainerBase
     {
         [DrawToggleLeft] public bool positionConstraint = true;

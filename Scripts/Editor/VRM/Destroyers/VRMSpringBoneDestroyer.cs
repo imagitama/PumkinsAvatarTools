@@ -15,10 +15,9 @@ namespace Pumkin.AvatarTools2.VRM.Destroyers
     public class VRMSpringBoneDestroyer : ComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Spring Bone");
-        protected override GUIContent CreateGUIContent()
-        {
-            return new GUIContent(UIDefs.Name, Icons.Bone);
-        }
-        public override string ComponentTypeFullName => VRMTypes.VRMSpringBone?.FullName;
+
+        protected override GUIContent CreateGUIContent() => new GUIContent(UIDefs.Name, Icons.Bone);
+
+        public override string[] ComponentTypesFullNames => new string[] { VRMTypes.VRMSpringBone?.FullName };
     }
 }

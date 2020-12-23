@@ -9,16 +9,16 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRM.Copiers
 {
-    [AutoLoad("copier_VRMSpringBone", "VRM", ParentModuleID = DefaultIDs.Modules.Copier)]
-    public class VRMSpringBoneCopier : ComponentCopierBase
-    {
-        public override UIDefinition UIDefs { get; set; }
-            = new UIDefinition("Spring Bone", -1);
+    //[AutoLoad("copier_VRMSpringBone", "VRM", ParentModuleID = DefaultIDs.Modules.Copier)]
+    //public class VRMSpringBoneCopier : ComponentCopierBase
+    //{
+    //    public override UIDefinition UIDefs { get; set; }
+    //        = new UIDefinition("Spring Bone", -1);
 
-        public override string ComponentTypeFullName => VRMTypes.VRMSpringBone?.FullName;
-        protected override GUIContent CreateGUIContent()
-        {
-            return new GUIContent(UIDefs.Name, Icons.Bone);
-        }
-    }
+    //    public override string ComponentTypeFullName => VRMTypes.VRMSpringBone?.FullName;
+    //    protected override GUIContent CreateGUIContent()
+    //    {
+    //        return new GUIContent(UIDefs.Name, Icons.Bone);
+    //    }
+    //}
 }

@@ -18,7 +18,10 @@ namespace Pumkin.AvatarTools2.VRChat
         {
             var desc = avatar.GetComponent(VRChatTypes.VRC_AvatarDescriptor);
             if(desc == null)
+            {
+                avatar.transform.localScale = newScale;
                 return;
+            }
 
             SerializedObject serialDesc = new SerializedObject(desc);
             var viewProp = serialDesc.FindProperty("ViewPosition");

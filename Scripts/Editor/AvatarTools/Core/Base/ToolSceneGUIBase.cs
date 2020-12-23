@@ -70,7 +70,8 @@ namespace Pumkin.AvatarTools2.Tools
         }
 
         public virtual UIDefinition UIDefs { get; set; }
-        public bool EnabledInUI { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public virtual bool EnabledInUI { get; set; } = true;
 
         bool _allowSceneGUI;
         bool _allowUpdate;
@@ -127,8 +128,15 @@ namespace Pumkin.AvatarTools2.Tools
             if(!CanDrawSceneGUI)
                 return;
 
+            float multiplier = 0.1f;
             Rect rect = scene.camera.pixelRect;
-            rect = new Rect(Padding, rect.height - Padding - WindowSize.y, WindowSize.x, WindowSize.y);
+
+            rect.width *= multiplier;
+            rect.height *= multiplier;
+
+            rect.position += rect.position * multiplier;
+
+            //rect = new Rect(Padding, rect.height - Padding - WindowSize.y, WindowSize.x, WindowSize.y);
             float minButtonWidth = rect.width / 2 - Styles.Box.padding.left - Styles.Box.padding.right;
 
             Handles.BeginGUI();
@@ -136,13 +144,19 @@ namespace Pumkin.AvatarTools2.Tools
                 GUILayout.BeginArea(rect, Styles.Box);
                 {
                     GUILayout.Label(UIDefs.Name);
+                    UIHelpers.DrawLine(1, false, false);
+                    EditorGUILayout.Space();
 
                     if(CanDrawSceneGUI)
                     {
                         DrawInsideSceneWindowGUI();
                     }
 
-                    GUILayout.BeginHorizontal();
+                    UIHelpers.DrawLine();
+
+                    GUILayout.FlexibleSpace();
+
+                    GUILayout.BeginHorizontal();//GUILayout.ExpandHeight(true));
                     {
                         if(GUILayout.Button("Cancel", GUILayout.MinWidth(minButtonWidth)))
                             PressedCancel(serializedObject?.targetObject as GameObject);
@@ -283,7 +297,7 @@ namespace Pumkin.AvatarTools2.Tools
                 UIHelpers.DrawInVerticalBox(() =>
                 {
                     EditorGUILayout.Space();
-                    Settings?.Editor?.OnInspectorGUI();
+                    Settings?.DrawUI();
                 });
             }
         }

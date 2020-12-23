@@ -8,11 +8,11 @@ using UnityEngine.Animations;
 namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.Constraint, ParentModuleID = DefaultIDs.Modules.Destroyer)]
-    public class ConstraintDestroyer : MultiComponentDestroyerBase
+    public class ConstraintDestroyer : ComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Constraints");
 
-        public override string[] ComponentTypeFullNamesAll => new string[]
+        public override string[] ComponentTypesFullNames => new string[]
         {
             typeof(PositionConstraint).FullName,
             typeof(RotationConstraint).FullName,
@@ -22,16 +22,10 @@ namespace Pumkin.AvatarTools2.Destroyers
             typeof(AimConstraint).FullName
         };
 
-        public override ISettingsContainer Settings => settings;
-        ConstraintDestroyer_Settings settings;
-
-        protected override void SetupSettings()
-        {
-            settings = ScriptableObject.CreateInstance<ConstraintDestroyer_Settings>();
-        }
-
         protected override bool Prepare(GameObject target)
         {
+            var settings = Settings as ConstraintDestroyer_Settings;
+
             ComponentTypesAndEnabled[typeof(PositionConstraint)] = settings.positionConstraint;
             ComponentTypesAndEnabled[typeof(RotationConstraint)] = settings.rotationConstraint;
             ComponentTypesAndEnabled[typeof(ScaleConstraint)] = settings.scaleConstraint;

@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Interfaces
 {
     public interface IComponentActor
     {
-        string ComponentTypeFullName { get; }
+        string[] ComponentTypesFullNames { get; }
+
+        Type FirstValidType { get; }
     }
 }

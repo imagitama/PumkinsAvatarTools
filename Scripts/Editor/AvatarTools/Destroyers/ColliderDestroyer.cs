@@ -7,11 +7,11 @@ using UnityEngine;
 namespace Pumkin.AvatarTools2.Destroyers
 {
     [AutoLoad(DefaultIDs.Destroyers.Collider, ParentModuleID = DefaultIDs.Modules.Destroyer)]
-    class ColliderDestroyer : MultiComponentDestroyerBase
+    class ColliderDestroyer : ComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Colliders");
 
-        public override string[] ComponentTypeFullNamesAll { get; } = new string[]
+        public override string[] ComponentTypesFullNames { get; } = new string[]
         {
             typeof(BoxCollider).FullName,
             typeof(CapsuleCollider).FullName,
@@ -19,20 +19,12 @@ namespace Pumkin.AvatarTools2.Destroyers
             typeof(MeshCollider).FullName,
         };
 
-        public override ISettingsContainer Settings => settings;
-        ColliderDestroyer_Settings settings;
-
-        protected override void SetupSettings()
-        {
-            settings = ScriptableObject.CreateInstance<ColliderDestroyer_Settings>();
-        }
-
         protected override bool Prepare(GameObject target)
         {
-            ComponentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
-            ComponentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
-            ComponentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
-            ComponentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
+            //ComponentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
+            //ComponentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
+            //ComponentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
+            //ComponentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
 
             return base.Prepare(target);
         }

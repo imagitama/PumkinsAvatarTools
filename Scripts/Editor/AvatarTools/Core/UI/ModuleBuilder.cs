@@ -48,10 +48,10 @@ namespace Pumkin.AvatarTools2.UI
                     //Check if item is a copier or destroyer then check if their targetted type is valid in project
                     if(itemInst is IComponentActor actor)
                     {
-                        Type targetType = TypeHelpers.GetType(actor.ComponentTypeFullName);
+                        Type targetType = actor.FirstValidType;
                         if(targetType == null)
                         {
-                            PumkinTools.LogVerbose($"Type {actor.ComponentTypeFullName} not found in project for {itemInst.GetType()}");
+                            PumkinTools.LogVerbose($"Type {actor.FirstValidType} not found in project for {itemInst.GetType()}");
                             continue;
                         }
                     }

@@ -12,13 +12,12 @@ namespace Pumkin.AvatarTools2.VRM.Destroyers
     public class VRMSpringBoneColliderGroupDestroyer : ComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Spring Bone Collider");
-        protected override GUIContent CreateGUIContent()
-        {
-            return new GUIContent(UIDefs.Name, Icons.BoneCollider);
-        }
-        public override string ComponentTypeFullName => VRMTypes.VRMSpringBoneColliderGroup?.FullName;
 
-        //TODO: Make this automatic
+        protected override GUIContent CreateGUIContent() => new GUIContent(UIDefs.Name, Icons.BoneCollider);
+
+        public override string[] ComponentTypesFullNames => new string[] { VRMTypes.VRMSpringBoneColliderGroup?.FullName };
+
+        //TODO: Make this automatic somehow
         protected override void Finish(GameObject target)
         {
             //Clean up null references from spring bone collider arrays inside spring bone scripts

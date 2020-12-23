@@ -19,6 +19,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
         Vector3 startScale;
         float tempScale = 0;
+        bool hasDescriptor = false;
 
         public EditScale()
         {
@@ -39,6 +40,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                 startPosition = target.transform.position;
 
                 tempScale = startScale.y;
+                hasDescriptor = target.GetComponent(VRChatTypes.VRC_AvatarDescriptor);
 
                 return true;
             }
@@ -48,7 +50,11 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
         protected override void DrawInsideSceneWindowGUI()
         {
             base.DrawInsideSceneWindowGUI();
-            moveViewpoint = EditorGUILayout.ToggleLeft("Move Viewpoint", moveViewpoint);
+            EditorGUI.BeginDisabledGroup(!hasDescriptor);
+            {
+                moveViewpoint = EditorGUILayout.ToggleLeft("Move Viewpoint", moveViewpoint);
+            }
+            EditorGUI.EndDisabledGroup();
         }
 
         protected override bool DoAction(GameObject target)

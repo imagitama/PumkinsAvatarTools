@@ -103,7 +103,7 @@ namespace Pumkin.AvatarTools2.Tools
                 UIHelpers.DrawInVerticalBox(() =>
                 {
                     EditorGUILayout.Space();
-                    Settings?.Editor?.OnInspectorGUI();
+                    Settings?.DrawUI();
                 });
             }
         }
