@@ -7,10 +7,18 @@ namespace Pumkin.AvatarTools2.Destroyers
     [CustomSettingsContainer(typeof(ColliderDestroyer))]
     class ColliderDestroyer_Settings : SettingsContainerBase
     {
-        [DrawToggleLeft] public bool boxColliders = true;
-        [DrawToggleLeft] public bool sphereColliders = true;
-        [DrawToggleLeft] public bool capsuleColliders = true;
+        [DrawToggleLeft][TypeEnablerField(typeof(BoxCollider))]
+        public bool boxColliders = true;
+
+        [DrawToggleLeft][TypeEnablerField(typeof(SphereCollider))]
+        public bool sphereColliders = true;
+
+        [DrawToggleLeft][TypeEnablerField(typeof(CapsuleCollider))]
+        public bool capsuleColliders = true;
+
         [Space]
-        [DrawToggleLeft] public bool meshColliders = true;
+
+        [DrawToggleLeft][TypeEnablerField(typeof(MeshCollider))]
+        public bool meshColliders = true;
     }
 }

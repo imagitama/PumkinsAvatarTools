@@ -13,7 +13,7 @@ namespace Pumkin.AvatarTools2
     /// </summary>
     public static class GenericTypes
     {
-        public static readonly Type DynamicBone = TypeHelpers.GetType("DynamicBone");
-        public static readonly Type DynamicBoneCollider = TypeHelpers.GetType("DynamicBoneCollider");
+        public static readonly Type DynamicBone = TypeHelpers.GetTypeAnwhere("DynamicBone");
+        public static readonly Type DynamicBoneCollider = TypeHelpers.GetTypeAnwhere("DynamicBoneCollider");
     }
 }

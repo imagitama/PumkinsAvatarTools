@@ -10,7 +10,7 @@ namespace Pumkin.AvatarTools2
     public class PumkinToolsWindow : EditorWindow
     {
         public static MainUI UI { get; set; }
-        static Vector2 minWindowSize = new Vector2(360,580);
+        static Vector2 minWindowSize = new Vector2(300,400);
         static GUISkin guiSkin;
 
         public static event Action OnWindowEnabled;

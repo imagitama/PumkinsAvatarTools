@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
+    [CustomSettingsContainer(typeof(SetRendererAnchors))]
     internal class SetRendererAnchors_Settings : SettingsContainerBase
     {
         public enum AnchorType { HumanBone, TransformPath };
@@ -17,10 +18,8 @@ namespace Pumkin.AvatarTools2.Tools
 
         public string hierarchyPath = "Armature/Hips/Spine";
 
-        [DrawToggleLeft]
-        public bool skinnedMeshRenderers = true;
-        [DrawToggleLeft]
-        public bool meshRenderers = true;
+        [DrawToggleLeft] public bool skinnedMeshRenderers = true;
+        [DrawToggleLeft] public bool meshRenderers = true;
     }
 
     [CustomEditor(typeof(SetRendererAnchors_Settings))]

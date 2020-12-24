@@ -66,7 +66,7 @@ namespace Pumkin.AvatarTools2.UI
             {
                 foreach(var builder in builders)
                 {
-                    builder.BuildSubTools(subItemTypeCache);
+                    builder.BuildSubItems(subItemTypeCache);
                     if(string.IsNullOrWhiteSpace(builder.LoadAttribute.ParentModuleID))
                         modules.Add(builder.Module);
                 }

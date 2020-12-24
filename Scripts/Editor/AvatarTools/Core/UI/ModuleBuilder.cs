@@ -29,7 +29,7 @@ namespace Pumkin.AvatarTools2.UI
             this.LoadAttribute = loadAttribute;
         }
 
-        public void BuildSubTools(Dictionary<Type, AutoLoadAttribute> subItemsTypes)
+        public void BuildSubItems(Dictionary<Type, AutoLoadAttribute> subItemsTypes)
         {
             var items = new List<IItem>();
 
@@ -51,7 +51,7 @@ namespace Pumkin.AvatarTools2.UI
                         Type targetType = actor.FirstValidType;
                         if(targetType == null)
                         {
-                            PumkinTools.LogVerbose($"Type {actor.FirstValidType} not found in project for {itemInst.GetType()}");
+                            PumkinTools.LogWarning($"No valid types found in actor <b>{actor.GetType().Name}</b>");
                             continue;
                         }
                     }
@@ -66,12 +66,12 @@ namespace Pumkin.AvatarTools2.UI
             }
 
             //Order SubTools based on their OrderInUI
-            Module.SubItems = items.OrderBy(x => x?.UIDefs?.OrderInUI)?.ToList() ?? Module.SubItems;
+            Module.SubItems = items.OrderBy(x => x?.UIDefs?.OrderInUI)?.ToList() ?? Module.SubItems;//
         }
 
         public bool BuildModule()
         {
-            PumkinTools.LogVerbose($"Building module {ModuleType.Name}");
+            PumkinTools.LogVerbose($"Building module <b>{ModuleType?.Name ?? "Invalid type"}</b>");
             //Cancel checks
             {
                 if(string.IsNullOrEmpty(LoadAttribute?.ID))

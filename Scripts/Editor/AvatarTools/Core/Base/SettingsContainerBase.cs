@@ -22,7 +22,7 @@ namespace Pumkin.AvatarTools2.Settings
                 // Creates editors for everything, then replaces default editors with default SettingsEditors. Don't like it, but it will do for now.
                 // TODO: Potential crashes here
                 if(genericInspectorType == null)
-                    genericInspectorType = TypeHelpers.GetType("UnityEditor.GenericInspector");
+                    genericInspectorType = TypeHelpers.GetTypeAnwhere("UnityEditor.GenericInspector");
                 if(defaultEditorType == null)
                     defaultEditorType = typeof(SettingsEditor);
 
@@ -40,9 +40,10 @@ namespace Pumkin.AvatarTools2.Settings
         {
             Editor.OnInspectorGUINoScriptField();   //Try to draw so it initializes and opens instantly later
         }
+
         public void DrawUI()
         {
-            Editor.OnInspectorGUINoScriptField();
+            Editor.OnInspectorGUI();
         }
 
         public bool SaveToConfigFile(string filePath)

@@ -24,14 +24,14 @@ namespace Pumkin.AvatarTools2.Destroyers
 
         protected override bool Prepare(GameObject target)
         {
-            var settings = Settings as ConstraintDestroyer_Settings;
+            //var settings = Settings as ConstraintDestroyer_Settings;
 
-            ComponentTypesAndEnabled[typeof(PositionConstraint)] = settings.positionConstraint;
-            ComponentTypesAndEnabled[typeof(RotationConstraint)] = settings.rotationConstraint;
-            ComponentTypesAndEnabled[typeof(ScaleConstraint)] = settings.scaleConstraint;
-            ComponentTypesAndEnabled[typeof(ParentConstraint)] = settings.parentConstraint;
-            ComponentTypesAndEnabled[typeof(LookAtConstraint)] = settings.lookAtConstraint;
-            ComponentTypesAndEnabled[typeof(AimConstraint)] = settings.aimConstraint;
+            //ComponentTypesAndEnabled[typeof(PositionConstraint)] = settings.positionConstraint;
+            //ComponentTypesAndEnabled[typeof(RotationConstraint)] = settings.rotationConstraint;
+            //ComponentTypesAndEnabled[typeof(ScaleConstraint)] = settings.scaleConstraint;
+            //ComponentTypesAndEnabled[typeof(ParentConstraint)] = settings.parentConstraint;
+            //ComponentTypesAndEnabled[typeof(LookAtConstraint)] = settings.lookAtConstraint;
+            //ComponentTypesAndEnabled[typeof(AimConstraint)] = settings.aimConstraint;
 
             return base.Prepare(target);
         }

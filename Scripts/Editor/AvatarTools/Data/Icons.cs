@@ -46,7 +46,7 @@ namespace Pumkin.AvatarTools2.UI
         /// <returns></returns>
         public static Texture GetTypeIconTextureFromResources(string typeNameFull)
         {
-            Type type = TypeHelpers.GetType(typeNameFull);
+            Type type = TypeHelpers.GetTypeAnwhere(typeNameFull);
             Texture tex = null;
             if (type != null)
                 tex = GetIconTexureFromReources(type.Name);

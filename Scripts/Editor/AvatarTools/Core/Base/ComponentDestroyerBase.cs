@@ -22,7 +22,7 @@ namespace Pumkin.AvatarTools2.Destroyers
     {
         public abstract string[] ComponentTypesFullNames { get; }
 
-        protected Dictionary<Type, bool> ComponentTypesAndEnabled { get; set; } = new Dictionary<Type, bool>();
+        Dictionary<Type, bool> ComponentTypesAndEnabled { get; set; } = new Dictionary<Type, bool>();
 
         public string GameConfigurationString { get; set; }
 
@@ -55,15 +55,13 @@ namespace Pumkin.AvatarTools2.Destroyers
 
                 if(!string.IsNullOrWhiteSpace(tName))
                 {
-                    var type = TypeHelpers.GetType(tName);
+                    var type = TypeHelpers.GetTypeAnwhere(tName);
                     if(type != null)
-                        ComponentTypesAndEnabled[type] = true;
+                        ComponentTypesAndEnabled[type] = false;
                 }
-                else
-                    PumkinTools.LogVerbose($"{tName} is invalid");
             }
 
-            FirstValidType = ComponentTypesAndEnabled.First(c => c.Key != null).Key;
+            FirstValidType = ComponentTypesAndEnabled.FirstOrDefault(c => c.Key != null).Key;
 
             if(!UIDefs)
             {
@@ -114,6 +112,25 @@ namespace Pumkin.AvatarTools2.Destroyers
                 return false;
 
             Undo.RegisterCompleteObjectUndo(target, $"Destroy Components {UIDefs.Name}");
+
+            //Enable and disable components based on bool fields with TypeEnablerFieldAttribute in Settings
+            if(Settings != null)
+            {
+                var fields = Settings.GetType().GetFields()?.Where(t => t.FieldType == typeof(bool));
+                foreach(var f in fields)
+                {
+                    var attr = f.GetCustomAttributes(false).FirstOrDefault(a => a is TypeEnablerFieldAttribute) as TypeEnablerFieldAttribute;
+                    if(attr == null)
+                        continue;
+
+                    bool? enabled = f.GetValue(Settings) as bool?;
+                    if(enabled == null)
+                        continue;
+
+                    if(attr.EnabledType != null && ComponentTypesAndEnabled.ContainsKey(attr.EnabledType))
+                        ComponentTypesAndEnabled[attr.EnabledType] = (bool)enabled;
+                }
+            }
             return true;
         }
 

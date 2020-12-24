@@ -10,11 +10,11 @@ namespace Pumkin.Core.Helpers
     public static class TypeHelpers
     {
         /// <summary>
-        /// Gets type from full name
+        /// Gets type from full name from all assemblies
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns>Type or null</returns>
-        public static Type GetType(string typeName)
+        public static Type GetTypeAnwhere(string typeName)
         {
             if(string.IsNullOrWhiteSpace(typeName))
                 return null;

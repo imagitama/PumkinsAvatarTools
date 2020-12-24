@@ -19,14 +19,16 @@ namespace Pumkin.AvatarTools2.Destroyers
             typeof(MeshCollider).FullName,
         };
 
-        protected override bool Prepare(GameObject target)
-        {
-            //ComponentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
-            //ComponentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
-            //ComponentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
-            //ComponentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
+        //protected override bool Prepare(GameObject target)
+        //{
+        //    var settings = Settings as ColliderDestroyer_Settings;
 
-            return base.Prepare(target);
-        }
+        //    ComponentTypesAndEnabled[typeof(BoxCollider)] = settings.boxColliders;
+        //    ComponentTypesAndEnabled[typeof(CapsuleCollider)] = settings.capsuleColliders;
+        //    ComponentTypesAndEnabled[typeof(SphereCollider)] = settings.sphereColliders;
+        //    ComponentTypesAndEnabled[typeof(MeshCollider)] = settings.meshColliders;
+
+        //    return base.Prepare(target);
+        //}
     }
 }

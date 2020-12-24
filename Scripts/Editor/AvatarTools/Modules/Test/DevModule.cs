@@ -42,6 +42,11 @@ namespace Pumkin.AvatarTools2.Modules
                 s += "\n};";
                 Debug.Log(s);
             }
+
+            if(GUILayout.Button("Test dynamic bones in project"))
+            {
+                Debug.Log(TypeHelpers.GetTypeAnwhere("DynamicBone")?.FullName ?? "Not here");
+            }
         }
     }
 }

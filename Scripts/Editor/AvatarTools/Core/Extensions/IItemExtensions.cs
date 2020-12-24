@@ -22,15 +22,20 @@ namespace Pumkin.AvatarTools2.Settings
                 return _cachedTypesAndAttributes;
             }
         }
+        static Dictionary<IItem, ISettingsContainer> CachedItemsAndSettings = new Dictionary<IItem, ISettingsContainer>();
 
         public static ISettingsContainer GetSettingsContainer(this IItem item)
         {
             var itemType = item.GetType();
             var settingsType = CachedTypesAndAttributes.FirstOrDefault(t => t.Value.OwnerType == itemType).Key;
+            ISettingsContainer settings = null;
 
             if(settingsType != null)
-                return ScriptableObject.CreateInstance(settingsType) as ISettingsContainer;
-            return null;
+                settings = ScriptableObject.CreateInstance(settingsType) as ISettingsContainer;
+
+            CachedItemsAndSettings[item] = settings;
+
+            return settings;
         }
 
         static Dictionary<Type, CustomSettingsContainerAttribute> _cachedTypesAndAttributes;
