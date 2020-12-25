@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Modules
 {
-    [AutoLoad(DefaultIDs.Modules.Debug, "Debug")]
+    [AutoLoad(DefaultIDs.Modules.Debug, "Dev")]
     class DevModule : UIModuleBase
     {
         public override UIDefinition UIDefs { get; set; }
-            = new UIDefinition("Debug", "Debug and test stuff", 100);
+            = new UIDefinition("Dev", "Debug and test stuff", 100);
 
         public override void DrawContent()
         {
@@ -19,7 +19,7 @@ namespace Pumkin.AvatarTools2.Modules
 
             if(GUILayout.Button("Remove reset transforms from tools"))
                 PumkinToolsWindow.UI.FindModule("tools")?.SubItems.RemoveAll(s =>
-                string.Equals(s.UIDefs.Name, "reset transforms", System.StringComparison.InvariantCultureIgnoreCase));
+                string.Equals(s.UIDefs.Name, "reset transforms", System.StringComparison.OrdinalIgnoreCase));
 
             if(GUILayout.Button("Remove tools module"))
                 PumkinToolsWindow.UI.RemoveModule("tools");
@@ -46,6 +46,11 @@ namespace Pumkin.AvatarTools2.Modules
             if(GUILayout.Button("Test dynamic bones in project"))
             {
                 Debug.Log(TypeHelpers.GetTypeAnwhere("DynamicBone")?.FullName ?? "Not here");
+            }
+
+            if(GUILayout.Button("Get Main Script Path"))
+            {
+                Debug.Log(PumkinTools.ToolsFolderPath);
             }
         }
     }

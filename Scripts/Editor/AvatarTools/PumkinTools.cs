@@ -1,15 +1,11 @@
 ﻿#if UNITY_EDITOR
 using System;
-using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Remoting.Contexts;
-using UnityEditor;
 using UnityEngine;
 using Pumkin.Core.Logger;
+using System.IO;
+using System.Linq;
 
 namespace Pumkin.AvatarTools2
 {
@@ -17,11 +13,38 @@ namespace Pumkin.AvatarTools2
     {
         public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
 
-        static GameObject _selectedAvatar;
-
-        static PumkinTools()
+        public static string ToolsFolderPath
         {
-            VerboseLogger.logEnabled = true;
+            get
+            {
+                if(_toolFolderPath != null)
+                    return _toolFolderPath;
+
+                //Get all folders starting with PumkinsAvatarTools (might end in -master if cloned) and get the the folder that has a Scripts folder inside
+                string[] folder = Directory.GetDirectories(Application.dataPath, "PumkinsAvatarTools*", SearchOption.AllDirectories);
+                if(folder.Length > 0)
+                {
+                    foreach(string f in folder)
+                    {
+                        var subdirs = Directory.GetDirectories(f, "*", SearchOption.TopDirectoryOnly);
+                        string sub = subdirs.Where(x => x.Equals(f + "\\Scripts")).FirstOrDefault();
+                        if(!string.IsNullOrEmpty(sub))
+                        {
+                            _toolFolderPath = f + '/';
+                            return _toolFolderPath;
+                        }
+                    }
+                }
+                return _toolFolderPath;
+            }
+        }
+
+        public static string ResourceFolderPath
+        {
+            get
+            {
+                return ToolsFolderPath + "Resources/";
+            }
         }
 
         public static GameObject SelectedAvatar
@@ -47,6 +70,11 @@ namespace Pumkin.AvatarTools2
             }
         }
 
+        static PumkinTools()
+        {
+            VerboseLogger.logEnabled = true;
+        }
+
         public static void AvatarSelectionChanged(GameObject newSelection)
         {
             OnAvatarSelectionChanged?.Invoke(newSelection);
@@ -65,9 +93,9 @@ namespace Pumkin.AvatarTools2
                 return _versionSuffix;
             }
         }
-        static string _versionSuffix = null;
 
-        //Logger stuff
+        #region Logger
+
         public static PumkinLogger Logger { get; } = new PumkinLogger("blue", "Pumkin Tools");
         public static PumkinLogger VerboseLogger { get; } = new PumkinLogger("red", "Pumkin Tools Verbose");
 
@@ -110,6 +138,16 @@ namespace Pumkin.AvatarTools2
         {
             Logger.LogException(e);
         }
+
+        #endregion
+
+        #region Property fields
+
+        static GameObject _selectedAvatar;
+        static string _toolFolderPath;
+        static string _versionSuffix = null;
+
+        #endregion
     }
 }
 #endif

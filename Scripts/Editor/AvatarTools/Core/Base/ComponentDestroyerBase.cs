@@ -47,6 +47,9 @@ namespace Pumkin.AvatarTools2.Destroyers
 
         public ComponentDestroyerBase()
         {
+            if(ComponentTypesFullNames == null)
+                return;
+
             ComponentTypesAndEnabled = new Dictionary<Type, bool>(ComponentTypesFullNames.Length);
 
             for(int i = 0; i < ComponentTypesFullNames.Length; i++)

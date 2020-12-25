@@ -8,7 +8,7 @@ namespace Pumkin.AvatarTools2.Destroyers
     [AutoLoad(DefaultIDs.Destroyers.DynamicBoneCollider, ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class DynamicBoneColliderDestroyer : ComponentDestroyerBase
     {
-        public override string[] ComponentTypesFullNames => new string[] { GenericTypes.DynamicBoneCollider?.FullName };
+        public override string[] ComponentTypesFullNames { get; } = new string[]{ GenericTypes.DynamicBoneCollider?.FullName };
 
         protected override void Finish(GameObject target)
         {

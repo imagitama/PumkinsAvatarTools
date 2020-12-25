@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Modules;
+using Pumkin.AvatarTools2.UI.Credits;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using System;
@@ -24,6 +25,15 @@ namespace Pumkin.AvatarTools2.UI
 
         GUIContent configLabel = new GUIContent(ConfigurationManager.CurrentConfigurationString);
         GUIContent versionLabel = new GUIContent($"Version {PumkinTools.version}{PumkinTools.versionSuffix}");
+
+        CreditsList thanksList = new CreditsList(
+            "Thanks to the following people for their help!",
+            new NoteEntry("Xiexe", "Original fallback shaders"),
+            new NoteEntry("Dreadrith", "Reset pose to avatar"));
+
+        CreditsList linksLIst = new CreditsList(
+            "Links",
+            new URLEntry("1's VRWorld Toolkit", "https://github.com/oneVR/VRWorldToolkit"));
 
         public IUIModule OrphanHolder
         {
@@ -138,12 +148,16 @@ namespace Pumkin.AvatarTools2.UI
 
             UIHelpers.DrawLine();
 
-            Credits.DrawUI();
+            thanksList.Draw();
+
+            UIHelpers.DrawLine();
+
+            linksLIst.Draw();
         }
 
         public IUIModule FindModule(string name)
         {
-            return UIModules.FirstOrDefault(s => string.Equals(name, s.UIDefs.Name, StringComparison.InvariantCultureIgnoreCase));
+            return UIModules.FirstOrDefault(s => string.Equals(name, s.UIDefs.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool HasModule(IUIModule module)
@@ -164,7 +178,7 @@ namespace Pumkin.AvatarTools2.UI
 
         public int RemoveModule(string name)
         {
-            return UIModules.RemoveAll(m => string.Equals(m.UIDefs.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            return UIModules.RemoveAll(m => string.Equals(m.UIDefs.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

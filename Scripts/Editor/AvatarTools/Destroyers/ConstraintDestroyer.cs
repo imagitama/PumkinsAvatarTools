@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools2.Destroyers
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Constraints");
 
-        public override string[] ComponentTypesFullNames => new string[]
+        public override string[] ComponentTypesFullNames { get; } = new string[]
         {
             typeof(PositionConstraint).FullName,
             typeof(RotationConstraint).FullName,

@@ -100,8 +100,8 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                     {
                         string tempShape = renders[iRender].sharedMesh.GetBlendShapeName(iShape);
 
-                        if(tempShape.EndsWith(RequiredVisemeNames[iReqViseme], StringComparison.InvariantCultureIgnoreCase)
-                            || tempShape.StartsWith(RequiredVisemeNames[iReqViseme], StringComparison.InvariantCultureIgnoreCase))
+                        if(tempShape.EndsWith(RequiredVisemeNames[iReqViseme], StringComparison.OrdinalIgnoreCase)
+                            || tempShape.StartsWith(RequiredVisemeNames[iReqViseme], StringComparison.OrdinalIgnoreCase))
                         {
                             shapeName = tempShape;
                             foundShapeInRenderer = true;

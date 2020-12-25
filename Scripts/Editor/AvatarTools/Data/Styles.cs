@@ -30,6 +30,7 @@ namespace Pumkin.AvatarTools2.UI
         public static GUIStyle SubToolButton { get; private set; }
         public static GUIStyle CopierCopyButton { get; private set; }
         public static GUIStyle RightAlignedLabel { get; private set; }
+        public static GUIStyle UrlLabel { get; private set; }
 
         public static float CopierTabHeight { get; private set; } = 22f;
 
@@ -171,6 +172,14 @@ namespace Pumkin.AvatarTools2.UI
                 alignment = TextAnchor.UpperRight,
                 stretchWidth = false,
             };
+
+            UrlLabel = new GUIStyle(EditorStyles.label)
+            {
+                richText = true
+            };
+            UrlLabel.normal.textColor = Color.blue;
+            UrlLabel.onHover.textColor = Color.cyan;
+            UrlLabel.onActive.textColor = Color.red;
 
             SubToolButton = MediumButton;
             CopierCopyButton = BigButton;

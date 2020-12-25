@@ -10,6 +10,6 @@ namespace Pumkin.AvatarTools2.Modules
     [AutoLoad(DefaultIDs.Modules.TestAvatar)]
     class TestAvatarModule : UIModuleBase
     {
-        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Test Avatar", 4);
+        public override UIDefinition UIDefs { get; set; } = new UIDefinition("Avatar Testing", 4);
     }
 }
