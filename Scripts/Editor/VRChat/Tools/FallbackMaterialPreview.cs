@@ -95,12 +95,11 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                     if(AssetDatabaseHelpers.IsBuiltInAsset(oldMat))
                         continue;
 
-                    var newMat = cache.GetCachedCopy(oldMat, out bool wasCreated);
+                    var newMat = cache.GetCachedCopy(oldMat, out bool _);
+                    SetFallbackShader(newMat, oldMat);
 
                     var mat = materials.GetArrayElementAtIndex(i);
                     mat.objectReferenceValue = newMat;
-                    if(wasCreated)
-                        SetFallbackShader(newMat);
                 }
                 serial.ApplyModifiedProperties();
                 PumkinTools.Log($"Set fallback materials for <b>{r.gameObject.name}</b>");
@@ -110,38 +109,41 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
         /// <summary>
         /// Sets the shader of the material to a fallback variant
         /// </summary>
-        /// <param name="mat"></param>
-        void SetFallbackShader(Material mat)
+        /// <param name="referenceMaterial">Old material needed to decide what the new one should fallback to. If null <paramref name="material"/> is used</param>
+        /// <param name="material">Material to set fallback shader for</param>
+        void SetFallbackShader(Material material, Material referenceMaterial = null)
         {
-            if(!mat)
+            if(!material)
                 return;
+            else if(!referenceMaterial)
+                referenceMaterial = material;
 
-            string currShaderName = mat.shader.name;
+            string currShaderName = referenceMaterial.shader.name;
             var trustRankColor = TrustRankColors.GetColorForRank(trustRank);
 
-            if(mat.HasProperty("_MainTex"))
+            if(referenceMaterial.HasProperty("_MainTex"))
             {
-                mat.shader = shader_diffuse; //default to standard Diffuse
+                material.shader = shader_diffuse; //default to standard Diffuse
 
                 if(currShaderName.Contains("Cutout") && !currShaderName.Contains("Toon"))
-                    mat.shader = shader_cutout_diffuse;
+                    material.shader = shader_cutout_diffuse;
 
                 if(!currShaderName.Contains("Cutout") && currShaderName.Contains("Toon"))
-                    mat.shader = shader_toon_opaque;
+                    material.shader = shader_toon_opaque;
 
                 if(currShaderName.Contains("Cutout") && currShaderName.Contains("Toon"))
-                    mat.shader = shader_toon_cutout;
+                    material.shader = shader_toon_cutout;
 
                 if(currShaderName.Contains("Transparent"))
-                    mat.shader = shader_transparent_diffuse;
+                    material.shader = shader_transparent_diffuse;
 
                 if(currShaderName.Contains("Unlit"))
-                    mat.shader = shader_unlit;
+                    material.shader = shader_unlit;
             }
             else
             {
-                mat.shader = Shader.Find("Fallback/Matcap");
-                mat.SetColor("_MatcapColorTintHolyMolyDontReadThis", trustRankColor);
+                material.shader = Shader.Find("Fallback/Matcap");
+                material.SetColor("_MatcapColorTintHolyMolyDontReadThis", trustRankColor);
             }
         }
 

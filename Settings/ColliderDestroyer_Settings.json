@@ -1,0 +1,7 @@
+//Pumkin.AvatarTools2.Destroyers.ColliderDestroyer_Settings
+{
+    "boxColliders": true,
+    "sphereColliders": false,
+    "capsuleColliders": true,
+    "meshColliders": false
+}

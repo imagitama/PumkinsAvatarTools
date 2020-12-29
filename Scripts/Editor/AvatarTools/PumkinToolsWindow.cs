@@ -44,6 +44,7 @@ namespace Pumkin.AvatarTools2
         {
             //UI build gets called by configuration being loaded
             guiSkin = Resources.Load<GUISkin>("UI/PumkinToolsGUISkin");
+
             OnWindowEnabled?.Invoke();
         }
 
@@ -55,6 +56,7 @@ namespace Pumkin.AvatarTools2
         private void OnDestroy()
         {
             OnWindowDestroyed?.Invoke();
+            Debug.Log("So long!");
         }
 
         private void OnGUI()

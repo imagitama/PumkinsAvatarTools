@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Pumkin.AvatarTools2;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Pumkin.Core.UI
 {
@@ -12,6 +15,38 @@ namespace Pumkin.Core.UI
     /// </summary>
     public class UIDefinition
     {
+        const string MAIN_FOLDER_SUFFIX = "/Settings/UI";
+
+        string SavePath
+        {
+            get
+            {
+                if(_savePath == null)
+                    _savePath = $"{SaveFolder}{GetType().Name}.json";
+                return _savePath;
+            }
+        }
+
+        string SaveFolder
+        {
+            get
+            {
+                if(_saveFolder == null)
+                    _saveFolder = $"{PumkinTools.MainFolderPath}/{MAIN_FOLDER_SUFFIX}";
+                return _saveFolder;
+            }
+        }
+
+        string Header
+        {
+            get
+            {
+                if(_header == null)
+                    _header = $"//{GetType().FullName}";
+                return _header;
+            }
+        }
+
         /// <summary>
         /// The name of this item in the UI
         /// </summary>
@@ -47,7 +82,14 @@ namespace Pumkin.Core.UI
         /// </summary>
         public bool ExpandSettings { get; set; }
 
-        public UIDefinition(string name, string description, int orderInUI, params UIModuleStyles[] moduleStyles)
+        private UIDefinition()
+        {
+            LoadFromConfigFile(SavePath);
+
+            PumkinToolsWindow.OnWindowDestroyed += PumkinToolsWindow_OnWindowDestroyed;
+        }
+
+        public UIDefinition(string name, string description, int orderInUI, params UIModuleStyles[] moduleStyles) : this()
         {
             Name = name;
             Description = description;
@@ -77,9 +119,67 @@ namespace Pumkin.Core.UI
         public bool HasStyle(UIModuleStyles style) =>
             ModuleStyles.Exists(t => t == style);
 
+        public bool SaveToConfigFile(string filePath)
+        {
+            return false;
+            try
+            {
+                string json = Header + '\n' + JsonUtility.ToJson(this, true);
+                File.WriteAllText(SavePath, json);
+            }
+            catch(Exception e)
+            {
+                PumkinTools.LogException(e);
+                return false;
+            }
+            return true;
+        }
+
+        public bool LoadFromConfigFile(string filePath)
+        {
+            try
+            {
+                if(!File.Exists(SavePath))
+                    return false;
+
+                var lines = File.ReadAllLines(SavePath);
+                if(lines.Length == 0)
+                    return false;
+
+                if(lines[0] != Header)
+                    PumkinTools.LogVerbose($"Trying to load settings for {GetType().Name} but the file header is not valid for this container");
+
+                JsonUtility.FromJsonOverwrite(string.Concat(lines), this);
+            }
+            catch(Exception e)
+            {
+                PumkinTools.LogException(e);
+                if(File.Exists(SavePath))
+                    File.Delete(SavePath);
+                return false;
+            }
+            return true;
+        }
+
+
+        private void PumkinToolsWindow_OnWindowDestroyed()
+        {
+            SaveToConfigFile(SavePath);
+        }
+
+        private void ConfigurationManager_BeforeConfigurationChanged(string newString)
+        {
+            SaveToConfigFile(SavePath);
+        }
+
+
         public static implicit operator bool(UIDefinition uid)
         {
             return !ReferenceEquals(uid, null);
         }
+
+        private string _savePath;
+        private string _saveFolder;
+        private string _header;
     }
 }

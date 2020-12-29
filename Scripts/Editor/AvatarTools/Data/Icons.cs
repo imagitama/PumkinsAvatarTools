@@ -8,7 +8,7 @@ namespace Pumkin.AvatarTools2.UI
 {
     public static class Icons
     {
-        const string RESOURCE_FOLDER_PREFIX = "Pumkin/Icons/";
+        const string RESOURCE_FOLDER_SUFFIX = "Pumkin/Icons/";
 
         public static Texture Settings { get; private set; }
         public static Texture Options { get; private set; }
@@ -121,9 +121,9 @@ namespace Pumkin.AvatarTools2.UI
 
         static Texture GetIconTexureFromReources(string name)
         {
-            var tx = Resources.Load<Texture>(RESOURCE_FOLDER_PREFIX + name + "-Icon");
+            var tx = Resources.Load<Texture>(RESOURCE_FOLDER_SUFFIX + name + "-Icon");
             if(tx == null)
-                tx = Resources.Load<Texture>(RESOURCE_FOLDER_PREFIX + name);
+                tx = Resources.Load<Texture>(RESOURCE_FOLDER_SUFFIX + name);
             return tx;
         }
     }

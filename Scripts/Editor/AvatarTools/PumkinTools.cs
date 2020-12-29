@@ -13,7 +13,7 @@ namespace Pumkin.AvatarTools2
     {
         public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
 
-        public static string ToolsFolderPath
+        public static string MainFolderPath
         {
             get
             {
@@ -43,7 +43,7 @@ namespace Pumkin.AvatarTools2
         {
             get
             {
-                return ToolsFolderPath + "Resources/";
+                return MainFolderPath + "Resources/";
             }
         }
 

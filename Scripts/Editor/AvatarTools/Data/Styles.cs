@@ -11,7 +11,7 @@ namespace Pumkin.AvatarTools2.UI
 {
     static class Styles
     {
-        const string RESOURCE_FOLDER_PREFIX = "Pumkin/UI/";
+        const string RESOURCE_FOLDER_SUFFIX = "Pumkin/UI/";
 
         public static GUIStyle MenuFoldout { get; private set; }
         public static GUIStyle SubMenuFoldout { get; private set; }
@@ -60,14 +60,6 @@ namespace Pumkin.AvatarTools2.UI
 
             SubMenuFoldout = MenuFoldout;
 
-            //SubMenuFoldout = new GUIStyle("OffsetDropDown")
-            //{
-            //    fontSize = 12,
-            //    fixedHeight = 22,
-            //    fontStyle = FontStyle.Normal,
-            //    contentOffset = new Vector2(5f, 0),
-            //};
-
             TitleLabel = new GUIStyle("label")
             {
                 padding = new RectOffset(1, 1, 3, 3),
@@ -82,15 +74,6 @@ namespace Pumkin.AvatarTools2.UI
                 margin = new RectOffset(5, 5, 1, 1),
                 padding = new RectOffset(1, 1, 1, 1),
             };
-
-            //Box = new GUIStyle("box")
-            //{
-            //    margin = new RectOffset(3, 3, 3, 4),
-            //    padding = new RectOffset(10, 10, 6, 6),
-            //    border = new RectOffset(6, 6, 6, 6),
-            //    fontSize = 12,
-            //    alignment = TextAnchor.UpperLeft,
-            //};
 
             Box = new GUIStyle("helpBox")
             {
@@ -171,6 +154,8 @@ namespace Pumkin.AvatarTools2.UI
             {
                 alignment = TextAnchor.UpperRight,
                 stretchWidth = false,
+                fixedWidth = 0,
+                padding = new RectOffset(-1, 0, 0, 0)
             };
 
             UrlLabel = new GUIStyle(EditorStyles.label)
@@ -179,7 +164,7 @@ namespace Pumkin.AvatarTools2.UI
             };
             UrlLabel.normal.textColor = Color.blue;
             UrlLabel.onHover.textColor = Color.cyan;
-            UrlLabel.onActive.textColor = Color.red;
+            UrlLabel.active.textColor = Color.red;
 
             SubToolButton = MediumButton;
             CopierCopyButton = BigButton;

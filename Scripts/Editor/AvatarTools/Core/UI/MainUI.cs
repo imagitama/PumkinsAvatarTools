@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Modules;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.AvatarTools2.UI.Credits;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Pumkin.AvatarTools2.UI
 {
@@ -26,29 +28,23 @@ namespace Pumkin.AvatarTools2.UI
         GUIContent configLabel = new GUIContent(ConfigurationManager.CurrentConfigurationString);
         GUIContent versionLabel = new GUIContent($"Version {PumkinTools.version}{PumkinTools.versionSuffix}");
 
-        CreditsList thanksList = new CreditsList(
-            "Thanks to the following people for their help!",
-            new NoteEntry("Xiexe", "Original fallback shaders"),
-            new NoteEntry("Dreadrith", "Reset pose to avatar"));
-
-        CreditsList linksLIst = new CreditsList(
-            "Links",
-            new URLEntry("1's VRWorld Toolkit", "https://github.com/oneVR/VRWorldToolkit"));
-
         public IUIModule OrphanHolder
         {
             get => _orphanHolder ?? (_orphanHolder = new OrphanHolderModule());
             private set => _orphanHolder = value;
         }
 
-        IUIModule _orphanHolder;
-
-        int selectedConfigIndex = 0;
-
-        public MainUI()
+        PumkinTools_Settings Settings
         {
-            selectedConfigIndex = ConfigurationManager.CurrentConfigurationIndex;
+            get
+            {
+                if(!_settings)
+                    _settings = ScriptableObject.CreateInstance<PumkinTools_Settings>();
+                return _settings;
+            }
         }
+
+        public MainUI() { }
 
         public MainUI(List<IUIModule> modules)
         {
@@ -67,9 +63,11 @@ namespace Pumkin.AvatarTools2.UI
 
             EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.PrefixLabel(versionLabel, EditorStyles.label);
+                EditorStyles.label.normal.background = null;
+
+                UIHelpers.DrawTightLabel(versionLabel);
                 GUILayout.FlexibleSpace();
-                EditorGUILayout.LabelField(configLabel, Styles.RightAlignedLabel);
+                UIHelpers.DrawTightLabel(configLabel, Styles.RightAlignedLabel);
             }
             EditorGUILayout.EndHorizontal();
 
@@ -128,31 +126,12 @@ namespace Pumkin.AvatarTools2.UI
 
         private void DrawSettings()
         {
-            EditorGUI.BeginChangeCheck();
-            {
-                selectedConfigIndex = EditorGUILayout.Popup("Configuration", selectedConfigIndex, ConfigurationManager.Configurations);
-            }
-            if(EditorGUI.EndChangeCheck())
-            {
-                ConfigurationManager.CurrentConfigurationString = ConfigurationManager.Configurations[selectedConfigIndex];
-            }
-
-            EditorGUILayout.Space();
-
-            bool logVerbose = PumkinTools.VerboseLogger.logEnabled;
-            EditorGUI.BeginChangeCheck();
-            logVerbose = EditorGUILayout.ToggleLeft("Enable Verbose logging", logVerbose);
-
-            if(EditorGUI.EndChangeCheck())
-                PumkinTools.VerboseLogger.logEnabled = logVerbose;
+            Settings?.DrawUI();
 
             UIHelpers.DrawLine();
-
             thanksList.Draw();
-
             UIHelpers.DrawLine();
-
-            linksLIst.Draw();
+            linksList.Draw();
         }
 
         public IUIModule FindModule(string name)
@@ -200,6 +179,23 @@ namespace Pumkin.AvatarTools2.UI
             return !ReferenceEquals(ui, null) &&
                 (ui.UIModules.IsNullOrEmpty() && ui.OrphanHolder.ChildModules.IsNullOrEmpty());
         }
+
+        readonly CreditsList thanksList = new CreditsList(
+            "Thanks to the following people for their help!",
+            new NoteEntry("Xiexe", "Fallback shaders"),
+            new NoteEntry("Dreadrith", "Reset pose to avatar definition")
+        );
+
+        readonly CreditsList linksList = new CreditsList(
+            "Links",
+            new URLEntry("VRWorld Toolkit", "https://github.com/oneVR/VRWorldToolkit"),
+            new URLEntry("Poiyomi Shaders", "https://github.com/poiyomi/PoiyomiToonShader"),
+            new URLEntry("Thry Editor", "https://thryeditor.thryrallo.de/")
+        );
+
+
+        IUIModule _orphanHolder;
+        PumkinTools_Settings _settings;
     }
 }
 #endif

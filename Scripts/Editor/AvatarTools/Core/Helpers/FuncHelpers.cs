@@ -15,8 +15,14 @@ namespace Pumkin.Core.Helpers
             TReturn result;
             bool logsEnabled = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            result = func.Invoke();
-            Debug.unityLogger.logEnabled = logsEnabled;
+            try
+            {
+                result = func.Invoke();
+            }
+            finally
+            {
+                Debug.unityLogger.logEnabled = logsEnabled;
+            }
             return result;
         }
 
@@ -24,8 +30,14 @@ namespace Pumkin.Core.Helpers
         {
             bool logsEnabled = Debug.unityLogger.logEnabled;
             Debug.unityLogger.logEnabled = false;
-            action.Invoke();
-            Debug.unityLogger.logEnabled = logsEnabled;
+            try
+            {
+                action.Invoke();
+            }
+            finally
+            {
+                Debug.unityLogger.logEnabled = logsEnabled;
+            }
         }
     }
 }

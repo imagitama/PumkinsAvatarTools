@@ -1,0 +1,9 @@
+//Pumkin.AvatarTools2.Destroyers.ConstraintDestroyer_Settings
+{
+    "positionConstraint": false,
+    "rotationConstraint": false,
+    "scaleConstraint": false,
+    "parentConstraint": false,
+    "aimConstraint": false,
+    "lookAtConstraint": false
+}

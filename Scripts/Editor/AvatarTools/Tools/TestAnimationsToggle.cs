@@ -87,13 +87,14 @@ namespace Pumkin.AvatarTools2.Tools
             {
                 WantsToPlay = EditorGUILayout.ToggleLeft("Test Animations", WantsToPlay);
 
-                GUILayout.FlexibleSpace();  //Makes the label stretch out less
-
                 EditorGUI.BeginChangeCheck();
                 {
                     EditorGUI.BeginDisabledGroup(!CanPlay || !WantsToPlay);
                     {
+                        //TODO: Figure out how to make the label width fit properly
+                        EditorGUIUtility.labelWidth = 0.001f;
                         animation = (TestAnimation)EditorGUILayout.EnumPopup(GUIContent.none, animation);
+                        EditorGUIUtility.labelWidth = 0;
                     }
                     EditorGUI.EndDisabledGroup();
                 }

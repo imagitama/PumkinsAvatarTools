@@ -44,14 +44,13 @@ namespace Pumkin.AvatarTools2.Modules
             }
 
             if(GUILayout.Button("Test dynamic bones in project"))
-            {
                 Debug.Log(TypeHelpers.GetTypeAnwhere("DynamicBone")?.FullName ?? "Not here");
-            }
 
             if(GUILayout.Button("Get Main Script Path"))
-            {
-                Debug.Log(PumkinTools.ToolsFolderPath);
-            }
+                Debug.Log(PumkinTools.MainFolderPath);
+
+            if(GUILayout.Button("Log verbose"))
+                PumkinTools.LogVerbose("Hello!", LogType.Warning);
         }
     }
 }

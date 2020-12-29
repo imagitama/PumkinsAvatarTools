@@ -27,6 +27,9 @@ namespace Pumkin.AvatarTools2.Tools
     {
         public override void OnInspectorGUI()
         {
+            if(target == null)
+                return;
+
             var anchorType = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.anchorTransformType));
             var humanBone = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.humanBone));
             var bonePath = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.hierarchyPath));

@@ -30,7 +30,7 @@ namespace Pumkin.AvatarTools2.Settings
             var settingsType = CachedTypesAndAttributes.FirstOrDefault(t => t.Value.OwnerType == itemType).Key;
             ISettingsContainer settings = null;
 
-            if(settingsType != null)
+            if(settingsType != null && settings == null)
                 settings = ScriptableObject.CreateInstance(settingsType) as ISettingsContainer;
 
             CachedItemsAndSettings[item] = settings;

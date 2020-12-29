@@ -12,8 +12,6 @@ namespace Pumkin.AvatarTools2
     static class ConfigurationManager
     {
         public const string DEFAULT_CONFIGURATION = "General";
-        static string[] _configurations;
-        static string _configurationString;
 
         public static event Delegates.StringChangeHandler OnConfigurationChanged;
 
@@ -26,25 +24,44 @@ namespace Pumkin.AvatarTools2
             }
             set => _configurations = value;
         }
+
         public static string CurrentConfigurationString
         {
             get => _configurationString;
-            set
+            private set
             {
-                string newValue = string.IsNullOrWhiteSpace(value) ? DEFAULT_CONFIGURATION : value;
-                if(_configurationString != newValue)
+                _configurationString = ValidateConfigurationString(value);
+
+                PrefManager.SetString("configurationString", _configurationString);
+                _configurationIndex = Array.IndexOf(Configurations, _configurationString);
+
+                try
                 {
-                    _configurationString = newValue;
-                    OnConfigurationChanged?.Invoke(newValue);
+                    OnConfigurationChanged?.Invoke(_configurationString);
+                }
+                catch(Exception ex)
+                {
+                    PumkinTools.LogException(ex);
                 }
             }
         }
+
         public static int CurrentConfigurationIndex
         {
             get
             {
-                int index = Array.IndexOf(Configurations, CurrentConfigurationString);
-                return index > 0 ? index : 0;
+                if(_configurationIndex == null)
+                    _configurationIndex = Array.IndexOf(Configurations, CurrentConfigurationString);
+                return _configurationIndex > 0 ? (int)_configurationIndex : 0;
+            }
+            set
+            {
+                if(CurrentConfigurationIndex == value)
+                    return;
+
+                CurrentConfigurationString = Configurations[value];
+                PrefManager.SetString("configurationString", CurrentConfigurationString);
+                OnConfigurationChanged?.Invoke(CurrentConfigurationString);
             }
         }
 
@@ -54,14 +71,6 @@ namespace Pumkin.AvatarTools2
 
             PumkinToolsWindow.OnWindowEnabled -= OnEnable;
             PumkinToolsWindow.OnWindowEnabled += OnEnable;
-
-            PumkinToolsWindow.OnWindowDisabled -= OnDisabled;
-            PumkinToolsWindow.OnWindowDisabled += OnDisabled;
-        }
-
-        private static void OnDisabled()
-        {
-            PrefManager.SetString("configurationString", CurrentConfigurationString);
         }
 
         private static void OnEnable()
@@ -77,9 +86,20 @@ namespace Pumkin.AvatarTools2
             var configCache = cache
                 .SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings)
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(s => s != DEFAULT_CONFIGURATION)
+                .ThenBy(s => s)
                 .ToArray();
 
             Configurations = configCache;
         }
+
+        public static string ValidateConfigurationString(string newConfigString)
+        {
+            return string.IsNullOrWhiteSpace(newConfigString) ? DEFAULT_CONFIGURATION : newConfigString;
+        }
+
+        static string[] _configurations;
+        static string _configurationString;
+        static int? _configurationIndex;
     }
 }

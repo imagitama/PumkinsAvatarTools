@@ -1,0 +1,8 @@
+//Pumkin.AvatarTools2.Tools.SetRendererAnchors_Settings
+{
+    "anchorTransformType": 0,
+    "humanBone": 7,
+    "hierarchyPath": "Armature/Hips/Spine",
+    "skinnedMeshRenderers": true,
+    "meshRenderers": true
+}

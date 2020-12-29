@@ -239,6 +239,42 @@ namespace Pumkin.Core.Helpers
             action?.Invoke();
             GUI.enabled = old;
         }
+
+        /// <summary>
+        /// Draws a label with it's width being tight around the text
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="style"></param>
+        /// <param name="options"></param>
+        public static void DrawTightLabel(GUIContent content, GUIStyle style, params GUILayoutOption[] options)
+        {
+            float textWidth = style.CalcSize(content).x;
+            float labelWidth = EditorGUIUtility.labelWidth;
+            float fieldWidth = EditorGUIUtility.fieldWidth;
+
+            EditorGUIUtility.labelWidth = textWidth - 0.1f;
+            EditorGUIUtility.fieldWidth = 0.00000001f;
+
+            EditorGUILayout.LabelField(content, options);
+
+            EditorGUIUtility.labelWidth = labelWidth;
+            EditorGUIUtility.fieldWidth = fieldWidth;
+        }
+
+        public static void DrawTightLabel(GUIContent content, params GUILayoutOption[] options)
+        {
+            DrawTightLabel(content, EditorStyles.label, options);
+        }
+
+        public static void DrawTightLabel(string label, GUIStyle style, params GUILayoutOption[] options)
+        {
+            DrawTightLabel(new GUIContent(label), style, options);
+        }
+
+        public static void DrawTightLabel (string label, params GUILayoutOption[] options)
+        {
+            DrawTightLabel(new GUIContent(label), EditorStyles.label, options);
+        }
     }
 }
 #endif

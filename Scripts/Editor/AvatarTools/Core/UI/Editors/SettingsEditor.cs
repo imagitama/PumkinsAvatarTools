@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Settings;
+using System;
 using UnityEditor;
 
 namespace Pumkin.AvatarTools2.UI
@@ -12,6 +13,21 @@ namespace Pumkin.AvatarTools2.UI
     public class SettingsEditor : Editor
     {
         protected bool hideScriptField = true;
+        protected bool refreshSettings = false;
+
+        private void OnEnable()
+        {
+            refreshSettings = true;
+            try
+            {
+                OnInspectorGUI();
+            }
+            finally
+            {
+                refreshSettings = false;
+            }
+
+        }
 
         public override void OnInspectorGUI()
         {
@@ -20,7 +36,14 @@ namespace Pumkin.AvatarTools2.UI
                 serializedObject.Update();
                 EditorGUI.BeginChangeCheck();
                 {
-                    DrawPropertiesExcluding(serializedObject, "m_Script");
+                    try
+                    {
+                        DrawPropertiesExcluding(serializedObject, "m_Script");
+                    }
+                    catch(Exception ex)
+                    {
+                        UnityEngine.Debug.Log("WHY!?");
+                    }
                 }
                 if(EditorGUI.EndChangeCheck())
                     serializedObject.ApplyModifiedProperties();
