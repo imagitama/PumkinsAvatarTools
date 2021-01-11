@@ -72,7 +72,7 @@ namespace Pumkin.AvatarTools2
 
         static PumkinTools()
         {
-            VerboseLogger.logEnabled = true;
+
         }
 
         public static void AvatarSelectionChanged(GameObject newSelection)

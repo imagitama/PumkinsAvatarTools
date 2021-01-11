@@ -1,8 +1,10 @@
 ﻿#if UNITY_EDITOR && PUMKIN_DEV
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
+using System;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Modules
@@ -24,8 +26,9 @@ namespace Pumkin.AvatarTools2.Modules
             if(GUILayout.Button("Remove tools module"))
                 PumkinToolsWindow.UI.RemoveModule("tools");
 
-            if(GUILayout.Button("Build UI"))
-                PumkinToolsWindow.UI = UIBuilder.BuildUI();
+            //if(GUILayout.Button("Build UI"))
+            //    if(UIBuilder.BuildUI(out MainUI ui))
+            //        PumkinToolsWindow.UI = ui;
 
             if(GUILayout.Button("Dump Default GUISkin"))
                 DevHelpers.DumpDefaultGUISkin();
@@ -51,6 +54,10 @@ namespace Pumkin.AvatarTools2.Modules
 
             if(GUILayout.Button("Log verbose"))
                 PumkinTools.LogVerbose("Hello!", LogType.Warning);
+
+            if(GUILayout.Button("Print settings containers"))
+                foreach(var s in GameObject.FindObjectsOfType<SettingsContainerBase>())
+                    Debug.Log(s.GetType().Name);
         }
     }
 }

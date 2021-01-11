@@ -1,8 +1,10 @@
 ﻿using Pumkin.AvatarTools2;
+using Pumkin.AvatarTools2.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -13,28 +15,30 @@ namespace Pumkin.Core.UI
     /// Used to define UI related stuff.
     /// Note that not all of these are applicable to every UI item
     /// </summary>
-    public class UIDefinition
+    [Serializable]
+    public sealed class UIDefinition
     {
-        const string MAIN_FOLDER_SUFFIX = "/Settings/UI";
+        const string FOLDER_NAME = "UI";
+        const string NAME_SUFFIX = "_UIDefs";
 
-        string SavePath
+        string JSONHeader
         {
             get
             {
-                if(_savePath == null)
-                    _savePath = $"{SaveFolder}{GetType().Name}.json";
-                return _savePath;
+                if(_header == null && !string.IsNullOrWhiteSpace(OwnerName))
+                    _header = $"//{OwnerName}";
+                return _header;
             }
+        }
+
+        string SavePath
+        {
+            get => _savePath = $"{SaveFolder}{OwnerName}{NAME_SUFFIX}.json";
         }
 
         string SaveFolder
         {
-            get
-            {
-                if(_saveFolder == null)
-                    _saveFolder = $"{PumkinTools.MainFolderPath}/{MAIN_FOLDER_SUFFIX}";
-                return _saveFolder;
-            }
+            get => $"{SettingsManager.SettingsPath}/{FOLDER_NAME}/";
         }
 
         string Header
@@ -42,10 +46,15 @@ namespace Pumkin.Core.UI
             get
             {
                 if(_header == null)
-                    _header = $"//{GetType().FullName}";
+                    _header = $"//{GetType().Name}";
                 return _header;
             }
         }
+
+        /// <summary>
+        /// Name of the owner class. Used in the filename when saving to a config file
+        /// </summary>
+        public string OwnerName { get; set; }
 
         /// <summary>
         /// The name of this item in the UI
@@ -70,7 +79,7 @@ namespace Pumkin.Core.UI
         /// <summary>
         /// Whether or not this item should be expanded in the UI
         /// </summary>
-        public bool IsExpanded { get; set; }
+        public bool IsExpanded { get => _isExpanded; set => _isExpanded = value; }
 
         /// <summary>
         /// Whether or not this item should be hidden in the UI
@@ -80,13 +89,20 @@ namespace Pumkin.Core.UI
         /// <summary>
         /// Whether or not this items should have it's settings expanded in the UI
         /// </summary>
-        public bool ExpandSettings { get; set; }
+        public bool ExpandSettings { get => _expandSettings; set => _expandSettings = value; }
 
         private UIDefinition()
         {
-            LoadFromConfigFile(SavePath);
+            SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
+            SettingsManager.SaveSettingsCallback += SettingsManager_SaveSettingsCallback;
 
-            PumkinToolsWindow.OnWindowDestroyed += PumkinToolsWindow_OnWindowDestroyed;
+            SettingsManager.LoadSettingsCallback -= SettingsManager_LoadSettingsCallback;
+            SettingsManager.LoadSettingsCallback += SettingsManager_LoadSettingsCallback;
+        }
+
+        private void SettingsManager_LoadSettingsCallback()
+        {
+            LoadFromConfigFile(SavePath);
         }
 
         public UIDefinition(string name, string description, int orderInUI, params UIModuleStyles[] moduleStyles) : this()
@@ -121,10 +137,18 @@ namespace Pumkin.Core.UI
 
         public bool SaveToConfigFile(string filePath)
         {
-            return false;
+            if(string.IsNullOrWhiteSpace(OwnerName))
+                return false;
+
+            Directory.CreateDirectory(SaveFolder);
+            //PumkinTools.LogVerbose($"Saving... {OwnerName}{NAME_SUFFIX}.json");
             try
             {
-                string json = Header + '\n' + JsonUtility.ToJson(this, true);
+                string json = JsonUtility.ToJson(this, true);
+                if(json == "{}")
+                    return false;
+
+                json = JSONHeader + '\n' + JsonUtility.ToJson(this, true);
                 File.WriteAllText(SavePath, json);
             }
             catch(Exception e)
@@ -147,9 +171,11 @@ namespace Pumkin.Core.UI
                     return false;
 
                 if(lines[0] != Header)
-                    PumkinTools.LogVerbose($"Trying to load settings for {GetType().Name} but the file header is not valid for this container");
-
-                JsonUtility.FromJsonOverwrite(string.Concat(lines), this);
+                {
+                    PumkinTools.LogVerbose($"Trying to load UI defintion for {OwnerName} but the file header is not valid for this object");
+                    return false;
+                }
+                JsonUtility.FromJsonOverwrite(string.Concat(lines.Skip(1)), this);
             }
             catch(Exception e)
             {
@@ -161,17 +187,10 @@ namespace Pumkin.Core.UI
             return true;
         }
 
-
-        private void PumkinToolsWindow_OnWindowDestroyed()
+        private void SettingsManager_SaveSettingsCallback()
         {
             SaveToConfigFile(SavePath);
         }
-
-        private void ConfigurationManager_BeforeConfigurationChanged(string newString)
-        {
-            SaveToConfigFile(SavePath);
-        }
-
 
         public static implicit operator bool(UIDefinition uid)
         {
@@ -181,5 +200,8 @@ namespace Pumkin.Core.UI
         private string _savePath;
         private string _saveFolder;
         private string _header;
+
+        [SerializeField] private bool _isExpanded;
+        [SerializeField] private bool _expandSettings;
     }
 }

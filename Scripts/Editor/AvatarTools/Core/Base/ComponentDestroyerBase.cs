@@ -72,7 +72,7 @@ namespace Pumkin.AvatarTools2.Destroyers
                 UIDefs = new UIDefinition(StringHelpers.ToTitleCase(name) ?? "Invalid Destroyer");
             }
 
-            Settings = this.GetSettingsContainer();
+            Settings = this.GetOrCreateSettingsContainer();
         }
 
 

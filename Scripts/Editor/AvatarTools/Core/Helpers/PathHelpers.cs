@@ -108,5 +108,23 @@ namespace Pumkin.Core.Helpers
                 path = path.Replace('\\', '/');
             return path;
         }
+
+        public static string FullTypeNameAsPath(string fullName)
+        {
+            if(string.IsNullOrWhiteSpace(fullName))
+                return fullName;
+
+            var arr = GetPathAsArray(fullName.Replace('.', '/'));
+            return string.Join("/", arr);
+        }
+
+        public static string NamespaceAsPath(string name)
+        {
+            if(string.IsNullOrWhiteSpace(name))
+                return name;
+
+            var arr = GetPathAsArray(name.Replace('.', '/'));
+            return string.Join("/", arr.Take(arr.Length - 1));
+        }
     }
 }

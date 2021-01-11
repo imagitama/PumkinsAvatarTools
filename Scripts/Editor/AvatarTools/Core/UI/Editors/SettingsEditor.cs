@@ -22,11 +22,11 @@ namespace Pumkin.AvatarTools2.UI
             {
                 OnInspectorGUI();
             }
+            catch { }
             finally
             {
                 refreshSettings = false;
             }
-
         }
 
         public override void OnInspectorGUI()
@@ -40,10 +40,10 @@ namespace Pumkin.AvatarTools2.UI
                     {
                         DrawPropertiesExcluding(serializedObject, "m_Script");
                     }
-                    catch(Exception ex)
-                    {
-                        UnityEngine.Debug.Log("WHY!?");
-                    }
+                    catch { }
+                    //{
+                    //    UnityEngine.Debug.Log("WHY!?");
+                    //}
                 }
                 if(EditorGUI.EndChangeCheck())
                     serializedObject.ApplyModifiedProperties();

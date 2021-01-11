@@ -17,20 +17,13 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Quick Setup Avatar", -1);
 
-        //public override ISettingsContainer Settings => settings;
-        QuickSetupAvatar_Settings settings;
-
-        protected override void SetupSettings()
-        {
-            settings = ScriptableObject.CreateInstance<QuickSetupAvatar_Settings>();
-        }
-
         protected override bool DoAction(GameObject target)
         {
             return true;
         }
     }
 
+    [CustomSettingsContainer(typeof(QuickSetupAvatar))]
     public class QuickSetupAvatar_Settings : SettingsContainerBase
     {
 

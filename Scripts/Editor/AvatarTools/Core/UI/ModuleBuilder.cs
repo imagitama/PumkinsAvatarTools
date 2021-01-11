@@ -57,7 +57,7 @@ namespace Pumkin.AvatarTools2.UI
                     }
 
                     if(IDManager.Register(itemInst))
-                            items.Add(itemInst);
+                        items.Add(itemInst);
                 }
                 catch(Exception e)
                 {

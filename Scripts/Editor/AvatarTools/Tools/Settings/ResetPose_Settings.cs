@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
+    [CustomSettingsContainer(typeof(ResetPose))]
     class ResetPose_Settings : SettingsContainerBase
     {
         public ResetType resetType = ResetType.ToAvatarDefinition;

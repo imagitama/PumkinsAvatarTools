@@ -13,23 +13,36 @@ namespace Pumkin.AvatarTools2.UI
 {
     static class UIBuilder
     {
+        public static event Action BeforeUIBuildCallback;
+        public static event Action OnUIBuildFinished;
+        public static bool IsBuilding { get; private set; }
+
         static Dictionary<Type, AutoLoadAttribute> typeCache;
         static Dictionary<Type, AutoLoadAttribute> subItemTypeCache;
         static Dictionary<Type, AutoLoadAttribute> moduleTypeCache;
 
-        public static MainUI BuildUI()
+        public static bool BuildUI(out MainUI ui)
         {
-            MainUI ui = new MainUI();
-            IDManager.ClearCache();
-            RefreshCachedTypes(ConfigurationManager.CurrentConfigurationString);
+            ui = new MainUI();
+
+            //SettingsManager.ClearEvents();
+
+            if(IsBuilding)
+                return false;
+
+            BeforeUIBuildCallback?.Invoke();
+
+            IsBuilding = true;
 
             var builders = new List<ModuleBuilder>();
             var modules = new List<IUIModule>();
 
-
-            //Create all builders and their modules
             try
             {
+                IDManager.ClearCache();
+                RefreshCachedTypes(ConfigurationManager.CurrentConfigurationString);
+
+                //Create all builders and their modules
                 foreach(var kv in moduleTypeCache)
                 {
                     var builder = new ModuleBuilder(kv.Key, kv.Value);
@@ -97,7 +110,9 @@ namespace Pumkin.AvatarTools2.UI
             ui.UIModules = modules;
             ui.OrderModules();
 
-            return ui;
+            IsBuilding = false;
+            OnUIBuildFinished?.Invoke();
+            return true;
         }
 
         public static bool AssignToParentByID(IUIModule module, string parentID)

@@ -3,6 +3,7 @@ using Pumkin.AvatarTools2.UI;
 using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Pumkin.AvatarTools2
 {
@@ -19,12 +20,8 @@ namespace Pumkin.AvatarTools2
 
         public PumkinToolsWindow()
         {
-            ConfigurationManager.OnConfigurationChanged += RebuildUI;
-        }
-
-        private void RebuildUI(string newConfig)
-        {
-            UI = UIBuilder.BuildUI();
+            ConfigurationManager.OnConfigurationChanged -= ConfigurationChanged;
+            ConfigurationManager.OnConfigurationChanged += ConfigurationChanged;
         }
 
         [MenuItem("Pumkin/Tools/Avatar Tools 2", false, 0)]
@@ -42,9 +39,7 @@ namespace Pumkin.AvatarTools2
 
         void OnEnable()
         {
-            //UI build gets called by configuration being loaded
             guiSkin = Resources.Load<GUISkin>("UI/PumkinToolsGUISkin");
-
             OnWindowEnabled?.Invoke();
         }
 
@@ -56,7 +51,6 @@ namespace Pumkin.AvatarTools2
         private void OnDestroy()
         {
             OnWindowDestroyed?.Invoke();
-            Debug.Log("So long!");
         }
 
         private void OnGUI()
@@ -68,10 +62,30 @@ namespace Pumkin.AvatarTools2
                 GUI.skin = guiSkin;
             }
 
-            UI?.Draw();
+            if(!UI)
+                RebuildUI();
+
+            UI.Draw();
 
             if(oldSkin != null)
                 GUI.skin = oldSkin;
+        }
+
+        private void ConfigurationChanged(string newString)
+        {
+            if(UI != null)
+                RebuildUI(newString);
+        }
+
+        void RebuildUI()
+        {
+            RebuildUI(ConfigurationManager.CurrentConfigurationString);
+        }
+
+        private void RebuildUI(string newConfig)
+        {
+            if(UIBuilder.BuildUI(out MainUI tempUI))
+                UI = tempUI ?? UI;
         }
     }
 }

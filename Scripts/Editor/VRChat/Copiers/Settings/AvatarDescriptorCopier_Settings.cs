@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Settings
 {
+    //[CustomSettingsContainer(typeof(AvatarDescriptorCopier))]
     class AvatarDescriptorCopier_Settings : CopierSettingsContainerBase
     {
         protected override bool ShowCreateGameObjects => false;

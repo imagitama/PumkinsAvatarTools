@@ -3,7 +3,6 @@ using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Modules;
 using Pumkin.AvatarTools2.Settings;
 using Pumkin.AvatarTools2.UI.Credits;
-using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using System;
 using System.Collections.Generic;
@@ -20,7 +19,6 @@ namespace Pumkin.AvatarTools2.UI
     public class MainUI
     {
         public List<IUIModule> UIModules = new List<IUIModule>();
-        public List<UIModuleBase> mods = new List<UIModuleBase>();
         bool drawSettings = false;
 
         Vector2 scroll = Vector2.zero;
@@ -44,22 +42,29 @@ namespace Pumkin.AvatarTools2.UI
             }
         }
 
-        public MainUI() { }
+        public MainUI()
+        {
 
-        public MainUI(List<IUIModule> modules)
+        }
+
+        public MainUI(List<IUIModule> modules) : this()
         {
             UIModules = modules;
         }
 
         public void Draw()
         {
-            EditorGUILayout.BeginHorizontal();
+            try
             {
+                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Pumkin's Avatar Tools", Styles.TitleLabel);
                 if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
                     drawSettings = !drawSettings;
             }
-            EditorGUILayout.EndHorizontal();
+            finally // Used to throw an exception when recompiling scripts
+            {
+                EditorGUILayout.EndHorizontal();
+            }
 
             EditorGUILayout.BeginHorizontal();
             {
@@ -176,8 +181,7 @@ namespace Pumkin.AvatarTools2.UI
         /// <param name="ui"></param>
         public static implicit operator bool(MainUI ui)
         {
-            return !ReferenceEquals(ui, null) &&
-                (ui.UIModules.IsNullOrEmpty() && ui.OrphanHolder.ChildModules.IsNullOrEmpty());
+            return !ReferenceEquals(ui, null);
         }
 
         readonly CreditsList thanksList = new CreditsList(

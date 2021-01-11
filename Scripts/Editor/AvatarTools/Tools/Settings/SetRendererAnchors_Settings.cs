@@ -36,6 +36,7 @@ namespace Pumkin.AvatarTools2.Tools
             var skinnedMeshRenderers = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.skinnedMeshRenderers));
             var meshRenderers = serializedObject.FindProperty(nameof(SetRendererAnchors_Settings.meshRenderers));
 
+
             EditorGUILayout.PropertyField(anchorType);
             if(anchorType.enumValueIndex == (int)SetRendererAnchors_Settings.AnchorType.HumanBone)
                 EditorGUILayout.PropertyField(humanBone);

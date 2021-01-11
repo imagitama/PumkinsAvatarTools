@@ -14,6 +14,7 @@ namespace Pumkin.AvatarTools2
         public const string DEFAULT_CONFIGURATION = "General";
 
         public static event Delegates.StringChangeHandler OnConfigurationChanged;
+        public static event Delegates.StringChangeHandler BeforeConfigurationChanged;
 
         public static string[] Configurations
         {
@@ -30,7 +31,21 @@ namespace Pumkin.AvatarTools2
             get => _configurationString;
             private set
             {
-                _configurationString = ValidateConfigurationString(value);
+                var str = ValidateConfigurationString(value);
+
+                if(str.Equals(_configurationString, StringComparison.OrdinalIgnoreCase))
+                    return;
+
+                _configurationString = str;
+
+                try
+                {
+                    BeforeConfigurationChanged?.Invoke(_configurationString);
+                }
+                catch(Exception ex)
+                {
+                    PumkinTools.LogException(ex);
+                }
 
                 PrefManager.SetString("configurationString", _configurationString);
                 _configurationIndex = Array.IndexOf(Configurations, _configurationString);

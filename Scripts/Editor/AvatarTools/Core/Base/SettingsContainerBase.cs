@@ -8,16 +8,18 @@ using Pumkin.AvatarTools2.UI;
 using Pumkin.Core.Helpers;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using Pumkin.Core;
 
 namespace Pumkin.AvatarTools2.Settings
 {
     [Serializable]
     public class SettingsContainerBase : ScriptableObject, ISettingsContainer
     {
-        const string MAIN_FOLDER_SUFFIX = "Settings/";
+        const string FOLDER_NAME = "Configs";
 
         static Type genericInspectorType;
-        static Type defaultEditorType;
+        static Type defaultSettingsEditorType;
 
         string SavePath
         {
@@ -34,12 +36,23 @@ namespace Pumkin.AvatarTools2.Settings
             get
             {
                 if(_saveFolder == null)
-                    _saveFolder = $"{PumkinTools.MainFolderPath}/{MAIN_FOLDER_SUFFIX}";
+                {
+                    string config = null;
+                    var attr = GetType().GetCustomAttribute<CustomSettingsContainerAttribute>();
+                    if(attr != null)
+                    {
+                        var ownerAutoLoad = attr.OwnerType.GetCustomAttribute<AutoLoadAttribute>();
+                        if(ownerAutoLoad != null)
+                            config = ownerAutoLoad.ConfigurationStrings.FirstOrDefault();
+                    }
+                    config = string.IsNullOrWhiteSpace(config) ? ConfigurationManager.DEFAULT_CONFIGURATION : config;
+                    _saveFolder = $"{SettingsManager.SettingsPath}{FOLDER_NAME}/{config}/";
+                }
                 return _saveFolder;
             }
         }
 
-        string Header
+        string JSONHeader
         {
             get
             {
@@ -53,18 +66,12 @@ namespace Pumkin.AvatarTools2.Settings
         {
             get
             {
-                // Creates editors for everything, then replaces default editors with default SettingsEditors. Don't like it, but it will do for now.
-                // NOTE: Potential crashes here
-                if(genericInspectorType == null)
-                    genericInspectorType = TypeHelpers.GetTypeAnwhere("UnityEditor.GenericInspector");
-                if(defaultEditorType == null)
-                    defaultEditorType = typeof(SettingsEditor);
-
-                if(!_editor || (_editor && _editor.serializedObject == null))
+                if(_editor == null)
                 {
+                    //Create a custom editor, if it's a generic one replace it with a SettingsEditor
                     _editor = Editor.CreateEditor(this);
                     if(_editor.GetType() == genericInspectorType)
-                        _editor = Editor.CreateEditor(this, defaultEditorType);
+                        _editor = Editor.CreateEditor(this, defaultSettingsEditorType);
                 }
                 return _editor;
             }
@@ -72,20 +79,22 @@ namespace Pumkin.AvatarTools2.Settings
 
         public void Awake()
         {
-            LoadFromConfigFile(SavePath);
             Editor.OnInspectorGUINoScriptField();   //Try to draw so it initializes and opens instantly later
-            PumkinToolsWindow.OnWindowDisabled += PumkinToolsWindow_OnWindowDisabled;
+
+            if(genericInspectorType == null)
+                genericInspectorType = TypeHelpers.GetTypeAnwhere("UnityEditor.GenericInspector");
+            if(defaultSettingsEditorType == null)
+                defaultSettingsEditorType = typeof(SettingsEditor);
+
+            LoadFromConfigFile(SavePath);
+
+            SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
+            SettingsManager.SaveSettingsCallback += SettingsManager_SaveSettingsCallback;
         }
 
-        private void PumkinToolsWindow_OnWindowDisabled()
+        private void SettingsManager_SaveSettingsCallback()
         {
             SaveToConfigFile(SavePath);
-        }
-
-        private void OnDisable()
-        {
-            Debug.Log(GetType().Name + " " + "Called OnDisable()");
-            //SaveToConfigFile(SavePath);
         }
 
         public void DrawUI()
@@ -95,12 +104,18 @@ namespace Pumkin.AvatarTools2.Settings
 
         public bool SaveToConfigFile(string filePath)
         {
-            if(!Directory.Exists(SaveFolder))
-                Directory.CreateDirectory(SaveFolder);
-
+            Directory.CreateDirectory(SaveFolder);
             try
             {
-                string json = Header + '\n' + JsonUtility.ToJson(this, true);
+                string json = JsonUtility.ToJson(this, true);
+                if(json == "{}")
+                {
+                    PumkinTools.LogVerbose($"Json for <b>{GetType().Name} is empty. Ignoring</b>");
+                    return false;
+                }
+
+                PumkinTools.LogVerbose($"Saving <b>{GetType().Name}.json</b>");
+                json = JSONHeader + '\n' + JsonUtility.ToJson(this, true);
                 File.WriteAllText(SavePath, json);
             }
             catch(Exception e)
@@ -122,7 +137,7 @@ namespace Pumkin.AvatarTools2.Settings
                 if(lines.Length == 0)
                     return false;
 
-                if(lines[0] != Header)
+                if(lines[0] != JSONHeader)
                 {
                     PumkinTools.LogVerbose($"Trying to load settings for {GetType().Name} but the file header is not valid for this container");
                     return false;
@@ -141,11 +156,6 @@ namespace Pumkin.AvatarTools2.Settings
                 return false;
             }
             return true;
-        }
-
-        private void OnDestroy()
-        {
-            SaveToConfigFile(SavePath);
         }
 
         protected Editor _editor;

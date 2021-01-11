@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace Pumkin.AvatarTools2.Settings
 {
+    //No [CustomSettingsContainer] here because we create it manually
     class PumkinTools_Settings : SettingsContainerBase
     {
         public bool enableVerboseLogging = false;

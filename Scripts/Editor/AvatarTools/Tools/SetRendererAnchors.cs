@@ -15,23 +15,17 @@ namespace Pumkin.AvatarTools2.Tools
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("Set Renderer Anchors", "Sets up anchors overrides on your renderers");
 
-        public override ISettingsContainer Settings { get => settings; }
-
-        SetRendererAnchors_Settings settings;
-
-        protected override void SetupSettings()
-        {
-            settings = ScriptableObject.CreateInstance<SetRendererAnchors_Settings>();
-        }
 
         protected override bool Prepare(GameObject target)
         {
+            var settings = Settings as SetRendererAnchors_Settings;
             return (settings.skinnedMeshRenderers || settings.meshRenderers) &&
                 base.Prepare(target);
         }
 
         protected override bool DoAction(GameObject target)
         {
+            var settings = Settings as SetRendererAnchors_Settings;
             var anim = target.GetComponent<Animator>();
             Transform bone = null;
             string path = null;

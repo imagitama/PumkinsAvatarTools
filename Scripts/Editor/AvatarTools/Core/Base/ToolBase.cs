@@ -1,5 +1,6 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
@@ -55,7 +56,7 @@ namespace Pumkin.AvatarTools2.Tools
 
         public virtual bool EnabledInUI { get; set; } = true;
 
-        public virtual ISettingsContainer Settings => null;
+        public ISettingsContainer Settings { get; private set; }
 
         bool _allowUpdate;
         GUIContent _content;
@@ -67,7 +68,7 @@ namespace Pumkin.AvatarTools2.Tools
         {
             if(UIDefs == null)
                 UIDefs = new UIDefinition(StringHelpers.ToTitleCase(GetType().Name));
-            SetupSettings();
+            Settings = this.GetOrCreateSettingsContainer();
         }
 
         void SetupUpdateCallback(ref EditorApplication.CallbackFunction callback, bool add)
@@ -83,8 +84,6 @@ namespace Pumkin.AvatarTools2.Tools
             else
                 EditorApplication.update += callback;
         }
-
-        protected virtual void SetupSettings() { }
 
         public virtual void DrawUI(params GUILayoutOption[] options)
         {

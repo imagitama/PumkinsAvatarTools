@@ -17,16 +17,9 @@ namespace Pumkin.AvatarTools2.Tools
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("Reset Pose", "Reverts the location, rotation and scale of your avatar back to avatar definition, prefab, T-Pose or A-Pose");
 
-        public override ISettingsContainer Settings => settings;
-        ResetPose_Settings settings;
-
-        protected override void SetupSettings()
-        {
-            settings = ScriptableObject.CreateInstance<ResetPose_Settings>();
-        }
-
         protected override bool DoAction(GameObject target)
         {
+            var settings = Settings as ResetPose_Settings;
             switch(settings.resetType)
             {
                 case ResetPose_Settings.ResetType.ToAvatarDefinition:
@@ -143,6 +136,8 @@ namespace Pumkin.AvatarTools2.Tools
 
         bool ResetToPrefab(GameObject target, bool position, bool rotation, bool scale)
         {
+            var settings = Settings as ResetPose_Settings;
+
             var overrides = PrefabUtility.GetObjectOverrides(target)
                     ?.Where(t => t.instanceObject.GetType() == _transformType && t.instanceObject);
 
