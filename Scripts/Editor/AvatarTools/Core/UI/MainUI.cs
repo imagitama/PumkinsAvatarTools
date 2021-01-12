@@ -54,17 +54,13 @@ namespace Pumkin.AvatarTools2.UI
 
         public void Draw()
         {
-            try
+            EditorGUILayout.BeginHorizontal();
             {
-                EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Pumkin's Avatar Tools", Styles.TitleLabel);
                 if(GUILayout.Button(Icons.Settings, Styles.MediumIconButton))
                     drawSettings = !drawSettings;
             }
-            finally // Used to throw an exception when recompiling scripts
-            {
-                EditorGUILayout.EndHorizontal();
-            }
+            EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
             {

@@ -23,9 +23,8 @@ namespace Pumkin.AvatarTools2.UI
 
         public static bool BuildUI(out MainUI ui)
         {
+            PumkinTools.LogVerbose("Building UI...");
             ui = new MainUI();
-
-            //SettingsManager.ClearEvents();
 
             if(IsBuilding)
                 return false;

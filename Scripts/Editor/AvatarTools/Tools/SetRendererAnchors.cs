@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Settings;
+using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.UI;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad(DefaultIDs.Tools.SetRendererAchors, ParentModuleID = DefaultIDs.Modules.Tools_SetupAvatar)]
-    class SetRendererAnchors : ToolBase
+    public class SetRendererAnchors : ToolBase
     {
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("Set Renderer Anchors", "Sets up anchors overrides on your renderers");

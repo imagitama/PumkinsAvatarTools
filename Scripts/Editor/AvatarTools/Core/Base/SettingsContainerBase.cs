@@ -13,6 +13,9 @@ using Pumkin.Core;
 
 namespace Pumkin.AvatarTools2.Settings
 {
+    /// <summary>
+    /// Settings container for IItem. Note: All settings containers MUST be in their own files to work
+    /// </summary>
     [Serializable]
     public class SettingsContainerBase : ScriptableObject, ISettingsContainer
     {
@@ -86,9 +89,10 @@ namespace Pumkin.AvatarTools2.Settings
             if(defaultSettingsEditorType == null)
                 defaultSettingsEditorType = typeof(SettingsEditor);
 
+            SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
+
             LoadFromConfigFile(SavePath);
 
-            SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
             SettingsManager.SaveSettingsCallback += SettingsManager_SaveSettingsCallback;
         }
 

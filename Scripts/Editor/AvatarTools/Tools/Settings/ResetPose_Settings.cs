@@ -10,10 +10,9 @@ namespace Pumkin.AvatarTools2.Tools
     {
         public ResetType resetType = ResetType.ToAvatarDefinition;
 
-        [Space]
-        [DrawToggleLeft] public bool position = false;
-        [DrawToggleLeft] public bool rotation = true;
-        [DrawToggleLeft] public bool scale = false;
+        public bool position = false;
+        public bool rotation = true;
+        public bool scale = false;
 
         public enum ResetType { ToAvatarDefinition, ToPrefab, ToTPose, ToAPose };
     }

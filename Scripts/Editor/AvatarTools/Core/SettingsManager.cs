@@ -26,16 +26,15 @@ public static class SettingsManager
 
     static SettingsManager()
     {
-        PumkinToolsWindow.OnWindowDisabled -= PumkinToolsWindow_OnWindowDisabled;
+        LoadSettingsCallback = null;
+        SaveSettingsCallback = null;
+
         PumkinToolsWindow.OnWindowDisabled += PumkinToolsWindow_OnWindowDisabled;
 
-        ConfigurationManager.BeforeConfigurationChanged -= ConfigurationManger_BeforeConfigurationChanged;
         ConfigurationManager.BeforeConfigurationChanged += ConfigurationManger_BeforeConfigurationChanged;
 
-        UIBuilder.OnUIBuildFinished -= LoadAllSettings;
         UIBuilder.OnUIBuildFinished += LoadAllSettings;
 
-        UIBuilder.BeforeUIBuildCallback -= ClearEvents;
         UIBuilder.BeforeUIBuildCallback += ClearEvents;
     }
 

@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Pumkin.Core
 {
     /// <summary>
-    /// Tells a SettingsContainer what Item it should be created for
+    /// Tells a SettingsContainer what IItem it should be created for
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class CustomSettingsContainerAttribute : Attribute

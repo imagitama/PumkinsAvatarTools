@@ -31,10 +31,20 @@ namespace Pumkin.AvatarTools2.Settings
             ISettingsContainer settings = null;
 
             if(settingsType != null && settings == null)
-                settings = GameObject.FindObjectOfType(settingsType) as ISettingsContainer
-                    ?? ScriptableObject.CreateInstance(settingsType) as ISettingsContainer;
+            {
+                //Clean up if exists
+                settings = GameObject.FindObjectOfType(settingsType) as ISettingsContainer;
+                UnityObjectHelpers.DestroyAppropriate(settings as ScriptableObject);
+            }
+            settings = ScriptableObject.CreateInstance(settingsType) as ISettingsContainer;
 
             CachedItemsAndSettings[item] = settings;
+
+            //if(CachedItemsAndSettings.ContainsKey(item) && settings == null)
+            //    CachedItemsAndSettings.Remove(item);
+
+            //if(settings != null)
+            //    CachedItemsAndSettings[item] = settings;
 
             return settings;
         }
