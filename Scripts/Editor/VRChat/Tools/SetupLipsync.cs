@@ -2,6 +2,7 @@
 using Pumkin.AvatarTools2.Tools;
 using Pumkin.Core;
 using Pumkin.Core.UI;
+using Pumkin.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             = new UIDefinition("[VRC] Setup Lipsync", "Sets up lipsync on your avatar.");
 
         Type lipsyncStyleEnumType = VRChatTypes.VRC_AvatarDescriptor_LipSyncStyle;
+        Type visemeType = VRChatTypes.VRC_AvatarDescriptor_Viseme;
 
         Type vrcDescType = VRChatTypes.VRC_AvatarDescriptor;
 
@@ -26,19 +28,15 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             {
                 if(_requiredVisemeNames == null)
                 {
-                    if(lipsyncStyleEnumType == null)
+                    if(visemeType == null)
                         return null;
 
                     //Get required viseme names from the visemes enum and remove last entry called "Count"
-                    _requiredVisemeNames = Enum.GetNames(lipsyncStyleEnumType).ToList();
-                    if(_requiredVisemeNames != null)
-                        _requiredVisemeNames.RemoveAt(_requiredVisemeNames.Count - 1);
+                    _requiredVisemeNames = Enum.GetNames(visemeType).SkipLastElement().ToList();
                 }
                 return _requiredVisemeNames;
             }
         }
-
-        List<string> _requiredVisemeNames;
 
         protected override bool DoAction(GameObject target)
         {
@@ -48,7 +46,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                 return false;
             }
 
-            var descriptor = target.GetComponent(vrcDescType) ?? target.AddComponent(vrcDescType);
+            var descriptor = target.GetOrAddComponent(vrcDescType);
             var renders = target.GetComponentsInChildren<SkinnedMeshRenderer>();
 
             var serialDesc = new SerializedObject(descriptor);
@@ -78,7 +76,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
                 {
                     lipSyncType.intValue = (int)(Enum.Parse(lipsyncStyleEnumType, "Default", true));
                 }
-            }   //Ignore JawFlapBlendShape because nobody uses it
+            }   //Ignore JawFlapBlendShape for now because nobody uses it I think
 
             serialDesc.ApplyModifiedPropertiesWithoutUndo();
             return true;
@@ -116,6 +114,8 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             }
             return false;
         }
+
+        List<string> _requiredVisemeNames;
     }
 }
 #endif

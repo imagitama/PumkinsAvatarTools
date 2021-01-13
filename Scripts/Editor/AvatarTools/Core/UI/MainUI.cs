@@ -42,10 +42,7 @@ namespace Pumkin.AvatarTools2.UI
             }
         }
 
-        public MainUI()
-        {
-
-        }
+        public MainUI() { }
 
         public MainUI(List<IUIModule> modules) : this()
         {

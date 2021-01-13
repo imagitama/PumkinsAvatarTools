@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Extensions;

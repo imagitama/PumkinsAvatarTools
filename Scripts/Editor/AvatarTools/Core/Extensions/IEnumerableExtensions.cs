@@ -11,13 +11,10 @@ namespace Pumkin.Core.Extensions
     public static class IEnumerableExtensions
     {
         public static FlipFlopEnumerator<T> GetFlipFlopEnumerator<T>(this IEnumerable<T> collection)
-        {
-            return new FlipFlopEnumerator<T>(collection);
-        }
+            => new FlipFlopEnumerator<T>(collection);
 
         public static bool IsNullOrEmpty<T>(this IEnumerable<T> collection)
-        {
-            return collection != null && collection.Any();
-        }
+            => collection != null && collection.Any();
+
     }
 }

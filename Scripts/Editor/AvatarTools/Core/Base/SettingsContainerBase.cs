@@ -90,10 +90,8 @@ namespace Pumkin.AvatarTools2.Settings
                 defaultSettingsEditorType = typeof(SettingsEditor);
 
             SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
-
-            LoadFromConfigFile(SavePath);
-
             SettingsManager.SaveSettingsCallback += SettingsManager_SaveSettingsCallback;
+            LoadFromConfigFile(SavePath);
         }
 
         private void SettingsManager_SaveSettingsCallback()
@@ -151,6 +149,8 @@ namespace Pumkin.AvatarTools2.Settings
                     lines[0].StartsWith("//") ? lines.Skip(1).ToArray() : lines);
 
                 JsonUtility.FromJsonOverwrite(json, this);
+                Editor.OnInspectorGUI();    //refresh settings
+
             }
             catch(Exception e)
             {

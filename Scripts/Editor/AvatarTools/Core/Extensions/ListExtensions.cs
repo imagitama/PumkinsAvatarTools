@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions
+namespace Pumkin.Core.Extensions
 {
     public static class ListExtensions
     {

@@ -12,13 +12,17 @@ namespace Pumkin.AvatarTools2.Modules
     [AutoLoad(DefaultIDs.Modules.Copier)]
     class ComponentCopiersModule : UIModuleBase
     {
+        const string COPY_BUTTON_STRING = "Copy components to {0}";
+
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
 
-        public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
+        public static event Delegates.SelectedChangeHandler OnCopierAvatarSelectionChanged;
 
-        public static IgnoreList IgnoreList { get; } = new IgnoreList(OnAvatarSelectionChanged);
+        public static IgnoreList IgnoreList { get; } = new IgnoreList(OnCopierAvatarSelectionChanged);
 
         static bool CanCopy { get; set; } = true;
+
+        GUIContent copyButtonContent;
 
         public static GameObject CopyFromAvatar
         {
@@ -37,12 +41,23 @@ namespace Pumkin.AvatarTools2.Modules
 
         GUIContent AvatarSelectorContent { get; set; } = new GUIContent("Copy from");
 
+        public ComponentCopiersModule()
+        {
+            copyButtonContent = new GUIContent();
+            PumkinTools_OnAvatarSelectionChanged(null); //So label gets assigned
 
-        static GameObject _copyFromAvatar;
+            PumkinTools.OnAvatarSelectionChanged -= PumkinTools_OnAvatarSelectionChanged;
+            PumkinTools.OnAvatarSelectionChanged += PumkinTools_OnAvatarSelectionChanged;
+        }
+
+        private void PumkinTools_OnAvatarSelectionChanged(GameObject newSelection)
+        {
+            copyButtonContent.text = string.Format(COPY_BUTTON_STRING, newSelection?.name ?? "selected");
+        }
 
         public static void CopierAvatarSelectionChanged(GameObject newSelection)
         {
-            OnAvatarSelectionChanged?.Invoke(newSelection);
+            OnCopierAvatarSelectionChanged?.Invoke(newSelection);
         }
 
         public override void DrawContent()
@@ -87,7 +102,7 @@ namespace Pumkin.AvatarTools2.Modules
 
             EditorGUI.BeginDisabledGroup(!CanCopy);
             {
-                if(GUILayout.Button("Transfer Selected", Styles.CopierCopyButton))
+                if(GUILayout.Button(copyButtonContent, Styles.CopierCopyButton))
                 {
                     foreach(var copier in SubItems)
                     {
@@ -100,6 +115,9 @@ namespace Pumkin.AvatarTools2.Modules
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.Space();
         }
+
+
+        static GameObject _copyFromAvatar;
     }
 }
 #endif

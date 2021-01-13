@@ -8,7 +8,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Assets.PumkinsAvatarTools.Scripts.Editor.Core.Extensions;
 using Pumkin.AvatarTools2;
 using UnityEditor;
 using UnityEngine;
@@ -201,8 +200,13 @@ namespace Pumkin.Core.Helpers
                 try
                 {
                     EditorGUI.BeginChangeCheck();
-                    var obj = EditorGUILayout.ObjectField(gc, list[i] as UnityEngine.Object, typeof(T),
-                        true, GUILayout.ExpandWidth(true));
+                    UnityEngine.Object obj = null;
+                    try
+                    {
+                        obj = EditorGUILayout.ObjectField(gc, list[i] as UnityEngine.Object, typeof(T),
+                          true, GUILayout.ExpandWidth(true));
+                    }
+                    catch(ExitGUIException) { }
                     if(EditorGUI.EndChangeCheck())
                     {
                         list[i] = obj as T;
