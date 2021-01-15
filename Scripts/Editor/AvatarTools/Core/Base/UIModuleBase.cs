@@ -71,7 +71,7 @@ namespace Pumkin.AvatarTools2.Modules
 
         public abstract UIDefinition UIDefs { get; set; }
 
-        [SerializeField] protected GUIContent _content;
+        protected GUIContent _content;
 
         EditorApplication.CallbackFunction updateCallback;
 

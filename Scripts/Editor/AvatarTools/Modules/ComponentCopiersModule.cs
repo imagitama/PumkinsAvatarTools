@@ -7,6 +7,7 @@ using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools2.Modules
 {
     [AutoLoad(DefaultIDs.Modules.Copier)]
-    class ComponentCopiersModule : UIModuleBase
+    class ComponentCopiersModule : UIModuleBase, ISerializationCallbackReceiver
     {
         const string COPY_BUTTON_STRING = "Copy components to {0}";
         const string SAVE_FOLDER = "Configs/";
@@ -73,23 +74,12 @@ namespace Pumkin.AvatarTools2.Modules
 
         private void SettingsManager_LoadSettingsCallback()
         {
-            var enabledItems = SettingsManager.LoadFromJSON<string[]>(LocalSavePath) as string[];
-            if(enabledItems.IsNullOrEmpty())
-                return;
-
-            foreach(var item in SubItems)
-                item.EnabledInUI = enabledItems.Contains(item.GetType().Name, StringComparer.OrdinalIgnoreCase);
+            SettingsManager.LoadFromJson(LocalSavePath, this);
         }
 
         private void SettingsManager_SaveSettingsCallback()
         {
-            var enabledCopiers = IDManager.Items
-                .Where(kv => kv.Value is IComponentCopier)
-                .Where(kv => (kv.Value as IComponentCopier).Active)
-                .Select(kv => kv.Key)
-                .ToArray();
-
-            SettingsManager.SaveToJSON(enabledCopiers, LocalSavePath);
+            SettingsManager.SaveToJson(this, LocalSavePath);
         }
 
         private void PumkinTools_OnAvatarSelectionChanged(GameObject newSelection)
@@ -149,8 +139,8 @@ namespace Pumkin.AvatarTools2.Modules
                     foreach(var copier in SubItems)
                     {
                         var c = copier as IComponentCopier;
-                        if(c.Active)
-                            c?.TryCopyComponents(CopyFromAvatar, PumkinTools.SelectedAvatar);
+                        if(c?.Active == true)
+                            c.TryCopyComponents(CopyFromAvatar, PumkinTools.SelectedAvatar);
                     }
                 }
             }
@@ -159,8 +149,38 @@ namespace Pumkin.AvatarTools2.Modules
         }
 
 
+        private class _serial
+        {
+            public string[] enabled;
+
+            public _serial(string[] enabled)
+            {
+                this.enabled = enabled;
+            }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            _enabledIDs = IDManager.Items
+                .Where(kv => kv.Value is IComponentCopier)
+                .Where(kv => (kv.Value as IComponentCopier).Active)
+                .Select(kv => kv.Key)
+                .ToArray();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            foreach(var id in _enabledIDs)
+            {
+                if(IDManager.GetItem(id) is IComponentCopier cop)
+                    cop.Active = true;
+            }
+        }
+
+
         static GameObject _copyFromAvatar;
         static string _savePath;
+        [SerializeField] string[] _enabledIDs;
     }
 }
 #endif
