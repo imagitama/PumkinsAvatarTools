@@ -18,7 +18,7 @@ namespace Pumkin.Core.Extensions
 
         public static Component GetOrAddComponent(this GameObject go, string typeName)
         {
-            var type = Pumkin.Core.Helpers.TypeHelpers.GetTypeAnwhere(typeName);
+            var type = Pumkin.Core.Helpers.TypeHelpers.GetTypeAnywhere(typeName);
             if(type == null)
                 return null;
 

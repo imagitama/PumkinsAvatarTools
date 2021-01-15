@@ -42,9 +42,9 @@ namespace Pumkin.AvatarTools2.UI
             }
         }
 
-        public MainUI() { }
+        internal MainUI() { }
 
-        public MainUI(List<IUIModule> modules) : this()
+        internal MainUI(List<IUIModule> modules)
         {
             UIModules = modules;
         }
@@ -77,12 +77,20 @@ namespace Pumkin.AvatarTools2.UI
                 return;
             }
 
-            PumkinTools.SelectedAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
+            //Select avatar
+            {
+                GameObject newAvatar = null;
+                EditorGUI.BeginChangeCheck();
 
-            if(GUILayout.Button("Select from Scene"))
-                PumkinTools.SelectedAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
-            UIHelpers.DrawLine();
+                newAvatar = EditorGUILayout.ObjectField("Avatar", PumkinTools.SelectedAvatar, typeof(GameObject), true) as GameObject;
 
+                if(GUILayout.Button("Select from Scene"))
+                    newAvatar = Selection.activeGameObject ?? PumkinTools.SelectedAvatar;
+                UIHelpers.DrawLine();
+
+                if(EditorGUI.EndChangeCheck())
+                    PumkinTools.SelectedAvatar = newAvatar;
+            }
             scroll = EditorGUILayout.BeginScrollView(scroll);
 
             //Draw modules
@@ -125,6 +133,11 @@ namespace Pumkin.AvatarTools2.UI
         private void DrawSettings()
         {
             Settings?.DrawUI();
+
+#if PUMKIN_DEV
+            if(GUILayout.Button("Rebuild UI"))
+                PumkinToolsWindow.RebuildUI();
+#endif
 
             UIHelpers.DrawLine();
             thanksList.Draw();

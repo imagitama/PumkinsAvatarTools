@@ -22,7 +22,7 @@ namespace Pumkin.Core
 
         public TypeEnablerFieldAttribute(string enabledTypeFullName)
         {
-            EnabledType = TypeHelpers.GetTypeAnwhere(enabledTypeFullName);
+            EnabledType = TypeHelpers.GetTypeAnywhere(enabledTypeFullName);
         }
     }
 }

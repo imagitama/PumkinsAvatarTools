@@ -59,7 +59,7 @@ namespace Pumkin.AvatarTools2
                         newAvatar = newAvatar.transform.root.gameObject;
                     try
                     {
-                        OnAvatarSelectionChanged?.Invoke(newAvatar);
+                        AvatarSelectionChanged(value);
                     }
                     catch(Exception e)
                     {
@@ -70,13 +70,17 @@ namespace Pumkin.AvatarTools2
             }
         }
 
+        const string SELECTED_AVATAR_PREF_NAME = "selectedAvatar";
+
         static PumkinTools()
         {
-
+            // Load selected avatar
+            SelectedAvatar = PrefManager.GetUnityObject<GameObject>(SELECTED_AVATAR_PREF_NAME);
         }
 
         public static void AvatarSelectionChanged(GameObject newSelection)
         {
+            PrefManager.SetObject(SELECTED_AVATAR_PREF_NAME, newSelection);
             OnAvatarSelectionChanged?.Invoke(newSelection);
         }
 

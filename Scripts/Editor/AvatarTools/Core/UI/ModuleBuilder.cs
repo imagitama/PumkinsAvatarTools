@@ -87,21 +87,6 @@ namespace Pumkin.AvatarTools2.UI
                         $"Can't create module type <b>{ModuleType.Name}</b> with ID <b>{LoadAttribute.ID}</b> as <b>{oldMod.UIDefs.Name}</b> already registered that ID");
                     return false;
                 }
-
-                //TODO: Figure this out later, when I have saving and loading the window state
-                //Cancel if our auto load mode doesn't match current mode
-                //if(LoadAttribute.AutoLoadMode != AutoLoadAttribute.AutoLoadInMode.Both)
-                //{
-                //    if((EditorApplication.isPlayingOrWillChangePlaymode && LoadAttribute.AutoLoadMode != AutoLoadAttribute.AutoLoadInMode.Play) ||
-                //        (!EditorApplication.isPlayingOrWillChangePlaymode && LoadAttribute.AutoLoadMode != AutoLoadAttribute.AutoLoadInMode.Editor))
-                //    {
-                //        string modeName = Enum.GetName(typeof(AutoLoadAttribute.AutoLoadInMode), LoadAttribute.AutoLoadMode);
-                //        string currentMode = EditorApplication.isPlaying ? "Play" : "Editor";
-
-                //        PumkinTools.LogVerbose($"Module <b>{ModuleType.Name}</b> is trying to load in {currentMode} mode but it's AutoLoad attribute only allows {modeName} mode.");
-                //        return false;
-                //    }
-                //}
             }
 
 

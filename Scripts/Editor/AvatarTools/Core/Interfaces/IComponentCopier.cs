@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Interfaces
 {
-    public interface IComponentCopier : IItem, IComponentActor
+    public interface IComponentCopier : IComponentActor, IItem
     {
         bool Active { get; set; }
 

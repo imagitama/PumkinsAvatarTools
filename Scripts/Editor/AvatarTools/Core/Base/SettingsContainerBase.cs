@@ -85,7 +85,7 @@ namespace Pumkin.AvatarTools2.Settings
             Editor.OnInspectorGUINoScriptField();   //Try to draw so it initializes and opens instantly later
 
             if(genericInspectorType == null)
-                genericInspectorType = TypeHelpers.GetTypeAnwhere("UnityEditor.GenericInspector");
+                genericInspectorType = TypeHelpers.GetTypeAnywhere("UnityEditor.GenericInspector");
             if(defaultSettingsEditorType == null)
                 defaultSettingsEditorType = typeof(SettingsEditor);
 
@@ -116,7 +116,6 @@ namespace Pumkin.AvatarTools2.Settings
                     return false;
                 }
 
-                PumkinTools.LogVerbose($"Saving <b>{GetType().Name}.json</b>");
                 json = JSONHeader + '\n' + JsonUtility.ToJson(this, true);
                 File.WriteAllText(SavePath, json);
             }

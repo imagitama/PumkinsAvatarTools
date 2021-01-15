@@ -47,7 +47,7 @@ namespace Pumkin.AvatarTools2.Modules
             }
 
             if(GUILayout.Button("Test dynamic bones in project"))
-                Debug.Log(TypeHelpers.GetTypeAnwhere("DynamicBone")?.FullName ?? "Not here");
+                Debug.Log(TypeHelpers.GetTypeAnywhere("DynamicBone")?.FullName ?? "Not here");
 
             if(GUILayout.Button("Get Main Script Path"))
                 Debug.Log(PumkinTools.MainFolderPath);

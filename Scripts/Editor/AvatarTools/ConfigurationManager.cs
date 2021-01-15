@@ -100,7 +100,7 @@ namespace Pumkin.AvatarTools2
 
             var configCache = cache
                 .SelectMany(t => t.GetCustomAttribute<AutoLoadAttribute>().ConfigurationStrings)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
                 .OrderBy(s => s != DEFAULT_CONFIGURATION)
                 .ThenBy(s => s)
                 .ToArray();

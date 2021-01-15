@@ -17,8 +17,8 @@ namespace Pumkin.AvatarTools2.Tools
 
         public string hierarchyPath = "Armature/Hips/Spine";
 
-        [DrawToggleLeft] public bool skinnedMeshRenderers = true;
-        [DrawToggleLeft] public bool meshRenderers = true;
+        public bool skinnedMeshRenderers = true;
+        public bool meshRenderers = true;
     }
 
     [CustomEditor(typeof(SetRendererAnchors_Settings))]

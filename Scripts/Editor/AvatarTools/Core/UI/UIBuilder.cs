@@ -148,9 +148,9 @@ namespace Pumkin.AvatarTools2.UI
                     dict = dict.Where((kv) =>
                     {
                         return kv.Value.ConfigurationStrings.Contains(configurationString,
-                                   StringComparer.InvariantCultureIgnoreCase)
+                                   StringComparer.OrdinalIgnoreCase)
                                || kv.Value.ConfigurationStrings.Contains(ConfigurationManager.DEFAULT_CONFIGURATION,
-                                   StringComparer.InvariantCultureIgnoreCase);
+                                   StringComparer.OrdinalIgnoreCase);
                     })
                         .OrderBy(kv => kv.Value.IsGenericItem)
                         .GroupBy(kv => kv.Value.ID)

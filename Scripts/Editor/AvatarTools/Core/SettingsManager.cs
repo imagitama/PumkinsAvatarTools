@@ -6,12 +6,19 @@ using UnityEngine;
 using System.Linq;
 using Pumkin.AvatarTools2.UI;
 using System.IO;
+using UnityEditor;
 
 public static class SettingsManager
 {
     const string FOLDER_NAME = "Pumkin Tools";
 
+    /// <summary>
+    /// Subscribe to this event to get a callback when saving settings
+    /// </summary>
     public static event Action SaveSettingsCallback;
+    /// <summary>
+    /// Subscribe to this event to get a callback when loading settings
+    /// </summary>
     public static event Action LoadSettingsCallback;
 
     public static string SettingsPath
@@ -36,6 +43,37 @@ public static class SettingsManager
         UIBuilder.OnUIBuildFinished += LoadAllSettings;
 
         UIBuilder.BeforeUIBuildCallback += ClearEvents;
+    }
+
+    public static bool SaveToJSON(object obj, string pathInSettings)
+    {//TODO: Make this work
+        string json = EditorJsonUtility.ToJson(obj);
+        if(string.IsNullOrWhiteSpace(json))
+            return false;
+
+        try
+        {
+            Directory.CreateDirectory(SettingsPath);
+            File.WriteAllText($"{SettingsPath}{pathInSettings}", json);
+        }
+        catch
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public static object LoadFromJSON<T>(string pathInSettings)
+    {
+        T obj = default;
+        try
+        {
+            string json = File.ReadAllText($"{SettingsPath}{pathInSettings}");
+            if(!string.IsNullOrWhiteSpace(json) && json != "{}")
+                EditorJsonUtility.FromJsonOverwrite(json, obj);
+        }
+        catch { }
+        return obj;
     }
 
     private static void PumkinToolsWindow_OnWindowDisabled()

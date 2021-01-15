@@ -18,8 +18,6 @@ namespace Pumkin.AvatarTools2.Tools
     {
         public virtual UIDefinition UIDefs { get; set; }
 
-        public string GameConfigurationString { get; set; }
-
         public bool CanUpdate
         {
             get
@@ -33,9 +31,9 @@ namespace Pumkin.AvatarTools2.Tools
                     return;
 
                 if(_allowUpdate = value)    //Intentional assign + check
-                    SetupUpdateCallback(ref updateCallback, true);
+                    SetupUpdateCallback(ref _updateCallback, true);
                 else
-                    SetupUpdateCallback(ref updateCallback, false);
+                    SetupUpdateCallback(ref _updateCallback, false);
             }
         }
 
@@ -57,10 +55,6 @@ namespace Pumkin.AvatarTools2.Tools
         public virtual bool EnabledInUI { get; set; } = true;
 
         public ISettingsContainer Settings { get; private set; }
-
-        bool _allowUpdate;
-        GUIContent _content;
-        EditorApplication.CallbackFunction updateCallback;
 
         public SerializedObject serializedObject;
 
@@ -160,6 +154,10 @@ namespace Pumkin.AvatarTools2.Tools
         {
             EditorApplication.update -= CheckThenUpdate;
         }
+
+        bool _allowUpdate;
+        GUIContent _content;
+        EditorApplication.CallbackFunction _updateCallback;
     }
 }
 #endif

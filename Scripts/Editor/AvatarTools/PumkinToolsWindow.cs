@@ -77,12 +77,12 @@ namespace Pumkin.AvatarTools2
                 RebuildUI(newString);
         }
 
-        void RebuildUI()
+        internal static void RebuildUI()
         {
             RebuildUI(ConfigurationManager.CurrentConfigurationString);
         }
 
-        private void RebuildUI(string newConfig)
+        static void RebuildUI(string newConfig)
         {
             if(UIBuilder.BuildUI(out MainUI tempUI))
                 UI = tempUI ?? UI;

@@ -10,7 +10,7 @@ namespace Pumkin.AvatarTools2.UI
     /// Base editor that should be inherited when creating an editor for settings
     /// Draws default editor but without the script field by default
     /// </summary>
-    [CustomEditor(typeof(SettingsContainerBase))]
+    [CustomEditor(typeof(SettingsContainerBase), true)]
     public class SettingsEditor : Editor
     {
         protected bool hideScriptField = true;

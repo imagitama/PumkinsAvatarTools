@@ -2,8 +2,12 @@
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
+using Pumkin.Core.Extensions;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +17,17 @@ namespace Pumkin.AvatarTools2.Modules
     class ComponentCopiersModule : UIModuleBase
     {
         const string COPY_BUTTON_STRING = "Copy components to {0}";
+        const string SAVE_FOLDER = "Configs/";
+
+        static string LocalSavePath
+        {
+            get
+            {
+               if(string.IsNullOrWhiteSpace(_savePath))
+                    _savePath = $"{SAVE_FOLDER}{ConfigurationManager.CurrentConfigurationString}/{typeof(ComponentCopiersModule).Name}.json";
+                return _savePath;
+            }
+        }
 
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
 
@@ -48,6 +63,33 @@ namespace Pumkin.AvatarTools2.Modules
 
             PumkinTools.OnAvatarSelectionChanged -= PumkinTools_OnAvatarSelectionChanged;
             PumkinTools.OnAvatarSelectionChanged += PumkinTools_OnAvatarSelectionChanged;
+
+            SettingsManager.SaveSettingsCallback -= SettingsManager_SaveSettingsCallback;
+            SettingsManager.SaveSettingsCallback += SettingsManager_SaveSettingsCallback;
+
+            SettingsManager.LoadSettingsCallback -= SettingsManager_LoadSettingsCallback;
+            SettingsManager.LoadSettingsCallback += SettingsManager_LoadSettingsCallback;
+        }
+
+        private void SettingsManager_LoadSettingsCallback()
+        {
+            var enabledItems = SettingsManager.LoadFromJSON<string[]>(LocalSavePath) as string[];
+            if(enabledItems.IsNullOrEmpty())
+                return;
+
+            foreach(var item in SubItems)
+                item.EnabledInUI = enabledItems.Contains(item.GetType().Name, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private void SettingsManager_SaveSettingsCallback()
+        {
+            var enabledCopiers = IDManager.Items
+                .Where(kv => kv.Value is IComponentCopier)
+                .Where(kv => (kv.Value as IComponentCopier).Active)
+                .Select(kv => kv.Key)
+                .ToArray();
+
+            SettingsManager.SaveToJSON(enabledCopiers, LocalSavePath);
         }
 
         private void PumkinTools_OnAvatarSelectionChanged(GameObject newSelection)
@@ -118,6 +160,7 @@ namespace Pumkin.AvatarTools2.Modules
 
 
         static GameObject _copyFromAvatar;
+        static string _savePath;
     }
 }
 #endif

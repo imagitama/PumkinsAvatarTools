@@ -33,9 +33,9 @@ namespace Pumkin.AvatarTools2.Tools
 
             EditorGUI.BeginDisabledGroup(disablePosRotSc);
 
-            settings.position = EditorGUILayout.ToggleLeft("Position", settings.position);
-            settings.rotation = EditorGUILayout.ToggleLeft("Rotation", settings.rotation);
-            settings.scale = EditorGUILayout.ToggleLeft("Scale", settings.scale);
+            settings.position = EditorGUILayout.Toggle("Position", settings.position);
+            settings.rotation = EditorGUILayout.Toggle("Rotation", settings.rotation);
+            settings.scale = EditorGUILayout.Toggle("Scale", settings.scale);
 
             EditorGUI.EndDisabledGroup();
         }

@@ -1,242 +1,297 @@
-﻿//#if UNITY_EDITOR
-//using Pumkin.AvatarTools2.UI;
-//using System;
-//using System.Linq;
-//using UnityEditor;
-//using UnityEditorInternal;
-//using UnityEngine;
-//using Pumkin.Core.Extensions;
-//using Pumkin.Core.Helpers;
-//using Pumkin.AvatarTools2.Interfaces;
-//using Pumkin.AvatarTools2.Modules;
-//using Pumkin.Core.UI;
-//using Pumkin.AvatarTools2.Settings;
+﻿using Pumkin.AvatarTools2.Interfaces;
+using Pumkin.AvatarTools2.Modules;
+using Pumkin.AvatarTools2.Settings;
+using Pumkin.AvatarTools2.UI;
+using Pumkin.Core;
+using Pumkin.Core.Extensions;
+using Pumkin.Core.Helpers;
+using Pumkin.Core.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
 
-//namespace Pumkin.AvatarTools2.Copiers
-//{
-//    /// <summary>
-//    /// Base copier class that copies all components of type by it's full name. Also fixes references
-//    /// </summary>
-//    public abstract class ComponentCopierBase : IComponentCopier
-//    {
-//        public string GameConfigurationString { get; set; }
+namespace Pumkin.AvatarTools2.Copiers
+{
+    /// <summary>
+    /// Base copier class that copies all components of multiple types by their full name. Also fixes references.
+    /// </summary>
+    public abstract class ComponentCopierBase : IComponentCopier
+    {
+        const string COPY_ALL_PROPERTIES_STRING = "__all__";    //TODO: Move to PropertyDefinitions
 
-//        public virtual GUIContent Content
-//        {
-//            get
-//            {
-//                if(_content == null)
-//                    _content = CreateGUIContent();
-//                return _content;
-//            }
-//            set => _content = value;
-//        }
+        public abstract string[] ComponentTypesFullNames { get; }
 
-//        public abstract string ComponentTypeFullName { get; }
+        Dictionary<Type, bool> ComponentTypesAndEnabled { get; set; } = new Dictionary<Type, bool>();
 
-//        public bool Active { get; set; }
+        public bool Active { get; set; }
 
-//        public Type ComponentType
-//        {
-//            get
-//            {
-//                if(_componentType == null)
-//                    _componentType = TypeHelpers.GetType(ComponentTypeFullName);
-//                return _componentType;
-//            }
-//        }
+        public bool EnabledInUI { get; set; } = true;
 
-//        public virtual UIDefinition UIDefs { get; set; }
+        public GUIContent Content
+        {
+            get
+            {
+                if(_content == null)
+                    _content = CreateGUIContent();
+                return _content;
+            }
+        }
 
-//        public virtual ISettingsContainer Settings => _baseSettings;
+        protected virtual GUIContent CreateGUIContent()
+        {
+            return new GUIContent(UIDefs.Name, Icons.GetIconTextureFromType(FirstValidType));
+        }
 
-//        public bool EnabledInUI { get; set; }
+        public virtual UIDefinition UIDefs { get; set; }
 
-//        protected bool shouldFixReferences = false;
+        public Type FirstValidType { get; private set; }
 
-//        GUIContent _content;
-//        Type _componentType;
-//        CopierSettingsContainerBase _baseSettings;
+        public ISettingsContainer Settings { get; }
 
-//        public ComponentCopierBase()
-//        {
-//            if(UIDefs == null)
-//            {
-//                string name = ComponentType?.Name ?? GetType().Name;
-//                UIDefs = new UIDefinition(StringHelpers.ToTitleCase(name));
-//            }
-//            SetupSettings();
-//        }
+        public ComponentCopierBase()
+        {
+            ComponentTypesAndEnabled = new Dictionary<Type, bool>(ComponentTypesFullNames.Length);
 
-//        protected virtual GUIContent CreateGUIContent()
-//        {
-//            return new GUIContent(UIDefs.Name, Icons.GetIconTextureFromType(ComponentType));
-//        }
+            for(int i = 0; i < ComponentTypesFullNames.Length; i++)
+            {
+                string tName = ComponentTypesFullNames[i];
 
-//        protected virtual void SetupSettings()
-//        {
-//            _baseSettings = ScriptableObject.CreateInstance<CopierSettingsContainerBase>();
-//        }
+                if(!string.IsNullOrWhiteSpace(tName))
+                {
+                    var type = TypeHelpers.GetTypeAnywhere(tName);
+                    if(type != null)
+                        ComponentTypesAndEnabled[type] = false;
+                }
+            }
 
-//        public virtual void DrawUI(params GUILayoutOption[] options)
-//        {
-//            EditorGUILayout.BeginHorizontal(options);
-//            {
-//                Active = EditorGUILayout.ToggleLeft(Content, Active);
-//                if(Settings != null)
-//                    UIDefs.ExpandSettings = GUILayout.Toggle(UIDefs.ExpandSettings, Icons.Options, Styles.Icon);
-//            }
-//            EditorGUILayout.EndHorizontal();
+            FirstValidType = ComponentTypesAndEnabled.FirstOrDefault(c => c.Key != null).Key;
 
-//            //Draw settings here
-//            if(Settings == null || !UIDefs.ExpandSettings)
-//                return;
+            if(!UIDefs)
+            {
+                string name = FirstValidType?.Name;
+                UIDefs = new UIDefinition(StringHelpers.ToTitleCase(name) ?? "Invalid Copier");
+            }
 
-//            EditorGUILayout.Space();
+            Settings = this.GetOrCreateSettingsContainer();
+        }
 
-//            UIHelpers.DrawIndented(EditorGUI.indentLevel + 1, () =>
-//            {
-//                Settings.Editor.OnInspectorGUINoScriptField();
-//            });
+        public void DrawUI(params GUILayoutOption[] options)
+        {
+            EditorGUILayout.BeginHorizontal(options);
+            {
+                Active = EditorGUILayout.ToggleLeft(Content, Active);
+                if(Settings != null)
+                    UIDefs.ExpandSettings = GUILayout.Toggle(UIDefs.ExpandSettings, Icons.Options, Styles.Icon);
+            }
+            EditorGUILayout.EndHorizontal();
 
-//            EditorGUILayout.Space();
-//        }
+            //Draw settings here
+            if(Settings == null || !UIDefs.ExpandSettings)
+                return;
 
-//        public bool TryCopyComponents(GameObject objFrom, GameObject objTo)
-//        {
-//            try
-//            {
-//                if(Prepare(objFrom, objTo) && DoCopyComponents(objFrom, objTo))
-//                {
-//                    Finish(objFrom, objTo);
-//                    return true;
-//                }
-//            }
-//            catch(Exception e)
-//            {
-//                Debug.LogException(e);
-//            }
-//            return false;
-//        }
+            EditorGUILayout.Space();
 
-//        protected virtual bool Prepare(GameObject objFrom, GameObject objTo)
-//        {
-//            if((!objFrom || !objTo) || (objFrom == objTo))
-//                return false;
+            UIHelpers.DrawIndented(EditorGUI.indentLevel + 1, () =>
+            {
+                Settings?.DrawUI();
+            });
 
-//            if(ComponentType == null)
-//            {
-//                PumkinTools.Log($"{ComponentTypeFullName}: Couldn't find component type");
-//                return false;
-//            }
-//            return true;
-//        }
+            EditorGUILayout.Space();
+        }
 
-//        protected virtual bool ShouldIgnoreObject(GameObject obj)
-//        {
-//            return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
-//        }
+        public bool TryCopyComponents(GameObject objFrom, GameObject target)
+        {
+            try
+            {
+                if(Prepare(target, objFrom) && DoCopyComponents(target, objFrom))
+                {
+                    Finish(target, objFrom);
+                    return true;
+                }
+            }
+            catch(Exception e)
+            {
+                Debug.LogException(e);
+            }
+            return false;
+        }
 
-//        protected virtual bool DoCopyComponents(GameObject objFrom, GameObject objTo)
-//        {
-//            var compsFrom = objFrom.GetComponentsInChildren(ComponentType, true);
+        protected virtual bool Prepare(GameObject target, GameObject objFrom)
+        {
+            if(ComponentTypesAndEnabled.Count == 0)
+            {
+                PumkinTools.LogError($"Can't use {GetType().Name} as it doesn't have any valid types.");
+                return false;
+            }
 
-//            var set = Settings as CopierSettingsContainerBase;
-//            bool createGameObjects = set != null && set.createGameObjects;
-//            string[] propNames = set.PropertyNames;
+            if(!target)
+                return false;
 
-//            foreach(var coFrom in compsFrom)
-//            {
-//                if(!coFrom || ShouldIgnoreObject(coFrom.gameObject))
-//                {
-//                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {coFrom.gameObject.name}");
-//                    continue;
-//                }
+            SetComponentEnabedFromTypeEnablerAttributes();
 
-//                var transPath = coFrom.transform.GetPathInHierarchy();
-//                var trans = objTo.transform.FindOrCreate(transPath, createGameObjects, objFrom.transform);
-//                if(!trans)
-//                    continue;
+            Undo.RegisterCompleteObjectUndo(target, $"Copy Components - {UIDefs.Name}");
+            return true;
+        }
+
+        /// <summary>
+        /// Enable and disable components based on bool fields with TypeEnablerFieldAttribute in Settings
+        /// </summary>
+        void SetComponentEnabedFromTypeEnablerAttributes()
+        {
+            if(Settings != null)
+            {
+                var fields = Settings.GetType().GetFields()?.Where(t => t.FieldType == typeof(bool));
+                foreach(var f in fields)
+                {
+                    var attr = f.GetCustomAttributes(false).FirstOrDefault(a => a is TypeEnablerFieldAttribute) as TypeEnablerFieldAttribute;
+                    if(attr == null)
+                        continue;
+
+                    bool? enabled = f.GetValue(Settings) as bool?;
+                    if(enabled == null)
+                        continue;
+
+                    if(attr.EnabledType != null && ComponentTypesAndEnabled.ContainsKey(attr.EnabledType))
+                        ComponentTypesAndEnabled[attr.EnabledType] = (bool)enabled;
+                }
+            }
+        }
+
+        protected bool DoCopyComponents(GameObject target, GameObject objFrom)
+        {
+            foreach(var type_enabled in ComponentTypesAndEnabled)
+                if(type_enabled.Value)
+                    DoCopyByType(target, objFrom, type_enabled.Key);
+            return true;
+        }
+
+        protected virtual bool DoCopyByType(GameObject target, GameObject objFrom, Type componentType)
+        {
+            var set = Settings as CopierSettingsContainerBase;
+            bool createGameObjects = set != null && set.createGameObjects;
+
+            string[] propNames = new string[] { "__all__" };//set.PropertyNames;
+
+            var fromComps = objFrom.GetComponentsInChildren(componentType, true);
+
+            foreach(var comp in fromComps)
+            {
+                if(ShouldIgnoreObject(comp.gameObject))
+                    continue;
+
+                if(!comp || ShouldIgnoreObject(comp.gameObject))
+                {
+                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {comp.gameObject.name}");
+                    continue;
+                }
+
+                var transPath = comp.transform.GetPathInHierarchy();
+                var trans = target.transform.FindOrCreate(transPath, createGameObjects, objFrom.transform);
+                if(!trans)
+                    continue;
 
 
-//                Component addedComp;
-//                if(propNames.IsNullOrEmpty())
-//                    addedComp = CopyEverything(coFrom, trans);
-//                else
-//                    addedComp = CopyProperties(coFrom, trans, propNames);
+                Component addedComp;
+                if(propNames.Length == 1 && propNames[0] == COPY_ALL_PROPERTIES_STRING)
+                    addedComp = CopyWholeComponent(comp, trans);
+                else
+                    addedComp = CopyComponentProperties(comp, trans, propNames);
 
-//                FixReferences(addedComp, objTo.transform, createGameObjects);
-//            }
-//            return true;
-//        }
+                FixReferences(addedComp, target.transform, set.createGameObjects);
+            }
+            return true;
+        }
 
-//        protected Component CopyEverything(Component coFrom, Transform transTo)
-//        {
-//            var existComps = transTo.gameObject.GetComponents(ComponentType);
+        protected Component CopyWholeComponent(Component coFrom, Transform transTo)
+        {
+            Type coFromType = coFrom.GetType();
+            var existComps = transTo.gameObject.GetComponents(coFromType);
 
-//            ComponentUtility.CopyComponent(coFrom);
-//            ComponentUtility.PasteComponentAsNew(transTo.gameObject);
+            ComponentUtility.CopyComponent(coFrom);
+            ComponentUtility.PasteComponentAsNew(transTo.gameObject);
 
-//            var newComps = transTo.gameObject.GetComponents(ComponentType);
+            var newComps = transTo.gameObject.GetComponents(coFromType);
 
-//            return newComps.Except(existComps)
-//                .FirstOrDefault();
+            return newComps.Except(existComps)
+                .FirstOrDefault();
+        }
 
-//        }
+        protected Component CopyComponentProperties(Component compFrom, Transform transTo, params string[] propertyNames)
+        {
+            var compTo = transTo.gameObject.AddComponent(compFrom.GetType());
+            var serialCompFrom = new SerializedObject(compFrom);
+            var serialCompTo = new SerializedObject(compTo);
 
-//        protected Component CopyProperties(Component compFrom, Transform transTo, params string[] propertyNames)
-//        {
-//            var compTo = transTo.gameObject.AddComponent(compFrom.GetType());
-//            var serialCompFrom = new SerializedObject(compFrom);
-//            var serialCompTo = new SerializedObject(compTo);
+            foreach(var name in propertyNames)
+            {
+                if(string.IsNullOrWhiteSpace(name))
+                    continue;
 
-//            foreach(var name in propertyNames)
-//            {
-//                if(string.IsNullOrWhiteSpace(name))
-//                    continue;
+                var prop = serialCompFrom.FindProperty(name);
+                if(prop == null)
+                {
+                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> Copier: Can't find property with name {name} on {compFrom}. Skipping");
+                    continue;
+                }
+                serialCompTo.CopyFromSerializedProperty(prop);
+            }
+            serialCompTo.ApplyModifiedProperties();
+            return compTo;
+        }
 
-//                var prop = serialCompFrom.FindProperty(name);
-//                if(prop == null)
-//                {
-//                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> Copier: Can't find property with name {name} on {compFrom}. Skipping");
-//                    continue;
-//                }
-//                serialCompTo.CopyFromSerializedProperty(prop);
-//            }
-//            serialCompTo.ApplyModifiedProperties();
-//            return compTo;
-//        }
+        protected virtual void Finish(GameObject target, GameObject objFrom)
+        {
+            var sb = new StringBuilder();
+            foreach(var kv in ComponentTypesAndEnabled)
+                if(kv.Value)
+                    sb.Append($"{kv.Key.Name}s, ");
 
-//        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot, bool createGameObjects)
-//        {
-//            if(!comp)
-//                return;
+            if(sb.Length > 2)
+                sb.Remove(sb.Length - 2, 2);
 
-//            var serialComp = new SerializedObject(comp);
+            string names = sb.ToString();
+            if(string.IsNullOrWhiteSpace(names))
+                names = UIDefs.Name;
 
-//            serialComp.ForEachPropertyVisible(true, x =>
-//            {
-//                if(x.propertyType != SerializedPropertyType.ObjectReference || x.name == "m_Script")
-//                    return;
+            PumkinTools.Log($"Successfully copied all <b>{names}</b> from <b>{objFrom.name}</b> to <b>{target.name}</b>");
+        }
 
-//                var rf = x.objectReferenceValue;
-//                var trans = x.objectReferenceValue as Transform;
-//                if(trans != null)
-//                {
-//                    var tPath = trans.GetPathInHierarchy();
-//                    var transTarget = targetHierarchyRoot.FindOrCreate(tPath, createGameObjects, trans);
-//                    if(transTarget != null)
-//                        x.objectReferenceValue = transTarget;
-//                }
-//            });
+        protected virtual bool ShouldIgnoreObject(GameObject obj)
+        {
+            return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
+        }
 
-//            serialComp.ApplyModifiedProperties();
-//        }
+        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot, bool createGameObjects)
+        {
+            if(!comp)
+                return;
 
-//        protected virtual void Finish(GameObject objFrom, GameObject objTo)
-//        {
-//            PumkinTools.Log($"<b>{UIDefs.Name}</b> copier completed successfully.");
-//        }
-//    }
-//}
-//#endif
+            var serialComp = new SerializedObject(comp);
+
+            serialComp.ForEachPropertyVisible(true, x =>
+            {
+                if(x.propertyType != SerializedPropertyType.ObjectReference || x.name == "m_Script")
+                    return;
+
+                var rf = x.objectReferenceValue;
+                var trans = x.objectReferenceValue as Transform;
+                if(trans != null)
+                {
+                    var tPath = trans.GetPathInHierarchy();
+                    var transTarget = targetHierarchyRoot.FindOrCreate(tPath, createGameObjects, trans);
+                    if(transTarget != null)
+                        x.objectReferenceValue = transTarget;
+                }
+            });
+
+            serialComp.ApplyModifiedProperties();
+        }
+
+
+        private GUIContent _content;
+    }
+}

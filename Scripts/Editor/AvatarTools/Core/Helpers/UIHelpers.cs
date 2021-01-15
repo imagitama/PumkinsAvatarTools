@@ -16,7 +16,6 @@ namespace Pumkin.Core.Helpers
 {
     public static class UIHelpers
     {
-
         public static bool DrawFoldout(bool value, GUIContent content, bool toggleOnClick, GUIStyle style)
         {
             //Temporary wrapper until I decide to replace this with something nicer looking
@@ -52,12 +51,40 @@ namespace Pumkin.Core.Helpers
             EditorGUILayout.EndHorizontal();
         }
 
+        /// <summary>
+        /// Draws controlls indented by <paramref name="indentLevel"/>
+        /// </summary>
+        /// <param name="indentLevel">Amount to indent by</param>
+        /// <param name="action"></param>
         public static void DrawIndented(int indentLevel, Action action)
         {
             int old = EditorGUI.indentLevel;
             EditorGUI.indentLevel = indentLevel;
-            action.Invoke();
-            EditorGUI.indentLevel = old;
+            try
+            {
+                action?.Invoke();
+            }
+            finally
+            {
+                EditorGUI.indentLevel = old;
+            }
+        }
+
+        /// <summary>
+        /// Draws controlls indented by 1
+        /// </summary>
+        /// <param name="action"></param>
+        public static void DrawIndented(Action action)
+        {
+            EditorGUI.indentLevel++;
+            try
+            {
+                action?.Invoke();
+            }
+            finally
+            {
+                EditorGUI.indentLevel--;
+            }
         }
 
         public static void DrawUIPairs(List<IItem> items)

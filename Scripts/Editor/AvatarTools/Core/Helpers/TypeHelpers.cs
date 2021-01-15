@@ -14,7 +14,7 @@ namespace Pumkin.Core.Helpers
         /// </summary>
         /// <param name="typeName"></param>
         /// <returns>Type or null</returns>
-        public static Type GetTypeAnwhere(string typeName)
+        public static Type GetTypeAnywhere(string typeName)
         {
             if(string.IsNullOrWhiteSpace(typeName))
                 return null;
