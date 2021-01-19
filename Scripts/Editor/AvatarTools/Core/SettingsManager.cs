@@ -45,10 +45,11 @@ public static class SettingsManager
         UIBuilder.BeforeUIBuildCallback += ClearEvents;
     }
 
-    public static bool SaveToJSON(object obj, string pathInSettings)
+    public static bool SaveToJson(object obj, string pathInSettings)
     {//TODO: Make this work
         string json = EditorJsonUtility.ToJson(obj);
-        if(string.IsNullOrWhiteSpace(json))
+        Debug.Log(json);
+        if(string.IsNullOrWhiteSpace(json) || json == "{}")
             return false;
 
         try
@@ -63,17 +64,15 @@ public static class SettingsManager
         return true;
     }
 
-    public static object LoadFromJSON<T>(string pathInSettings)
+    public static void LoadFromJson<T>(string pathInSettings, T objectToOverwrite)
     {
-        T obj = default;
         try
         {
             string json = File.ReadAllText($"{SettingsPath}{pathInSettings}");
             if(!string.IsNullOrWhiteSpace(json) && json != "{}")
-                EditorJsonUtility.FromJsonOverwrite(json, obj);
+                EditorJsonUtility.FromJsonOverwrite(json, objectToOverwrite);
         }
         catch { }
-        return obj;
     }
 
     private static void PumkinToolsWindow_OnWindowDisabled()
