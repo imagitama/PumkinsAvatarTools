@@ -1,5 +1,4 @@
-﻿//#if UNITY_EDITOR
-//using Pumkin.AvatarTools2.UI;
+﻿//using Pumkin.AvatarTools2.UI;
 //using System;
 //using System.Linq;
 //using UnityEditor;
@@ -239,4 +238,3 @@
 //        }
 //    }
 //}
-//#endif

@@ -1,4 +1,4 @@
-﻿Shader "Fallback/Unlit"
+﻿Shader "Fallback/Unlit_Texture"
 {
 	Properties
 	{

@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using System;
+﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
@@ -149,4 +148,3 @@ namespace Pumkin.AvatarTools2
             GetUnityObject<T>(name) ?? defaultValue;
     }
 }
-#endif

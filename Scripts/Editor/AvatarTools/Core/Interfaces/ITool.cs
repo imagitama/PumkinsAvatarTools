@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Interfaces
 {
@@ -23,4 +22,3 @@ namespace Pumkin.AvatarTools2.Interfaces
         void Update();
     }
 }
-#endif

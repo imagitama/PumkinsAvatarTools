@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools2.Interfaces;
+﻿using Pumkin.AvatarTools2.Interfaces;
 using System;
 using Pumkin.Core.Extensions;
 using UnityEditor;
@@ -167,4 +166,3 @@ namespace Pumkin.AvatarTools2.Settings
         private string _saveFolder;
     }
 }
-#endif

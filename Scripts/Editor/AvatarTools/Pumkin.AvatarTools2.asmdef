@@ -8,5 +8,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": false,
-    "defineConstraints": []
+    "defineConstraints": [
+        "UNITY_EDITOR"
+    ]
 }

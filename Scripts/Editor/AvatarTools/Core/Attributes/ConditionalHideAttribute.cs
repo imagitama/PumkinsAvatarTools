@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Pumkin.Core
 {
@@ -20,4 +19,3 @@ namespace Pumkin.Core
         }
     }
 }
-#endif

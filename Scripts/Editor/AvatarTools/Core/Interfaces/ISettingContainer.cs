@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿using UnityEditor;
 
 namespace Pumkin.AvatarTools2.Interfaces
 {
@@ -12,4 +11,3 @@ namespace Pumkin.AvatarTools2.Interfaces
         void DrawUI();
     }
 }
-#endif

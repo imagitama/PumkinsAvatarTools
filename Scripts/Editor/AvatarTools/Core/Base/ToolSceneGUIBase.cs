@@ -1,4 +1,5 @@
-﻿using Pumkin.AvatarTools2.Interfaces;
+﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
@@ -303,3 +304,4 @@ namespace Pumkin.AvatarTools2.Tools
         }
     }
 }
+#endif

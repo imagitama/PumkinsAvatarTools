@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace Pumkin.Core.Helpers
@@ -54,4 +53,3 @@ namespace Pumkin.Core.Helpers
         }
     }
 }
-#endif

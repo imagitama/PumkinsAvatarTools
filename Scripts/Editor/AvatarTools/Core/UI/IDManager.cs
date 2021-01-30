@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using System.Collections;
+﻿using System.Collections;
 using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.Core;
 using System.Collections.Generic;
@@ -119,4 +118,3 @@ namespace Pumkin.AvatarTools2
         }
     }
 }
-#endif

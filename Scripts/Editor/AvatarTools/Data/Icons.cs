@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core.Helpers;
+﻿using Pumkin.Core.Helpers;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -128,4 +127,3 @@ namespace Pumkin.AvatarTools2.UI
         }
     }
 }
-#endif

@@ -1,4 +1,5 @@
-﻿using Pumkin.Core;
+﻿#if UNITY_EDITOR
+using Pumkin.Core;
 using UnityEditor;
 using UnityEngine;
 using Pumkin.Core.Extensions;
@@ -29,3 +30,4 @@ namespace Pumkin.AvatarTools2.Destroyers
         }
     }
 }
+#endif

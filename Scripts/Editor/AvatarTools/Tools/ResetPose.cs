@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
 using System;
@@ -203,4 +202,3 @@ namespace Pumkin.AvatarTools2.Tools
         Type _transformType = typeof(Transform);
     }
 }
-#endif

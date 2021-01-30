@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using Pumkin.Core.UI;
 
 namespace Pumkin.AvatarTools2.Modules
@@ -19,4 +18,3 @@ namespace Pumkin.AvatarTools2.Modules
         }
     }
 }
-#endif

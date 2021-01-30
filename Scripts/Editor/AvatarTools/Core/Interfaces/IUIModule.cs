@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core.UI;
+﻿using Pumkin.Core.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,4 +21,3 @@ namespace Pumkin.AvatarTools2.Interfaces
         bool ReplaceSubItem(IItem newItem, IItem oldItem);
     }
 }
-#endif

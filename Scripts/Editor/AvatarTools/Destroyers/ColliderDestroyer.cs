@@ -1,4 +1,5 @@
-﻿using Pumkin.AvatarTools2.Interfaces;
+﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.Settings;
 using Pumkin.Core;
 using Pumkin.Core.UI;
@@ -20,3 +21,4 @@ namespace Pumkin.AvatarTools2.Destroyers
         };
     }
 }
+#endif

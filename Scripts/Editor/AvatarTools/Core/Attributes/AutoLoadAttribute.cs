@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools2;
+﻿using Pumkin.AvatarTools2;
 using Pumkin.Core.Extensions;
 using System;
 using System.Linq;
@@ -70,4 +69,3 @@ namespace Pumkin.Core
         }
     }
 }
-#endif

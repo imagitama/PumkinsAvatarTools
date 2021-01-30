@@ -1,4 +1,5 @@
-﻿using Pumkin.AvatarTools2.Settings;
+﻿#if UNITY_EDITOR
+using Pumkin.AvatarTools2.Settings;
 using Pumkin.AvatarTools2.VRChat.Copiers;
 using Pumkin.Core;
 using System;
@@ -64,3 +65,4 @@ namespace Pumkin.AvatarTools2.VRChat.Settings
         //}
     }
 }
+#endif

@@ -1,6 +1,4 @@
-﻿#if UNITY_EDITOR
-
-using Pumkin.Core.UI;
+﻿using Pumkin.Core.UI;
 using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Interfaces
@@ -28,4 +26,3 @@ namespace Pumkin.AvatarTools2.Interfaces
         bool EnabledInUI { get; set; }
     }
 }
-#endif

@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using System;
+﻿using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -50,4 +49,3 @@ namespace Pumkin.Core.Logger
         }
     }
 }
-#endif

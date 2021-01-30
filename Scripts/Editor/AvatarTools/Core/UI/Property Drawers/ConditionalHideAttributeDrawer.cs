@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core;
+﻿using Pumkin.Core;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -66,4 +65,3 @@ namespace Pumkin.AvatarTools2.UI.PropertyDrawers
         }
     }
 }
-#endif

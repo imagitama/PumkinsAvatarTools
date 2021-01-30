@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Interfaces
 {
@@ -10,4 +9,3 @@ namespace Pumkin.AvatarTools2.Interfaces
         bool TryCopyComponents(GameObject objFrom, GameObject objTo);
     }
 }
-#endif

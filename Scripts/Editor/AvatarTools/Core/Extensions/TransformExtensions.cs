@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.Core.Helpers;
+﻿using Pumkin.Core.Helpers;
 using UnityEditor;
 using UnityEngine;
 
@@ -96,4 +95,3 @@ namespace Pumkin.Core.Extensions
         }
     }
 }
-#endif

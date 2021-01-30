@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-using Pumkin.AvatarTools2.Interfaces;
+﻿using Pumkin.AvatarTools2.Interfaces;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.Core;
 using Pumkin.Core.Extensions;
@@ -183,4 +182,3 @@ namespace Pumkin.AvatarTools2.Modules
         [SerializeField] string[] _enabledIDs;
     }
 }
-#endif
