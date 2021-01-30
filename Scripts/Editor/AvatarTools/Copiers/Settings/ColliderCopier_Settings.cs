@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Copiers
+namespace Pumkin.AvatarTools2.Copier
 {
     [CustomSettingsContainer(typeof(ColliderCopier))]
     class ColliderCopier_Settings : CopierSettingsContainerBase

@@ -14,7 +14,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Copiers
+namespace Pumkin.AvatarTools2.Copier
 {
     /// <summary>
     /// Base copier class that copies all components of multiple types by their full name. Also fixes references.
@@ -137,6 +137,12 @@ namespace Pumkin.AvatarTools2.Copiers
             return true;
         }
 
+        protected virtual void RemoveAllBeforeCopying(GameObject target)
+        {
+            var destroyer = this.GetTypeDestroyer();
+            destroyer.TryDestroyComponents(target);
+        }
+
         /// <summary>
         /// Enable and disable components based on bool fields with TypeEnablerFieldAttribute in Settings
         /// </summary>
@@ -165,14 +171,18 @@ namespace Pumkin.AvatarTools2.Copiers
         {
             foreach(var type_enabled in ComponentTypesAndEnabled)
                 if(type_enabled.Value)
+                {
+                    if((Settings as CopierSettingsContainerBase)?.removeAllBeforeCopying ?? false)
+                        RemoveAllBeforeCopying(target);
                     DoCopyByType(target, objFrom, type_enabled.Key);
+                }
             return true;
         }
 
         protected virtual bool DoCopyByType(GameObject target, GameObject objFrom, Type componentType)
         {
             var set = Settings as CopierSettingsContainerBase;
-            bool createGameObjects = set != null && set.createGameObjects;
+            bool createGameObjects = set?.createGameObjects ?? false;
 
             string[] propNames = new string[] { "__all__" };//set.PropertyNames;
 

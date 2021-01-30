@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Settings
+namespace Pumkin.AvatarTools2
 {
     public static class IItemExtensions
     {
