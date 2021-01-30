@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools2.VRChat
 #if VRC_SDK_VRCSDK2
         public static readonly Type VRC_AvatarDescriptor = TypeHelpers.GetTypeAnywhere("VRCSDK2.VRC_AvatarDescriptor");
 #else
-        public static readonly Type VRC_AvatarDescriptor = TypeHelpers.GetTypeAnwhere("VRC.SDK3.Avatars.Components.VRCAvatarDescriptor");
+        public static readonly Type VRC_AvatarDescriptor = TypeHelpers.GetTypeAnywhere("VRC.SDK3.Avatars.Components.VRCAvatarDescriptor");
 #endif
 
         public static readonly Type PipelineManager = TypeHelpers.GetTypeAnywhere("VRC.Core.PipelineManager");
