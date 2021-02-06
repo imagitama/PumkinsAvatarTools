@@ -26,7 +26,7 @@ namespace Pumkin.AvatarTools2
                     foreach(string f in folder)
                     {
                         var subdirs = Directory.GetDirectories(f, "*", SearchOption.TopDirectoryOnly);
-                        string sub = subdirs.Where(x => x.Equals(f + "\\Scripts")).FirstOrDefault();
+                        string sub = subdirs.FirstOrDefault(x => x.Equals(f + "\\Scripts"));
                         if(!string.IsNullOrEmpty(sub))
                         {
                             _toolFolderPath = f + '/';
@@ -70,7 +70,7 @@ namespace Pumkin.AvatarTools2
         }
 
         const string SELECTED_AVATAR_PREF_NAME = "selectedAvatar";
-
+        //
         static PumkinTools()
         {
             // Load selected avatar

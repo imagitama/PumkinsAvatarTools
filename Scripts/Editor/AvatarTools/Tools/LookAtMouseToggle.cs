@@ -15,7 +15,7 @@ namespace Pumkin.AvatarTools2.Tools
     public class LookAtMouseToggle : ToolUpdateToggleBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Look at Mouse");
-        public override bool EnabledInUI => PumkinTools.SelectedAvatar != null;
+        public override bool EnabledInUI => PumkinTools.SelectedAvatar != null && head != null;
         Quaternion StartHeadRotation { get; set; }
 
         Vector3 lookAtPosition;
@@ -27,6 +27,7 @@ namespace Pumkin.AvatarTools2.Tools
         public LookAtMouseToggle()
         {
             PumkinTools.OnAvatarSelectionChanged += OnAvatarSelectionChanged;
+            SetupNewAvatar(PumkinTools.SelectedAvatar);
         }
 
         protected override void OnDisableToggle()

@@ -25,7 +25,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             if(!pref)
                 return false;
 
-            VRChatHelpers.SetAvatarScale(target, pref.transform.localScale, true);
+            VRChatHelpers.SetAvatarScale(target, pref.transform.localScale, true, out _);
             return true;
         }
     }

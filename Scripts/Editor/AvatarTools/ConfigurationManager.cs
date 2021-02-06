@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Pumkin.Core.Extensions;
 
 namespace Pumkin.AvatarTools2
 {
@@ -20,7 +21,8 @@ namespace Pumkin.AvatarTools2
         {
             get
             {
-                RefreshConfigurations();
+                if(_configurations.IsNullOrEmpty())
+                    RefreshConfigurations();
                 return _configurations;
             }
             set => _configurations = value;
@@ -47,8 +49,16 @@ namespace Pumkin.AvatarTools2
                     PumkinTools.LogException(ex);
                 }
 
+                int newIndex = Array.IndexOf(Configurations, _configurationString);
+                if(newIndex == -1)
+                {
+                    _configurationIndex = 0;
+                    _configurationString = DEFAULT_CONFIGURATION;
+                }
+                else
+                    _configurationIndex = newIndex;
+
                 PrefManager.SetString("configurationString", _configurationString);
-                _configurationIndex = Array.IndexOf(Configurations, _configurationString);
 
                 try
                 {

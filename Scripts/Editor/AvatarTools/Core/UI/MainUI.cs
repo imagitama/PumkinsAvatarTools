@@ -129,7 +129,7 @@ namespace Pumkin.AvatarTools2.UI
 
         }
 
-        private void DrawSettings()
+        void DrawSettings()
         {
             Settings?.DrawUI();
 

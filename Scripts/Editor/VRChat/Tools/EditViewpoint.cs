@@ -12,7 +12,6 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
     class EditViewpoint : ToolSceneGUIBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Edit Viewpoint");
-        protected override Vector2 WindowSize { get; set; } = new Vector2(200, 70);
 
         Vector3 startViewpoint;
         Vector3 tempViewpoint;
@@ -79,6 +78,10 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             EditorGUI.BeginChangeCheck();
             {
                 tempViewpoint = Handles.PositionHandle(tempViewpoint, Quaternion.identity);
+                Color old = Handles.color;
+                Handles.color = Colors.viewpointBall;
+                Handles.SphereHandleCap(0, tempViewpoint, Quaternion.identity, 0.02f, EventType.Repaint);
+                Handles.color = old;
             }
             if(EditorGUI.EndChangeCheck())
             {
@@ -86,9 +89,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             }
         }
 
-        protected override void DrawInsideSceneWindowGUI()
+        protected override void DrawInsideMiniWindow()
         {
-            base.DrawInsideSceneWindowGUI();
+            base.DrawInsideMiniWindow();
             EditorGUI.BeginDisabledGroup(!avatarIsHumanoid);
             {
                 if(GUILayout.Button("Move to Eyes"))

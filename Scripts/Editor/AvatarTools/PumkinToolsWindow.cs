@@ -23,7 +23,7 @@ namespace Pumkin.AvatarTools2
             ConfigurationManager.OnConfigurationChanged += ConfigurationChanged;
         }
 
-        [MenuItem("Pumkin/Tools/Avatar Tools 2", false, 0)]
+        [MenuItem("Tools/Pumkin/Avatar Tools 2", false, 0)]
         public static void ShowWindow()
         {
             //Show existing window instance. If one doesn't exist, make one.
@@ -47,12 +47,12 @@ namespace Pumkin.AvatarTools2
             OnWindowDisabled?.Invoke();
         }
 
-        private void OnDestroy()
+        void OnDestroy()
         {
             OnWindowDestroyed?.Invoke();
         }
 
-        private void OnGUI()
+        void OnGUI()
         {
             GUISkin oldSkin = null;
             if(guiSkin != null)
@@ -70,7 +70,7 @@ namespace Pumkin.AvatarTools2
                 GUI.skin = oldSkin;
         }
 
-        private void ConfigurationChanged(string newString)
+        void ConfigurationChanged(string newString)
         {
             if(UI != null)
                 RebuildUI(newString);

@@ -18,10 +18,6 @@ namespace Pumkin.AvatarTools2.Tools
         public override UIDefinition UIDefs { get; set; }
             = new UIDefinition("Edit Scale");
 
-        public EditScale()
-        {
-            WindowSize = new Vector2(200, 60);
-        }
 
         protected override bool Prepare(GameObject target)
         {

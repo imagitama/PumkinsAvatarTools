@@ -31,8 +31,6 @@ namespace Pumkin.AvatarTools2.Tools
             }
         }
 
-        protected virtual Vector2 WindowSize { get; set; } = new Vector2(200, 50);
-
         float Padding { get; set; } = 10;
 
         public string GameConfigurationString { get; set; }
@@ -78,6 +76,7 @@ namespace Pumkin.AvatarTools2.Tools
         bool _allowUpdate;
         GUIContent _content;
         Tool editorToolOld;
+        Rect miniWindow = new Rect(EditorGUIUtility.pixelsPerPoint * Styles.Box.padding.left, Styles.Box.padding.left + EditorGUIUtility.pixelsPerPoint * 18, 0, 0);
 
         public SerializedObject serializedObject;
 
@@ -111,6 +110,7 @@ namespace Pumkin.AvatarTools2.Tools
                 EditorApplication.update += callback;
         }
 
+
         void SetupOnSceneGUIDelegate(bool add)
         {
             if(add)
@@ -125,6 +125,51 @@ namespace Pumkin.AvatarTools2.Tools
         }
 
         public void OnSceneGUI(SceneView scene)
+        {
+            if(!CanDrawSceneGUI)
+                return;
+
+            Handles.BeginGUI();
+            {
+                miniWindow = GUILayout.Window(2, miniWindow,
+                    id =>
+                    {
+                        EditorGUILayout.Space();
+
+                        DrawInsideMiniWindow();
+
+                        UIHelpers.DrawLine(1, true, false);
+
+                        GUILayout.BeginHorizontal();
+                        {
+                            if(GUILayout.Button("Cancel"))
+                                PressedCancel(serializedObject?.targetObject as GameObject);
+
+                            if(GUILayout.Button("Apply"))
+                                PressedApply(serializedObject?.targetObject as GameObject);
+                        }
+                        GUILayout.EndHorizontal();
+                    }, UIDefs.Name);
+            }
+            Handles.EndGUI();
+
+            try
+            {
+                if(CanDrawSceneGUI)
+                {
+                    if(!serializedObject?.targetObject)
+                    {
+                        Status = ToolStatus.Error;
+                        Finish(null, false);
+                    }
+                    else
+                        DrawHandles(serializedObject?.targetObject as GameObject);
+                }
+            }
+            catch { }
+        }
+
+        public void OnSceneGUIOld(SceneView scene)
         {
             if(!CanDrawSceneGUI)
                 return;
@@ -150,7 +195,7 @@ namespace Pumkin.AvatarTools2.Tools
 
                     if(CanDrawSceneGUI)
                     {
-                        DrawInsideSceneWindowGUI();
+                        DrawInsideMiniWindow();
                     }
 
                     UIHelpers.DrawLine();
@@ -170,25 +215,10 @@ namespace Pumkin.AvatarTools2.Tools
                 GUILayout.EndArea();
             }
             Handles.EndGUI();
-
-            try
-            {
-                if(CanDrawSceneGUI)
-                {
-                    if(!serializedObject?.targetObject)
-                    {
-                        Status = ToolStatus.Error;
-                        Finish(null, false);
-                    }
-                    else
-                        DrawHandles(serializedObject?.targetObject as GameObject);
-                }
-            }
-            catch {}
         }
 
         protected virtual void DrawHandles(GameObject target) { }
-        protected virtual void DrawInsideSceneWindowGUI() { }
+        protected virtual void DrawInsideMiniWindow() { }
 
         protected virtual bool Prepare(GameObject target)
         {

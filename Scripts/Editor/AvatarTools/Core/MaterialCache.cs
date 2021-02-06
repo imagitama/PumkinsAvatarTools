@@ -17,7 +17,7 @@ namespace Pumkin.Core
     /// </summary>
     public class MaterialCache
     {
-        public const string DEFAULT_CACHE_PATH = "_materialcache";
+        public const string DEFAULT_CACHE_PATH = "_materialCache";
 
         string CachePath
         {

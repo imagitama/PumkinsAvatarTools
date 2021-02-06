@@ -18,13 +18,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
         Vector3 startPosition;
 
         Vector3 startScale;
-        float tempScale = 0;
-        bool hasDescriptor = false;
-
-        public EditScale()
-        {
-            WindowSize = new Vector2(200, 70);
-        }
+        float tempScale;
+        Vector3 tempViewpoint;
+        bool hasDescriptor;
 
         protected override bool Prepare(GameObject target)
         {
@@ -47,9 +43,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             return false;
         }
 
-        protected override void DrawInsideSceneWindowGUI()
+        protected override void DrawInsideMiniWindow()
         {
-            base.DrawInsideSceneWindowGUI();
+            base.DrawInsideMiniWindow();
             EditorGUI.BeginDisabledGroup(!hasDescriptor);
             {
                 moveViewpoint = EditorGUILayout.ToggleLeft("Move Viewpoint", moveViewpoint);
@@ -59,7 +55,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
         protected override bool DoAction(GameObject target)
         {
-            VRChatHelpers.SetAvatarScale(target, tempScale, moveViewpoint);
+            VRChatHelpers.SetAvatarScale(target, tempScale, moveViewpoint, out _);
 
             serializedObject.ApplyModifiedProperties();
             return true;
@@ -67,7 +63,7 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
 
         protected override void PressedCancel(GameObject target)
         {
-            VRChatHelpers.SetAvatarScale(target, startScale.y, moveViewpoint);
+            VRChatHelpers.SetAvatarScale(target, startScale.y, moveViewpoint, out _);
             base.PressedCancel(target);
         }
 
@@ -76,10 +72,18 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             EditorGUI.BeginChangeCheck();
             {
                 tempScale = Handles.ScaleSlider(tempScale, startPosition, Vector3.up, Quaternion.identity, HandleUtility.GetHandleSize(startPosition) * 2, 0.01f);
+
+                if(moveViewpoint)
+                {
+                    Color old = Handles.color;
+                    Handles.color = Colors.viewpointBall;
+                    Handles.SphereHandleCap(0, tempViewpoint, Quaternion.identity, 0.02f, EventType.Repaint);
+                    Handles.color = old;
+                }
             }
             if(EditorGUI.EndChangeCheck())
             {
-                VRChatHelpers.SetAvatarScale(serializedObject.targetObject as GameObject, tempScale, moveViewpoint);
+                VRChatHelpers.SetAvatarScale(serializedObject.targetObject as GameObject, tempScale, moveViewpoint, out tempViewpoint);
             }
         }
     }

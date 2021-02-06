@@ -9,13 +9,14 @@ namespace Pumkin.AvatarTools2.VRChat
 {
     public static class VRChatHelpers
     {
-        public static void SetAvatarScale(GameObject avatar, float newScale, bool moveViewpoint)
+        public static void SetAvatarScale(GameObject avatar, float newScale, bool moveViewpoint, out Vector3 viewpointPos)
         {
-            SetAvatarScale(avatar, Vector3Helpers.RoundVectorValues(new Vector3(newScale, newScale, newScale), 3), moveViewpoint);
+            SetAvatarScale(avatar, Vector3Helpers.RoundVectorValues(new Vector3(newScale, newScale, newScale), 3), moveViewpoint, out viewpointPos);
         }
 
-        public static void SetAvatarScale(GameObject avatar, Vector3 newScale, bool moveViewpoint)
+        public static void SetAvatarScale(GameObject avatar, Vector3 newScale, bool moveViewpoint, out Vector3 viewpointPos)
         {
+            viewpointPos = default;
             var desc = avatar.GetComponent(VRChatTypes.VRC_AvatarDescriptor);
             if(desc == null)
             {
@@ -47,6 +48,7 @@ namespace Pumkin.AvatarTools2.VRChat
             {
                 try
                 {
+                    viewpointPos = tempDummy.transform.position;
                     tempDummy.parent = null;
                     viewProp.vector3Value = Vector3Helpers.RoundVectorValues(tempDummy.position - avatar.transform.position, 3);
                 }
