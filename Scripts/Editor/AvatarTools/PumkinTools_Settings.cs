@@ -33,8 +33,6 @@ namespace Pumkin.AvatarTools2.Settings
                 UnityEngine.Debug.LogException(ex);
             }
 
-            EditorGUILayout.HelpBox("Currently only SDK2 or SDK3 is supported, not both.\nIf yours is missing in the above configurations, change the define constraint on the Pumkin.AvatarTools2.VRChat.asmdef asset in your project tab", MessageType.Warning);
-
             EditorGUILayout.Space();
 
             EditorGUI.BeginChangeCheck();

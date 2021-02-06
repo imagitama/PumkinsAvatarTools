@@ -12,7 +12,7 @@
     "autoReferenced": false,
     "defineConstraints": [
         "UNITY_EDITOR",
-        "VRC_SDK_VRCSDK3",
+        "PUMKIN_VRC_SDK",
         "!UDON"
     ]
 }
