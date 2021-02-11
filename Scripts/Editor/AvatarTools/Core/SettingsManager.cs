@@ -48,7 +48,6 @@ public static class SettingsManager
     public static bool SaveToJson(object obj, string pathInSettings)
     {//TODO: Make this work
         string json = EditorJsonUtility.ToJson(obj);
-        Debug.Log(json);
         if(string.IsNullOrWhiteSpace(json) || json == "{}")
             return false;
 

@@ -14,7 +14,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Copier
+namespace Pumkin.AvatarTools2.Copiers
 {
     /// <summary>
     /// Base copier class that copies all components of multiple types by their full name. Also fixes references.
@@ -51,6 +51,17 @@ namespace Pumkin.AvatarTools2.Copier
         public Type FirstValidType { get; private set; }
 
         public ISettingsContainer Settings { get; }
+
+        IComponentDestroyer Destroyer
+        {
+            get
+            {
+                if(_destroyer == null)
+                    _destroyer = this.GetTypeDestroyer();
+                return _destroyer;
+            }
+        }
+
 
         public ComponentCopierBase()
         {
@@ -137,20 +148,28 @@ namespace Pumkin.AvatarTools2.Copier
             return true;
         }
 
-        protected virtual void RemoveAllBeforeCopying(GameObject target)
+        protected virtual void RemoveAllBeforeCopying(GameObject target, Type type)
         {
-            var destroyer = this.GetTypeDestroyer();
-            destroyer.TryDestroyComponents(target);
+            var set = Settings as CopierSettingsContainerBase;
+            bool canDestroy = true;
+            if(set != null)
+                canDestroy = set.Properties.AnyPropertiesEnabledForType(type);
+
+            if(canDestroy)
+                Destroyer.DoDestroyByType(target, type);
         }
 
         /// <summary>
         /// Enable and disable components based on bool fields with TypeEnablerFieldAttribute in Settings
+        /// or enable everything if either is missing
         /// </summary>
         void SetComponentEnabedFromTypeEnablerAttributes()
         {
+            bool enableAll = true;
             if(Settings != null)
             {
-                var fields = Settings.GetType().GetFields()?.Where(t => t.FieldType == typeof(bool));
+                var fields = Settings.GetType().GetFields()?.Where(t => t.FieldType == typeof(bool)).ToArray();
+
                 foreach(var f in fields)
                 {
                     var attr = f.GetCustomAttributes(false).FirstOrDefault(a => a is TypeEnablerFieldAttribute) as TypeEnablerFieldAttribute;
@@ -162,8 +181,17 @@ namespace Pumkin.AvatarTools2.Copier
                         continue;
 
                     if(attr.EnabledType != null && ComponentTypesAndEnabled.ContainsKey(attr.EnabledType))
+                    {
+                        enableAll = false;
                         ComponentTypesAndEnabled[attr.EnabledType] = (bool)enabled;
+                    }
                 }
+            }
+
+            if(enableAll || Settings == null)
+            {
+                foreach(var key in ComponentTypesAndEnabled.Keys.ToList())
+                    ComponentTypesAndEnabled[key] = true;
             }
         }
 
@@ -173,7 +201,7 @@ namespace Pumkin.AvatarTools2.Copier
                 if(type_enabled.Value)
                 {
                     if((Settings as CopierSettingsContainerBase)?.removeAllBeforeCopying ?? false)
-                        RemoveAllBeforeCopying(target);
+                        RemoveAllBeforeCopying(target, type_enabled.Key);
                     DoCopyByType(target, objFrom, type_enabled.Key);
                 }
             return true;
@@ -184,15 +212,12 @@ namespace Pumkin.AvatarTools2.Copier
             var set = Settings as CopierSettingsContainerBase;
             bool createGameObjects = set?.createGameObjects ?? false;
 
-            string[] propNames = new string[] { "__all__" };//set.PropertyNames;
+            PropertyDefinitions propDefs = set.Properties;
 
             var fromComps = objFrom.GetComponentsInChildren(componentType, true);
 
             foreach(var comp in fromComps)
             {
-                if(ShouldIgnoreObject(comp.gameObject))
-                    continue;
-
                 if(!comp || ShouldIgnoreObject(comp.gameObject))
                 {
                     PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> copier: Ignoring {comp.gameObject.name}");
@@ -206,10 +231,13 @@ namespace Pumkin.AvatarTools2.Copier
 
 
                 Component addedComp;
-                if(propNames.Length == 1 && propNames[0] == COPY_ALL_PROPERTIES_STRING)
+                if(!propDefs.AnyPropertiesEnabledForType(componentType))
+                    continue;
+
+                if(propDefs.AllPropertiesEnabledForType(componentType))
                     addedComp = CopyWholeComponent(comp, trans);
                 else
-                    addedComp = CopyComponentProperties(comp, trans, propNames);
+                    addedComp = CopyComponentProperties(comp, trans, propDefs);
 
                 FixReferences(addedComp, target.transform, set.createGameObjects);
             }
@@ -221,34 +249,59 @@ namespace Pumkin.AvatarTools2.Copier
             Type coFromType = coFrom.GetType();
             var existComps = transTo.gameObject.GetComponents(coFromType);
 
+            var set = Settings as CopierSettingsContainerBase;
+            bool onlyAllowOne = false;
+            if(set != null)
+                onlyAllowOne = set.onlyAllowOneComponentOfType;
+
             ComponentUtility.CopyComponent(coFrom);
-            ComponentUtility.PasteComponentAsNew(transTo.gameObject);
+            if(existComps.Length == 0 || !onlyAllowOne)
+            {
+                ComponentUtility.PasteComponentAsNew(transTo.gameObject);
+                var newComps = transTo.gameObject.GetComponents(coFromType);
 
-            var newComps = transTo.gameObject.GetComponents(coFromType);
+                return newComps.Except(existComps)
+                    .FirstOrDefault();
+            }
 
-            return newComps.Except(existComps)
-                .FirstOrDefault();
+            ComponentUtility.PasteComponentValues(existComps[0]);
+            return existComps[0];
         }
 
-        protected Component CopyComponentProperties(Component compFrom, Transform transTo, params string[] propertyNames)
+        protected Component CopyComponentProperties(Component compFrom, Transform transTo, PropertyDefinitions propDefs)
         {
-            var compTo = transTo.gameObject.AddComponent(compFrom.GetType());
+            return CopyComponentProperties(compFrom, transTo, propDefs[compFrom.GetType()]);
+        }
+
+        protected Component CopyComponentProperties(Component compFrom, Transform transTo, params PropertyGroup[] propGroups)
+        {
+            var set = Settings as CopierSettingsContainerBase;
+            Component compTo;
+            if(set && set.onlyAllowOneComponentOfType)
+                compTo = transTo.gameObject.GetOrAddComponent(compFrom.GetType());
+            else
+                compTo = transTo.gameObject.AddComponent(compFrom.GetType());
+
             var serialCompFrom = new SerializedObject(compFrom);
             var serialCompTo = new SerializedObject(compTo);
 
-            foreach(var name in propertyNames)
+            foreach(var group in propGroups)
             {
-                if(string.IsNullOrWhiteSpace(name))
+                if(group == null || !group.Enabled)
                     continue;
 
-                var prop = serialCompFrom.FindProperty(name);
-                if(prop == null)
+                foreach(var name in group.PropertyNames)
                 {
-                    PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> Copier: Can't find property with name {name} on {compFrom}. Skipping");
-                    continue;
+                    var prop = serialCompFrom.FindProperty(name);
+                    if(prop == null)
+                    {
+                        PumkinTools.LogVerbose($"<b>{UIDefs.Name}</b> Copier: Can't find property with name {name} on {compFrom}. Skipping");
+                        continue;
+                    }
+                    serialCompTo.CopyFromSerializedProperty(prop);
                 }
-                serialCompTo.CopyFromSerializedProperty(prop);
             }
+
             serialCompTo.ApplyModifiedProperties();
             return compTo;
         }
@@ -303,5 +356,6 @@ namespace Pumkin.AvatarTools2.Copier
 
 
         private GUIContent _content;
+        private IComponentDestroyer _destroyer;
     }
 }

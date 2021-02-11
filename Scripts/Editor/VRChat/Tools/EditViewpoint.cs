@@ -89,9 +89,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             }
         }
 
-        protected override void DrawInsideMiniWindow()
+        protected override void DrawInsideSceneGUIWindow()
         {
-            base.DrawInsideMiniWindow();
+            base.DrawInsideSceneGUIWindow();
             EditorGUI.BeginDisabledGroup(!avatarIsHumanoid);
             {
                 if(GUILayout.Button("Move to Eyes"))

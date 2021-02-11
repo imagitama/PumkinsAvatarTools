@@ -160,7 +160,7 @@ namespace Pumkin.AvatarTools2.Destroyers
             return true;
         }
 
-        protected virtual bool DoDestroyByType(GameObject target, Type componentType)
+        public virtual bool DoDestroyByType(GameObject target, Type componentType)
         {
             foreach(var co in target.GetComponentsInChildren(componentType, true))
             {

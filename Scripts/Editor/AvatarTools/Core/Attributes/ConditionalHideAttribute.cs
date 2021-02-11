@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Pumkin.Core.Extensions;
+using UnityEngine;
 
 namespace Pumkin.Core
 {
@@ -7,15 +8,16 @@ namespace Pumkin.Core
     /// </summary>
     public class ConditionalHideAttribute : PropertyAttribute
     {
-        public string PropertyName { get; set; }
+        public string[] PropertyNames { get; set; }
 
         /// <summary>
-        /// Allows you to hide fields from being drawn in the inspector based on the value of <paramref name="boolPropertyName"/>
+        /// Allows you to hide fields from being drawn in the inspector based on the value of <paramref name="boolPropertyNames"/>
+        /// Hidden if all are true
         /// </summary>
-        /// <param name="boolPropertyName">Name of bool property on the same object as the object this attribute's field is on</param>
-        public ConditionalHideAttribute(string boolPropertyName)
+        /// <param name="boolPropertyName">Name of bool properties in the same class as the field this attribute is on, all must be true to hide</param>
+        public ConditionalHideAttribute(params string[] boolPropertyNames)
         {
-            PropertyName = boolPropertyName;
+            PropertyNames = boolPropertyNames;
         }
     }
 }

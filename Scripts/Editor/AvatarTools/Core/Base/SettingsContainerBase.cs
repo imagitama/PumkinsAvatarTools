@@ -98,7 +98,7 @@ namespace Pumkin.AvatarTools2.Settings
             SaveToConfigFile(SavePath);
         }
 
-        public void DrawUI()
+        public virtual void DrawUI()
         {
             Editor?.OnInspectorGUI();
         }

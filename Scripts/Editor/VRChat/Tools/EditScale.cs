@@ -43,9 +43,9 @@ namespace Pumkin.AvatarTools2.VRChat.Tools
             return false;
         }
 
-        protected override void DrawInsideMiniWindow()
+        protected override void DrawInsideSceneGUIWindow()
         {
-            base.DrawInsideMiniWindow();
+            base.DrawInsideSceneGUIWindow();
             EditorGUI.BeginDisabledGroup(!hasDescriptor);
             {
                 moveViewpoint = EditorGUILayout.ToggleLeft("Move Viewpoint", moveViewpoint);

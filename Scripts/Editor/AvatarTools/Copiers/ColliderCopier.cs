@@ -3,7 +3,7 @@ using Pumkin.Core;
 using Pumkin.Core.UI;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Copier
+namespace Pumkin.AvatarTools2.Copiers
 {
     [AutoLoad(DefaultIDs.Copiers.Collider, ParentModuleID = DefaultIDs.Modules.Copier)]
     class ColliderCopier : ComponentCopierBase

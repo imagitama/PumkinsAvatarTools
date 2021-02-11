@@ -1,4 +1,6 @@
 ﻿using Pumkin.Core;
+using System;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
@@ -19,17 +21,20 @@ namespace Pumkin.AvatarTools2.UI.PropertyDrawers
                 if(canDraw == null || canDraw == false)
                 {
                     var attr = attribute as ConditionalHideAttribute;
-                    var prop = fieldInfo.DeclaringType.GetProperty(attr.PropertyName,
+                    var props = fieldInfo.DeclaringType.GetProperties(
                         BindingFlags.NonPublic | BindingFlags.FlattenHierarchy | BindingFlags.Instance);
 
-                    if(prop != null && prop.PropertyType == typeof(bool))
+                    foreach(var prop in props)
                     {
+                        if(prop == null
+                            || prop.PropertyType != typeof(bool)
+                            || !attr.PropertyNames.Contains(prop.Name, StringComparer.OrdinalIgnoreCase))
+                            continue;
+
                         var val = prop.GetValue(serialProp.serializedObject.targetObject);
                         canDraw = val as bool? ?? false;
-                    }
-                    else
-                    {
-                        canDraw = false;
+                        if(canDraw == false)
+                            break;
                     }
                 }
                 return canDraw;
@@ -45,6 +50,9 @@ namespace Pumkin.AvatarTools2.UI.PropertyDrawers
 
             if(property.propertyType != SerializedPropertyType.Boolean)
             {
+                if(property.type == typeof(UISpacer).Name)
+                    label = GUIContent.none;
+
                 EditorGUI.PropertyField(position, property, label);
                 return;
             }

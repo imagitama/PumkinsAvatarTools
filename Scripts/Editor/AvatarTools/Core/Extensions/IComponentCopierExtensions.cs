@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pumkin.AvatarTools2.Copier
+namespace Pumkin.AvatarTools2.Copiers
 {
     public static class IComponentCopierExtensions
     {

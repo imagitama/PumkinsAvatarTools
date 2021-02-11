@@ -103,6 +103,11 @@ namespace Pumkin.AvatarTools2.UI
                 return true;
             return false;
         }
+
+        public override string ToString()
+        {
+            return ModuleType?.ToString() ?? "Module" + " Builder";
+        }
     }
 }
 #endif

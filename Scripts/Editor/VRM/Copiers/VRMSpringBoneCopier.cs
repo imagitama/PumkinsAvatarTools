@@ -1,4 +1,4 @@
-﻿using Pumkin.AvatarTools2.Copier;
+﻿using Pumkin.AvatarTools2.Copiers;
 using Pumkin.AvatarTools2.UI;
 using Pumkin.AvatarTools2.VRM;
 using Pumkin.Core;

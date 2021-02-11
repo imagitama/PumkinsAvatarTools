@@ -9,9 +9,10 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.Tools
 {
-    //TODO: Redo this class. I don't like it.
     public abstract class ToolSceneGUIBase : ITool
     {
+        const float windowPadding = 5;
+
         public bool CanDrawSceneGUI
         {
             get
@@ -31,11 +32,7 @@ namespace Pumkin.AvatarTools2.Tools
             }
         }
 
-        float Padding { get; set; } = 10;
-
-        public string GameConfigurationString { get; set; }
-
-        public virtual ISettingsContainer Settings { get => null; }
+        public ISettingsContainer Settings { get; private set; }
 
         public bool CanUpdate
         {
@@ -72,24 +69,16 @@ namespace Pumkin.AvatarTools2.Tools
 
         public virtual bool EnabledInUI { get; set; } = true;
 
-        bool _allowSceneGUI;
-        bool _allowUpdate;
-        GUIContent _content;
-        Tool editorToolOld;
-        Rect miniWindow = new Rect(EditorGUIUtility.pixelsPerPoint * Styles.Box.padding.left, Styles.Box.padding.left + EditorGUIUtility.pixelsPerPoint * 18, 0, 0);
-
+        Rect miniWindow = new Rect(EditorGUIUtility.pixelsPerPoint * windowPadding, EditorGUIUtility.pixelsPerPoint * windowPadding + 18, 0, 0);
         public SerializedObject serializedObject;
-
         EditorApplication.CallbackFunction updateCallback;
 
         public ToolSceneGUIBase()
         {
             if(UIDefs == null)
                 UIDefs = new UIDefinition(GetType().Name);
-            SetupSettings();
+            Settings = this.GetOrCreateSettingsContainer();
         }
-
-        protected virtual void SetupSettings() { }
 
         protected virtual GUIContent CreateGUIContent()
         {
@@ -136,7 +125,7 @@ namespace Pumkin.AvatarTools2.Tools
                     {
                         EditorGUILayout.Space();
 
-                        DrawInsideMiniWindow();
+                        DrawInsideSceneGUIWindow();
 
                         UIHelpers.DrawLine(1, true, false);
 
@@ -169,56 +158,8 @@ namespace Pumkin.AvatarTools2.Tools
             catch { }
         }
 
-        public void OnSceneGUIOld(SceneView scene)
-        {
-            if(!CanDrawSceneGUI)
-                return;
-
-            float multiplier = 0.1f;
-            Rect rect = scene.camera.pixelRect;
-
-            rect.width *= multiplier;
-            rect.height *= multiplier;
-
-            rect.position += rect.position * multiplier;
-
-            //rect = new Rect(Padding, rect.height - Padding - WindowSize.y, WindowSize.x, WindowSize.y);
-            float minButtonWidth = rect.width / 2 - Styles.Box.padding.left - Styles.Box.padding.right;
-
-            Handles.BeginGUI();
-            {
-                GUILayout.BeginArea(rect, Styles.Box);
-                {
-                    GUILayout.Label(UIDefs.Name);
-                    UIHelpers.DrawLine(1, false, false);
-                    EditorGUILayout.Space();
-
-                    if(CanDrawSceneGUI)
-                    {
-                        DrawInsideMiniWindow();
-                    }
-
-                    UIHelpers.DrawLine();
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.BeginHorizontal();//GUILayout.ExpandHeight(true));
-                    {
-                        if(GUILayout.Button("Cancel", GUILayout.MinWidth(minButtonWidth)))
-                            PressedCancel(serializedObject?.targetObject as GameObject);
-
-                        if(GUILayout.Button("Apply", GUILayout.MinWidth(minButtonWidth)))
-                            PressedApply(serializedObject?.targetObject as GameObject);
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndArea();
-            }
-            Handles.EndGUI();
-        }
-
         protected virtual void DrawHandles(GameObject target) { }
-        protected virtual void DrawInsideMiniWindow() { }
+        protected virtual void DrawInsideSceneGUIWindow() { }
 
         protected virtual bool Prepare(GameObject target)
         {
@@ -239,7 +180,7 @@ namespace Pumkin.AvatarTools2.Tools
             {
                 if(Prepare(target))
                 {
-                    editorToolOld = UnityEditor.Tools.current;
+                    _editorToolOld = UnityEditor.Tools.current;
                     UnityEditor.Tools.current = Tool.None;
                     CanDrawSceneGUI = true;
                     EnabledInUI = false;
@@ -262,7 +203,7 @@ namespace Pumkin.AvatarTools2.Tools
             CanDrawSceneGUI = false;
             EnabledInUI = true;
 
-            UnityEditor.Tools.current = editorToolOld;
+            UnityEditor.Tools.current = _editorToolOld;
 
             if(success)
             {
@@ -332,6 +273,11 @@ namespace Pumkin.AvatarTools2.Tools
                 });
             }
         }
+
+        bool _allowSceneGUI;
+        bool _allowUpdate;
+        GUIContent _content;
+        Tool _editorToolOld;
     }
 }
 #endif

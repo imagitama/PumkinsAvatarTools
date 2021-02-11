@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Pumkin.AvatarTools2.Copier
+namespace Pumkin.AvatarTools2.Copiers
 {
     [CustomSettingsContainer(typeof(ColliderCopier))]
     class ColliderCopier_Settings : CopierSettingsContainerBase
@@ -25,7 +25,5 @@ namespace Pumkin.AvatarTools2.Copier
 
         [DrawToggleLeft][TypeEnablerField(typeof(MeshCollider))]
         public bool meshColliders = true;
-
-        public override PropertyDefinitions Properties => null;
     }
 }

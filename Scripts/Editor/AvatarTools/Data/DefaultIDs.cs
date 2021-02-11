@@ -59,6 +59,7 @@
             public const string ParticleSystem = "destroyer_particleSystem";
             public const string Collider = "destroyer_collider";
             public const string Constraint = "destroyer_constraint";
+            public const string AvatarDescriptor = "destroyer_avatarDescriptor";
         }
     }
 }

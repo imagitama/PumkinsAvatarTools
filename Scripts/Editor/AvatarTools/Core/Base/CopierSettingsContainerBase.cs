@@ -1,8 +1,6 @@
 ﻿using Pumkin.Core;
-using Pumkin.Core.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -15,52 +13,50 @@ namespace Pumkin.AvatarTools2.Settings
     {
         protected virtual bool ShowRemoveAll { get; } = true;
         protected virtual bool ShowCreateGameObjects { get; } = true;
+        protected virtual bool ShowOnlyAllowOne { get; } = false;
 
         [ConditionalHide(nameof(ShowRemoveAll))]
         public bool removeAllBeforeCopying = false;
 
         [ConditionalHide(nameof(ShowCreateGameObjects))]
         public bool createGameObjects = false;
-        public abstract PropertyDefinitions Properties { get; }
 
+        [ConditionalHide(nameof(ShowOnlyAllowOne))]
+        public bool onlyAllowOneComponentOfType = false;
+
+        public virtual PropertyDefinitions Properties { get; } = null;
+
+        // This needs to be here to put a space before the settings of the object that inherits us
+        [ConditionalHide(nameof(ShowCreateGameObjects), nameof(ShowRemoveAll))]
         [SerializeField]UISpacer _spacer;
-    }
 
-    public class PropertyDefinitions
-    {
-        public Type Type { get; private set; }
-        public List<PropertyGroup> Properties { get; private set; }
-
-        public PropertyDefinitions(Type type, params PropertyGroup[] properties)
+        public override void DrawUI()
         {
-            Type = type;
-            Properties = properties.ToList();
+            base.DrawUI();
+            if(Properties != null)
+                DrawPropertyGroups();
         }
 
-        public PropertyDefinitions(params PropertyGroup[] properties) : this(default(Type), properties) { }
-
-        public PropertyDefinitions(string fullTypeName, params PropertyGroup[] properties)
-            : this(TypeHelpers.GetTypeAnywhere(fullTypeName), properties) { }
-
-        public PropertyDefinitions(Type type)
-            : this(type, new PropertyGroup(null, "__all__")) { }
-    }
-
-    public class PropertyGroup
-    {
-        public string Name { get; set; }
-        public bool Enabled { get; set; } = true;
-        public string[] PropertyNames { get; set; }
-
-
-        public PropertyGroup(string name, bool enabled, params string[] propertyNames)
+        void DrawPropertyGroups()
         {
-            Name = name;
-            Enabled = enabled;
-            PropertyNames = propertyNames;
-        }
+            int index = 0;
+            int count = Properties.TypeProperties.Count;
+            foreach(var type_propGroup in Properties.TypeProperties)
+            {
+                foreach(var group in type_propGroup.Value)
+                {
+                    EditorGUI.BeginChangeCheck();
+                    bool enabled = EditorGUILayout.ToggleLeft(group.Name, group.Enabled);
+                    if(EditorGUI.EndChangeCheck())
+                    {
+                        group.Enabled = enabled;
+                    }
+                }
 
-        public PropertyGroup(string name, params string[] propertyNames)
-            : this(name, true, propertyNames) { }
+                if(index < count)
+                    EditorGUILayout.Space();
+                index++;
+            }
+        }
     }
 }

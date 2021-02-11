@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Pumkin.AvatarTools2.VRChat.Destroyers
 {
-    [AutoLoad(DefaultIDs.Copiers.AvatarDescriptor, "VRChat", ParentModuleID = DefaultIDs.Modules.Destroyer)]
+    [AutoLoad(DefaultIDs.Destroyers.AvatarDescriptor, "VRChat", ParentModuleID = DefaultIDs.Modules.Destroyer)]
     class AvatarDescriptorDestroyer : ComponentDestroyerBase
     {
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Avatar Descriptor");
