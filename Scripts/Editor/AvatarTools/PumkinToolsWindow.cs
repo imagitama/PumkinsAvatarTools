@@ -23,7 +23,7 @@ namespace Pumkin.AvatarTools2
             ConfigurationManager.OnConfigurationChanged += ConfigurationChanged;
         }
 
-        [MenuItem("Tools/Pumkin/Avatar Tools 2", false, 0)]
+        [MenuItem("Pumkin/Tools/Avatar Tools 2", false, 0)]
         public static void ShowWindow()
         {
             //Show existing window instance. If one doesn't exist, make one.
