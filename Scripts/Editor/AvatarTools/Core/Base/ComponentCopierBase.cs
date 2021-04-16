@@ -9,10 +9,12 @@ using Pumkin.Core.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Pumkin.AvatarTools2.Copiers
 {
@@ -21,8 +23,6 @@ namespace Pumkin.AvatarTools2.Copiers
     /// </summary>
     public abstract class ComponentCopierBase : IComponentCopier
     {
-        const string COPY_ALL_PROPERTIES_STRING = "__all__";    //TODO: Move to PropertyDefinitions
-
         public abstract string[] ComponentTypesFullNames { get; }
 
         Dictionary<Type, bool> ComponentTypesAndEnabled { get; set; } = new Dictionary<Type, bool>();
@@ -212,7 +212,7 @@ namespace Pumkin.AvatarTools2.Copiers
             var set = Settings as CopierSettingsContainerBase;
             bool createGameObjects = set?.createGameObjects ?? false;
 
-            PropertyDefinitions propDefs = set.Properties;
+            PropertyDefinitions propDefs = set != null ? set.Properties : null;
 
             var fromComps = objFrom.GetComponentsInChildren(componentType, true);
 
@@ -229,17 +229,14 @@ namespace Pumkin.AvatarTools2.Copiers
                 if(!trans)
                     continue;
 
-
-                Component addedComp;
-                if(!propDefs.AnyPropertiesEnabledForType(componentType))
-                    continue;
-
-                if(propDefs.AllPropertiesEnabledForType(componentType))
+                Component addedComp = null;
+                if(propDefs == null || propDefs.AllPropertiesEnabledForType(componentType))
                     addedComp = CopyWholeComponent(comp, trans);
-                else
+                else if(propDefs.AnyPropertiesEnabledForType(componentType))
                     addedComp = CopyComponentProperties(comp, trans, propDefs);
 
-                FixReferences(addedComp, target.transform, set.createGameObjects);
+                if(addedComp != null)
+                    FixReferences(addedComp, target.transform, createGameObjects);
             }
             return true;
         }
@@ -328,27 +325,35 @@ namespace Pumkin.AvatarTools2.Copiers
             return ComponentCopiersModule.IgnoreList.ShouldIgnoreTransform(obj.transform);
         }
 
-        protected virtual void FixReferences(Component comp, Transform targetHierarchyRoot, bool createGameObjects)
+        protected virtual void FixReferences(Component newComp, Transform targetHierarchyRoot, bool createGameObjects)
         {
-            if(!comp)
+            if(!newComp)
                 return;
 
-            var serialComp = new SerializedObject(comp);
+            var serialComp = new SerializedObject(newComp);
 
             serialComp.ForEachPropertyVisible(true, x =>
             {
                 if(x.propertyType != SerializedPropertyType.ObjectReference || x.name == "m_Script")
                     return;
 
-                var rf = x.objectReferenceValue;
-                var trans = x.objectReferenceValue as Transform;
-                if(trans != null)
-                {
-                    var tPath = trans.GetPathInHierarchy();
-                    var transTarget = targetHierarchyRoot.FindOrCreate(tPath, createGameObjects, trans);
-                    if(transTarget != null)
-                        x.objectReferenceValue = transTarget;
-                }
+                var oldComp = x.objectReferenceValue as Component;
+                if(!oldComp)
+                    return;
+
+                Type compType = oldComp.GetType();
+                int compIndex = oldComp.gameObject.GetComponents(compType)
+                    .ToList()
+                    .IndexOf(oldComp);
+
+                var tPath = oldComp.transform.GetPathInHierarchy();
+                var transTarget = targetHierarchyRoot.FindOrCreate(tPath, createGameObjects, oldComp.transform);
+                if(transTarget == null)
+                    return;
+
+                var targetComps = transTarget.GetComponents(compType);
+
+                x.objectReferenceValue = targetComps[compIndex];
             });
 
             serialComp.ApplyModifiedProperties();

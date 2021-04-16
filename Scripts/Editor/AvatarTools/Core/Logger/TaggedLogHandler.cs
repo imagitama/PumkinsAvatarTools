@@ -38,7 +38,7 @@ namespace Pumkin.Core.Logger
                     Debug.LogAssertionFormat(context, taggedFormat, args);
                     break;
                 default:
-                    Debug.LogFormat(taggedFormat, args);
+                    Debug.LogFormat(context, taggedFormat, args);
                     break;
             }
         }

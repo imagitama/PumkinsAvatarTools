@@ -59,7 +59,7 @@ namespace Pumkin.AvatarTools2.Destroyers
                 {
                     var type = TypeHelpers.GetTypeAnywhere(tName);
                     if(type != null)
-                        ComponentTypesAndEnabled[type] = false;
+                        ComponentTypesAndEnabled[type] = true; //TODO: Why did I decide to disable them all by default?
                 }
             }
 
