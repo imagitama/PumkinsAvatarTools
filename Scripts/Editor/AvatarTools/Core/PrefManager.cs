@@ -15,7 +15,7 @@ namespace Pumkin.AvatarTools2
     /// </summary>
     public static class PrefManager
     {
-        static readonly string prefString = $"Pumkin.AvatarTools-{Application.productName}";    //productName returns the name of the project
+        static readonly string prefString = $"Pumkin.AvatarTools2-{Application.productName}";    //productName returns the name of the project
 
         /// <summary>
         /// Saves a bool value to player prefs using the project name as a prefix
