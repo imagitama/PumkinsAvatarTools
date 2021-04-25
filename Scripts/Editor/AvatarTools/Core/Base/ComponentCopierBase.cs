@@ -116,8 +116,10 @@ namespace Pumkin.AvatarTools2.Copiers
 
         public bool TryCopyComponents(GameObject objFrom, GameObject target)
         {
+            Transform oldParent = objFrom.transform.parent;
             try
             {
+                objFrom.transform.parent = null;
                 if(Prepare(target, objFrom) && DoCopyComponents(target, objFrom))
                 {
                     Finish(target, objFrom);
@@ -127,6 +129,10 @@ namespace Pumkin.AvatarTools2.Copiers
             catch(Exception e)
             {
                 Debug.LogException(e);
+            }
+            finally
+            {
+                objFrom.transform.parent = oldParent;
             }
             return false;
         }
