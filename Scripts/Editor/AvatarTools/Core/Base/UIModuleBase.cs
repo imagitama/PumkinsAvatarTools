@@ -9,6 +9,7 @@ using System.Reflection;
 using Pumkin.Core;
 using Pumkin.Core.Helpers;
 using Pumkin.Core.UI;
+using UnityEngine.SceneManagement;
 
 namespace Pumkin.AvatarTools2.Modules
 {
@@ -93,8 +94,8 @@ namespace Pumkin.AvatarTools2.Modules
 
             SubItems = new List<IItem>();
             ChildModules = new List<IUIModule>();
-            if(!UIDefs)
-                UIDefs = new UIDefinition("Generic Module", "A generic Module");
+            if(UIDefs == null)
+                UIDefs = new UIDefinition("Module", "A default module description. Did the UI definition fail to load?");
 
             shouldDrawHeader = !UIDefs.HasStyle(UIModuleStyles.NoHeader);
             shouldDrawBorder = !UIDefs.HasStyle(UIModuleStyles.NoBorder);
@@ -192,6 +193,11 @@ namespace Pumkin.AvatarTools2.Modules
                 EditorGUILayout.HelpBox($"{UIDefs.Description}", MessageType.Info);
 
             DrawChildren();
+        }
+
+        public virtual void DrawSettings()
+        {
+            
         }
 
         public virtual void DrawChildren()

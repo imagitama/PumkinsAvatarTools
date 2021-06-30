@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Pumkin.AvatarTools2.Tools
 {
     [AutoLoad(DefaultIDs.Tools.ClearVertexColors, ParentModuleID = DefaultIDs.Modules.Tools_FixAvatar)]
-    class ClearVertexColors : ToolBase
+    class ClearVertexColors : ToolBase //TODO: Check if this actually saves when unity restarts. It probably doesn't
     {
         protected override bool DoAction(GameObject target)
         {

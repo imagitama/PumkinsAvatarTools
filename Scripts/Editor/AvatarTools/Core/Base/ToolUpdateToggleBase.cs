@@ -10,8 +10,8 @@ namespace Pumkin.AvatarTools2.Tools
     /// </summary>
     public abstract class ToolUpdateToggleBase : ToolBase
     {
-        private bool _allowSceneGUI = false;
-
+        private bool _allowSceneGUI;
+        public bool Enabled => _allowUpdate;
         public bool CanDrawSceneGUI
         {
             get
@@ -33,26 +33,26 @@ namespace Pumkin.AvatarTools2.Tools
 
         protected virtual void OnEnableToggle()
         {
-            CanUpdate = true;
+            base.Enabled = true;
             CanDrawSceneGUI = true;
         }
 
         protected virtual void OnDisableToggle()
         {
-            CanUpdate = false;
+            base.Enabled = false;
             CanDrawSceneGUI = false;
         }
 
-        public ToolUpdateToggleBase()
+        protected ToolUpdateToggleBase()
         {
-            CanUpdate = false;
+            base.Enabled = false;
         }
 
         public override void DrawUI(params GUILayoutOption[] options)
         {
             UIHelpers.DrawLine();
             EditorGUI.BeginChangeCheck();
-            bool flag = EditorGUILayout.ToggleLeft(Content, CanUpdate, options);
+            bool flag = EditorGUILayout.ToggleLeft(Content, Enabled, options);
             if(EditorGUI.EndChangeCheck())
             {
                 CallbackThenPrepare(flag, PumkinTools.SelectedAvatar);

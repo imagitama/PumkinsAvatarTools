@@ -12,7 +12,7 @@ namespace Pumkin.AvatarTools2
 {
     public class IgnoreList : IDisposable
     {
-        Delegates.SelectedChangeHandler selectionChangeHandler;
+        Delegates.SelectedGameObjectChangeHandler selectionGameObjectChangeHandler;
 
         List<Transform> ignoredTransforms = new List<Transform>();
         List<string> ignoredTransformPaths = new List<string>();
@@ -30,10 +30,10 @@ namespace Pumkin.AvatarTools2
 
         SerializedObject serializedIgnoreList;
 
-        public IgnoreList(Delegates.SelectedChangeHandler selectionChangeHandler)
+        public IgnoreList(Delegates.SelectedGameObjectChangeHandler selectionGameObjectChangeHandler)
         {
-            this.selectionChangeHandler = selectionChangeHandler;
-            selectionChangeHandler += SelectionChanged;
+            this.selectionGameObjectChangeHandler = selectionGameObjectChangeHandler;
+            selectionGameObjectChangeHandler += SelectionChanged;
 
             if(ignoredTransforms.Count == 0)
                 ignoredTransforms.ResizeWithDefaults(1);
@@ -118,7 +118,7 @@ namespace Pumkin.AvatarTools2
 
         public void Dispose()
         {
-            selectionChangeHandler -= SelectionChanged;
+            selectionGameObjectChangeHandler -= SelectionChanged;
         }
     }
 }

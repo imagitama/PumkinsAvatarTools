@@ -25,31 +25,31 @@ namespace Pumkin.AvatarTools2.Modules
             {
                if(string.IsNullOrWhiteSpace(_savePath))
                     _savePath = $"{SAVE_FOLDER}{ConfigurationManager.CurrentConfigurationString}/{typeof(ComponentCopiersModule).Name}.json";
-                return _savePath;
+               return _savePath;
             }
         }
 
         public override UIDefinition UIDefs { get; set; } = new UIDefinition("Component Copier", 1);
 
-        public static event Delegates.SelectedChangeHandler OnCopierAvatarSelectionChanged;
+        public static event Delegates.SelectedGameObjectChangeHandler OnCopierSourceSelectionChanged;
 
-        public static IgnoreList IgnoreList { get; } = new IgnoreList(OnCopierAvatarSelectionChanged);
+        public static IgnoreList IgnoreList { get; } = new IgnoreList(OnCopierSourceSelectionChanged);
 
         static bool CanCopy { get; set; } = true;
 
         GUIContent copyButtonContent;
 
-        public static GameObject CopyFromAvatar
+        public static GameObject CopyFromSource
         {
-            get => _copyFromAvatar;
+            get => copyFromSource;
 
             set
             {
-                if(_copyFromAvatar == value)
+                if(copyFromSource == value)
                     return;
 
-                _copyFromAvatar = value;
-                CopierAvatarSelectionChanged(_copyFromAvatar);
+                copyFromSource = value;
+                CopierAvatarSelectionChanged(copyFromSource);
             }
 
         }
@@ -88,7 +88,7 @@ namespace Pumkin.AvatarTools2.Modules
 
         public static void CopierAvatarSelectionChanged(GameObject newSelection)
         {
-            OnCopierAvatarSelectionChanged?.Invoke(newSelection);
+            OnCopierSourceSelectionChanged?.Invoke(newSelection);
         }
 
         public override void DrawContent()
@@ -98,22 +98,22 @@ namespace Pumkin.AvatarTools2.Modules
             if(!string.IsNullOrEmpty(UIDefs.Description))
                 EditorGUILayout.HelpBox($"{UIDefs.Description}", MessageType.Info);
 
-            CopyFromAvatar = EditorGUILayout.ObjectField(AvatarSelectorContent, CopyFromAvatar, typeof(GameObject), true) as GameObject;
+            CopyFromSource = EditorGUILayout.ObjectField(AvatarSelectorContent, CopyFromSource, typeof(GameObject), true) as GameObject;
 
             if(GUILayout.Button("Select from Scene"))
-                CopyFromAvatar = Selection.activeGameObject ?? CopyFromAvatar;
+                CopyFromSource = Selection.activeGameObject ?? CopyFromSource;
 
 #if PUMKIN_DEV
             if(GUILayout.Button("Auto Select"))
             {
-                CopyFromAvatar = GameObject.Find("copyFrom") ?? GameObject.Find("Copy From") ?? GameObject.Find("from");
+                CopyFromSource = GameObject.Find("copyFrom") ?? GameObject.Find("Copy From") ?? GameObject.Find("from");
                 PumkinTools.SelectedAvatar = GameObject.Find("copyTo") ?? GameObject.Find("Copy To") ?? GameObject.Find("to");
             }
 #endif
 
             UIHelpers.DrawLine();
 
-            EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromAvatar);
+            EditorGUI.BeginDisabledGroup(!PumkinTools.SelectedAvatar || !CopyFromSource);
             {
                 foreach(var copier in SubItems)
                 {
@@ -139,7 +139,7 @@ namespace Pumkin.AvatarTools2.Modules
                     {
                         var c = copier as IComponentCopier;
                         if(c?.Active == true)
-                            c.TryCopyComponents(CopyFromAvatar, PumkinTools.SelectedAvatar);
+                            c.TryCopyComponents(CopyFromSource, PumkinTools.SelectedAvatar);
                     }
                 }
             }
@@ -177,7 +177,7 @@ namespace Pumkin.AvatarTools2.Modules
         }
 
 
-        static GameObject _copyFromAvatar;
+        static GameObject copyFromSource;
         static string _savePath;
         [SerializeField] string[] _enabledIDs;
     }

@@ -7,7 +7,7 @@ namespace Pumkin.AvatarTools2.Interfaces
         /// <summary>
         /// Whether or not to allow Update() to run
         /// </summary>
-        bool CanUpdate { get; set; }
+        bool Enabled { get; set; }
 
         /// <summary>
         /// Should call Prepare() => DoAction() => Finish()

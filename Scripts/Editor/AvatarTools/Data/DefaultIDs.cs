@@ -11,6 +11,8 @@
             public const string Destroyer = "destroyers";
 
             public const string Copier = "copiers";
+            
+            public const string Camera = "camera";
 
             public const string TestAvatar = "testAvatar";
 

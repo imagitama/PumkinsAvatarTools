@@ -10,7 +10,7 @@ namespace Pumkin.AvatarTools2
 {
     public static class PumkinTools
     {
-        public static event Delegates.SelectedChangeHandler OnAvatarSelectionChanged;
+        public static event Delegates.SelectedGameObjectChangeHandler OnAvatarSelectionChanged;
 
         public static string MainFolderPath
         {
@@ -70,7 +70,7 @@ namespace Pumkin.AvatarTools2
         }
 
         const string SELECTED_AVATAR_PREF_NAME = "selectedAvatar";
-        //
+        
         static PumkinTools()
         {
             // Load selected avatar

@@ -34,7 +34,7 @@ namespace Pumkin.AvatarTools2.Tools
 
         public ISettingsContainer Settings { get; private set; }
 
-        public bool CanUpdate
+        public bool Enabled
         {
             get
             {
@@ -246,7 +246,7 @@ namespace Pumkin.AvatarTools2.Tools
 
         public void CheckThenUpdate()
         {
-            if(CanUpdate)
+            if(Enabled)
                 Update();
         }
 

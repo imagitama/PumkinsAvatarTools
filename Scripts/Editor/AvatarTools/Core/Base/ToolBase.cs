@@ -17,12 +17,9 @@ namespace Pumkin.AvatarTools2.Tools
     {
         public virtual UIDefinition UIDefs { get; set; }
 
-        public bool CanUpdate
+        public virtual bool Enabled
         {
-            get
-            {
-                return _allowUpdate;
-            }
+            get => _allowUpdate;
 
             set
             {
@@ -143,7 +140,7 @@ namespace Pumkin.AvatarTools2.Tools
 
         public void CheckThenUpdate()
         {
-            if(CanUpdate)
+            if(Enabled)
                 Update();
         }
 
@@ -154,7 +151,7 @@ namespace Pumkin.AvatarTools2.Tools
             EditorApplication.update -= CheckThenUpdate;
         }
 
-        bool _allowUpdate;
+        protected bool _allowUpdate;
         GUIContent _content;
         EditorApplication.CallbackFunction _updateCallback;
     }
